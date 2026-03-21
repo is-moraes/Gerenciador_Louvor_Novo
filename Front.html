@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ministério de Louvor – Apresentação</title>
+<title>Ministério de Louvor – Programação</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 <style>
@@ -26,29 +26,15 @@
 
   body { font-family:var(--font); background:var(--bg); color:var(--fg); min-height:100vh; transition:background .3s,color .3s; }
 
-  /* ===== HEADER ===== */
-  header {
-    height:var(--header-h); background:var(--grad);
-    display:flex; align-items:center; justify-content:space-between;
-    padding:0 1.5rem; box-shadow:var(--shadow);
-    position:sticky; top:0; z-index:100;
-    gap:1rem;
-  }
+  header { height:var(--header-h); background:var(--grad); display:flex; align-items:center; justify-content:space-between; padding:0 1.5rem; box-shadow:var(--shadow); position:sticky; top:0; z-index:100; gap:1rem; }
   .header-left { display:flex; flex-direction:column; justify-content:center; min-width:0; }
-  .header-titulo { font-size:1rem; font-weight:700; color:#fff; display:flex; align-items:center; gap:.5rem; white-space:nowrap; }
-  .header-titulo i { flex-shrink:0; }
-  .header-data-culto {
-    font-size:.72rem; color:rgba(255,255,255,.8); font-weight:600;
-    display:flex; align-items:center; gap:.35rem; margin-top:.1rem;
-    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-  }
-  .header-data-culto i { color:rgba(255,255,255,.6); flex-shrink:0; }
+  .header-titulo { font-size:1rem; font-weight:700; color:#fff; display:flex; align-items:center; gap:.5rem; }
+  .header-data-culto { font-size:.72rem; color:rgba(255,255,255,.8); font-weight:600; display:flex; align-items:center; gap:.35rem; margin-top:.1rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .live-dot { width:7px; height:7px; border-radius:50%; background:#ef4444; display:inline-block; animation:pulseLive 1.5s infinite; flex-shrink:0; }
   @keyframes pulseLive { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.8)} }
-
   .header-right { display:flex; align-items:center; gap:.5rem; flex-shrink:0; }
-  .theme-bar { display:flex; gap:.35rem; align-items:center; }
-  .theme-btn { width:20px; height:20px; border-radius:50%; border:2.5px solid rgba(255,255,255,.5); cursor:pointer; transition:transform .2s,border-color .2s; flex-shrink:0; }
+  .theme-bar { display:flex; gap:.35rem; }
+  .theme-btn { width:20px; height:20px; border-radius:50%; border:2.5px solid rgba(255,255,255,.5); cursor:pointer; transition:transform .2s,border-color .2s; }
   .theme-btn:hover,.theme-btn.ativo { border-color:#fff; transform:scale(1.3); }
   .theme-btn[data-t="light"]    { background:linear-gradient(135deg,#4f46e5,#7c3aed); }
   .theme-btn[data-t="dark"]     { background:linear-gradient(135deg,#1e1e2f,#818cf8); }
@@ -57,132 +43,70 @@
   .theme-btn[data-t="forest"]   { background:linear-gradient(135deg,#059669,#047857); }
   .theme-btn[data-t="midnight"] { background:linear-gradient(135deg,#020617,#6366f1); }
 
-  /* ===== LAYOUT ===== */
   main { max-width:800px; margin:0 auto; padding:1.5rem 1rem; }
   @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
 
-  /* ===== HERO ===== */
-  .hero {
-    background:var(--grad); border-radius:var(--radius);
-    padding:1.8rem 1.5rem; margin-bottom:1.2rem;
-    box-shadow:var(--shadow-lg); color:#fff;
-    position:relative; overflow:hidden; animation:fadeUp .5s ease;
-  }
+  .hero { background:var(--grad); border-radius:var(--radius); padding:1.8rem 1.5rem; margin-bottom:1.2rem; box-shadow:var(--shadow-lg); color:#fff; position:relative; overflow:hidden; animation:fadeUp .5s ease; }
   .hero::before { content:''; position:absolute; top:-40px; right:-40px; width:180px; height:180px; border-radius:50%; background:rgba(255,255,255,.07); }
   .hero::after  { content:''; position:absolute; bottom:-50px; right:50px; width:130px; height:130px; border-radius:50%; background:rgba(255,255,255,.05); }
   .hero-label { font-size:.72rem; font-weight:700; letter-spacing:.1em; opacity:.75; text-transform:uppercase; margin-bottom:.35rem; }
-  .hero h2 { font-size:clamp(1.4rem, 4vw, 1.9rem); font-weight:800; margin-bottom:.35rem; position:relative; }
-  .hero-data-box {
-    display:inline-flex; align-items:center; gap:.5rem;
-    background:rgba(255,255,255,.18); border:1.5px solid rgba(255,255,255,.3);
-    border-radius:20px; padding:.35rem .9rem; font-size:.85rem; font-weight:600;
-    margin-top:.2rem; position:relative;
-  }
-  .hero-data-box i { font-size:.8rem; }
+  .hero h2 { font-size:clamp(1.4rem,4vw,1.9rem); font-weight:800; margin-bottom:.35rem; position:relative; }
+  .hero-data-box { display:inline-flex; align-items:center; gap:.5rem; background:rgba(255,255,255,.18); border:1.5px solid rgba(255,255,255,.3); border-radius:20px; padding:.35rem .9rem; font-size:.85rem; font-weight:600; margin-top:.2rem; position:relative; }
 
-  /* ===== CARD ===== */
-  .card {
-    background:var(--surface); border:1px solid var(--border);
-    border-radius:var(--radius); padding:1.2rem; margin-bottom:1.2rem;
-    box-shadow:var(--shadow); animation:fadeUp .4s ease;
-    transition:background .3s,border-color .3s;
-  }
-  .card-header {
-    display:flex; align-items:center; gap:.5rem;
-    font-size:.95rem; font-weight:700; color:var(--accent);
-    margin-bottom:1rem; padding-bottom:.7rem;
-    border-bottom:1.5px solid var(--border);
-  }
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:1.2rem; margin-bottom:1.2rem; box-shadow:var(--shadow); animation:fadeUp .4s ease; transition:background .3s,border-color .3s; }
+  .card-header { display:flex; align-items:center; gap:.5rem; font-size:.95rem; font-weight:700; color:var(--accent); margin-bottom:1rem; padding-bottom:.7rem; border-bottom:1.5px solid var(--border); }
 
-  /* ===== REPERTÓRIO — CARDS MOBILE ===== */
   .rep-list { display:flex; flex-direction:column; gap:.7rem; }
-  .rep-item {
-    background:var(--bg); border:1.5px solid var(--border);
-    border-radius:var(--radius-sm); padding:.9rem 1rem;
-    display:grid;
-    grid-template-columns:36px 1fr auto;
-    grid-template-rows:auto auto;
-    column-gap:.75rem; row-gap:.35rem;
-    transition:border-color .2s;
-  }
+  .rep-item { background:var(--bg); border:1.5px solid var(--border); border-radius:var(--radius-sm); padding:.9rem 1rem; display:grid; grid-template-columns:36px 1fr auto; grid-template-rows:auto auto; column-gap:.75rem; row-gap:.35rem; transition:border-color .2s; }
   .rep-item:hover { border-color:var(--accent); }
-  .num-musica {
-    width:34px; height:34px; border-radius:50%; background:var(--grad);
-    color:#fff; font-size:.82rem; font-weight:700;
-    display:flex; align-items:center; justify-content:center;
-    grid-row:span 2; align-self:center;
-  }
+  .num-musica { width:34px; height:34px; border-radius:50%; background:var(--grad); color:#fff; font-size:.82rem; font-weight:700; display:flex; align-items:center; justify-content:center; grid-row:span 2; align-self:center; }
   .rep-nome { font-size:.95rem; font-weight:700; color:var(--fg); align-self:end; }
   .rep-badges { display:flex; gap:.4rem; align-items:center; align-self:start; }
   .badge-tom { padding:.15rem .55rem; background:var(--grad); border-radius:20px; font-size:.72rem; font-weight:700; color:#fff; }
   .badge-seq { padding:.15rem .55rem; background:var(--bg); border:1.5px solid var(--border); border-radius:20px; font-size:.72rem; font-weight:700; color:var(--fg2); }
   .rep-links { grid-column:2 / span 2; display:flex; gap:.4rem; flex-wrap:wrap; }
-  .link-btn {
-    display:inline-flex; align-items:center; gap:.3rem;
-    padding:.22rem .6rem; border-radius:6px; font-size:.75rem;
-    font-weight:600; text-decoration:none; transition:opacity .2s;
-  }
-  .link-yt    { background:#ff000012; color:rgb(154, 20, 20); border:1.5px solid #ff000025; }
+  .link-btn { display:inline-flex; align-items:center; gap:.3rem; padding:.22rem .6rem; border-radius:6px; font-size:.75rem; font-weight:600; text-decoration:none; transition:opacity .2s; }
+  .link-yt    { background:#ff000012; color:#e00; border:1.5px solid #ff000025; }
   .link-cifra { background:var(--accent)12; color:var(--accent); border:1.5px solid var(--accent)25; }
   .link-btn:hover { opacity:.7; }
 
-  /* ===== ESCALA ===== */
   .escala-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:.8rem; }
-  .escala-card {
-    background:var(--bg); border:1.5px solid var(--border);
-    border-radius:var(--radius-sm); padding:.9rem 1rem; transition:border-color .2s;
-  }
+  .escala-card { background:var(--bg); border:1.5px solid var(--border); border-radius:var(--radius-sm); padding:.9rem 1rem; transition:border-color .2s; }
   .escala-card:hover { border-color:var(--accent); }
-  .escala-role {
-    font-size:.7rem; font-weight:700; color:var(--fg2);
-    text-transform:uppercase; letter-spacing:.06em;
-    display:flex; align-items:center; gap:.35rem; margin-bottom:.6rem;
-  }
+  .escala-role { font-size:.7rem; font-weight:700; color:var(--fg2); text-transform:uppercase; letter-spacing:.06em; display:flex; align-items:center; gap:.35rem; margin-bottom:.6rem; }
   .escala-role i { color:var(--accent); }
   .escala-membro { display:flex; align-items:center; gap:.45rem; margin-bottom:.3rem; }
-  .escala-num {
-    width:20px; height:20px; border-radius:50%; background:var(--grad);
-    color:#fff; font-size:.65rem; font-weight:700;
-    display:inline-flex; align-items:center; justify-content:center; flex-shrink:0;
-  }
-  .escala-nome { font-size:.88rem; font-weight:600; color:var(--fg); line-height:1.3; }
+  .escala-num { width:20px; height:20px; border-radius:50%; background:var(--grad); color:#fff; font-size:.65rem; font-weight:700; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .escala-nome { font-size:.88rem; font-weight:600; color:var(--fg); }
   .escala-vazio { color:var(--fg2); font-style:italic; font-size:.82rem; }
 
-  /* ===== LINKS RÁPIDOS ===== */
   .links-rapidos-lista { display:flex; flex-direction:column; gap:.6rem; }
-  .links-rapidos-item {
-    display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
-    padding:.6rem .8rem; background:var(--bg); border:1.5px solid var(--border);
-    border-radius:var(--radius-sm);
-  }
+  .links-rapidos-item { display:flex; align-items:center; gap:.6rem; flex-wrap:wrap; padding:.6rem .8rem; background:var(--bg); border:1.5px solid var(--border); border-radius:var(--radius-sm); }
   .links-rapidos-nome { font-size:.88rem; font-weight:600; flex:1; min-width:100px; }
 
-  /* ===== EMPTY STATE ===== */
   .empty-state { text-align:center; padding:3.5rem 1.5rem; display:flex; flex-direction:column; align-items:center; gap:1rem; }
   .empty-icon { width:72px; height:72px; border-radius:50%; background:var(--bg); border:2px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:1.8rem; color:var(--fg2); }
   .empty-state h3 { font-size:1rem; font-weight:700; color:var(--fg2); }
   .empty-state p  { font-size:.85rem; color:var(--fg2); max-width:280px; }
 
+  .loading-state { text-align:center; padding:4rem 2rem; color:var(--fg2); }
+  .loading-state i { font-size:2rem; animation:spin 1s linear infinite; margin-bottom:1rem; color:var(--accent); display:block; }
+  @keyframes spin { to{transform:rotate(360deg)} }
+
   footer { text-align:center; padding:1.5rem 1rem; font-size:.75rem; color:var(--fg2); border-top:1px solid var(--border); margin-top:.5rem; }
   footer i { color:var(--accent); }
 
-  /* ===== MOBILE ===== */
   @media(max-width:480px) {
     header { padding:0 1rem; }
     .header-titulo { font-size:.9rem; }
-    .theme-btn { width:18px; height:18px; }
+    .theme-btn { width:17px; height:17px; }
     main { padding:1rem .75rem; }
     .hero { padding:1.4rem 1rem; }
     .escala-grid { grid-template-columns:1fr; }
-    .rep-item { grid-template-columns:30px 1fr auto; }
-    .num-musica { width:30px; height:30px; font-size:.75rem; }
-    .rep-nome { font-size:.9rem; }
   }
-
   @media(max-width:360px) {
-    .theme-bar { gap:.25rem; }
-    .theme-btn { width:16px; height:16px; }
     .header-data-culto { display:none; }
+    .theme-bar { gap:.2rem; }
   }
 </style>
 </head>
@@ -202,113 +126,114 @@
   </div>
   <div class="header-right">
     <div class="theme-bar">
-      <div class="theme-btn" data-t="light"    title="Índigo"></div>
-      <div class="theme-btn" data-t="dark"     title="Escuro"></div>
-      <div class="theme-btn" data-t="rose"     title="Rosa"></div>
-      <div class="theme-btn" data-t="ocean"    title="Oceano"></div>
-      <div class="theme-btn" data-t="forest"   title="Floresta"></div>
-      <div class="theme-btn" data-t="midnight" title="Meia-noite"></div>
+      <div class="theme-btn" data-t="light"></div>
+      <div class="theme-btn" data-t="dark"></div>
+      <div class="theme-btn" data-t="rose"></div>
+      <div class="theme-btn" data-t="ocean"></div>
+      <div class="theme-btn" data-t="forest"></div>
+      <div class="theme-btn" data-t="midnight"></div>
     </div>
   </div>
 </header>
 
-<main id="conteudo"></main>
+<main id="conteudo">
+  <div class="loading-state">
+    <i class="fa-solid fa-spinner"></i>
+    Carregando programação...
+  </div>
+</main>
 
 <footer>
-  Atualiza a cada 30s via <i class="fa-solid fa-database"></i> localStorage
+  Atualização em tempo real via <i class="fa-solid fa-fire"></i> Firebase
   &nbsp;·&nbsp; <i class="fa-solid fa-heart"></i> Ministério de Louvor
 </footer>
 
+<!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 <script>
-  var CHAVE_TEMA = 'ministerioTemaFront';
-  var MESES_LONGO  = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-  var MESES_CURTO  = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
-  var DIAS_SEMANA  = ['domingo','segunda-feira','terça-feira','quarta-feira','quinta-feira','sexta-feira','sábado'];
+  /* ============================================================
+     🔥 COLE AQUI O SEU firebaseConfig
+  ============================================================ */
+  var firebaseConfig = {
+  apiKey:            "AIzaSyASRX7kZJUmp7jfx_C7buYnLfpz0reby4E",
+  authDomain:        "ministerio-de-louvor-e2eb3.firebaseapp.com",
+  projectId:         "ministerio-de-louvor-e2eb3",
+  storageBucket:     "ministerio-de-louvor-e2eb3.firebasestorage.app",
+  messagingSenderId: "319307727923",
+  appId:             "1:319307727923:web:845608da8aa866ac7ecf46"
+};
+
+  firebase.initializeApp(firebaseConfig);
+  var db  = firebase.firestore();
+  var col = db.collection('ministerios');
+
+  var CHAVE_TEMA  = 'ministerioTemaFront';
+  var MESES_LONGO = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  var DIAS_SEMANA = ['domingo','segunda-feira','terça-feira','quarta-feira','quinta-feira','sexta-feira','sábado'];
 
   /* ===== Tema ===== */
   function aplicarTema(t) {
     document.documentElement.setAttribute('data-theme', t);
     localStorage.setItem(CHAVE_TEMA, t);
-    document.querySelectorAll('.theme-btn').forEach(function(b) {
+    document.querySelectorAll('.theme-btn').forEach(function(b){
       b.classList.toggle('ativo', b.getAttribute('data-t') === t);
     });
   }
-  document.querySelectorAll('.theme-btn').forEach(function(b) {
-    b.addEventListener('click', function() { aplicarTema(b.getAttribute('data-t')); });
+  document.querySelectorAll('.theme-btn').forEach(function(b){
+    b.addEventListener('click', function(){ aplicarTema(b.getAttribute('data-t')); });
   });
   aplicarTema(localStorage.getItem(CHAVE_TEMA) || 'light');
 
-  /* ===== Calcula o DOMINGO da semana ISO ===== */
+  /* ===== Pega o ID do ministério pela URL ===== */
+  function getMinisterioId() {
+    var params = new URLSearchParams(window.location.search);
+    return params.get('id');
+  }
+
+  /* ===== Data do culto (domingo da semana ISO) ===== */
   function domingoSemanaISO(ano, sem) {
     var j4  = new Date(ano, 0, 4);
-    var d4  = (j4.getDay() + 6) % 7;    // Monday offset
+    var d4  = (j4.getDay() + 6) % 7;
     var seg = new Date(j4);
     seg.setDate(j4.getDate() - d4 + (sem - 1) * 7);
     var dom = new Date(seg);
-    dom.setDate(seg.getDate() + 6);      // domingo = segunda + 6
+    dom.setDate(seg.getDate() + 6);
     return dom;
   }
 
   function formatarDataCulto(semana) {
-    var ano  = new Date().getFullYear();
-    var dom  = domingoSemanaISO(ano, semana);
-    var dia  = dom.getDate();
-    var mes  = dom.getMonth();
-    var dSem = DIAS_SEMANA[dom.getDay()];
-    return capitalize(dSem) + ', ' + dia + ' de ' + MESES_LONGO[mes] + ' de ' + dom.getFullYear();
-  }
-
-  function formatarDataCurta(semana) {
     var ano = new Date().getFullYear();
     var dom = domingoSemanaISO(ano, semana);
-    return dom.toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit', year:'numeric' });
+    return capitalize(DIAS_SEMANA[dom.getDay()]) + ', ' +
+      dom.getDate() + ' de ' + MESES_LONGO[dom.getMonth()] + ' de ' + dom.getFullYear();
   }
 
-  /* ===== Atualiza cabeçalho ===== */
+  function capitalize(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
+
   function atualizarHeader(semana) {
-    var el = document.getElementById('headerDataCulto');
-    if (!semana) { el.querySelector('span').textContent = 'Sem programação'; return; }
-    var texto = 'Culto · ' + formatarDataCulto(semana);
-    el.querySelector('span').textContent = texto;
+    var el = document.getElementById('headerDataCulto').querySelector('span');
+    el.textContent = semana ? 'Culto · ' + formatarDataCulto(semana) : 'Sem programação';
   }
 
   /* ===== Renderizar ===== */
-  function renderizar() {
-    var main = document.getElementById('conteudo');
-    var raw  = localStorage.getItem('ministerioData');
-
-    if (!raw) {
-      atualizarHeader(null);
-      main.innerHTML =
-        '<div class="empty-state">' +
-          '<div class="empty-icon"><i class="fa-solid fa-music"></i></div>' +
-          '<h3>Nenhuma programação encontrada</h3>' +
-          '<p>Peça ao líder para gerar os dados no Gerenciador.</p>' +
-        '</div>';
-      return;
-    }
-
-    var d       = JSON.parse(raw);
+  function renderizar(d) {
+    var main    = document.getElementById('conteudo');
     var mesNome = MESES_LONGO[d.mes] || ('Mês ' + (d.mes + 1));
     var ano     = new Date().getFullYear();
     var html    = '';
 
     atualizarHeader(d.semana);
 
-    var dataCultoFormatada = formatarDataCulto(d.semana);
-    var dataCultoDisplay   = formatarDataCurta(d.semana);
-
-    /* ── HERO ── */
+    /* HERO */
     html +=
       '<div class="hero">' +
         '<div class="hero-label"><i class="fa-solid fa-calendar-week"></i> &nbsp;Semana ' + d.semana + ' · ' + mesNome + ' ' + ano + '</div>' +
         '<h2>Programação do Culto</h2>' +
-        '<div class="hero-data-box">' +
-          '<i class="fa-regular fa-calendar-check"></i> ' + dataCultoFormatada +
-        '</div>' +
+        '<div class="hero-data-box"><i class="fa-regular fa-calendar-check"></i> ' + formatarDataCulto(d.semana) + '</div>' +
       '</div>';
 
-    /* ── REPERTÓRIO ── */
+    /* REPERTÓRIO */
     html += '<div class="card"><div class="card-header"><i class="fa-solid fa-list-music"></i> Repertório da Semana</div>';
     if (!d.repertorio || d.repertorio.length === 0) {
       html += '<p style="color:var(--fg2);font-size:.88rem;font-style:italic;">Nenhuma música cadastrada.</p>';
@@ -323,9 +248,9 @@
         if (m.cifra) links += '<a class="link-btn link-cifra" href="' + m.cifra + '" target="_blank"><i class="fa-solid fa-music"></i> Cifra</a>';
         html +=
           '<div class="rep-item">' +
-            '<span class="num-musica">' + (i + 1) + '</span>' +
-            '<span class="rep-nome">' + (m.nome || '—') + '</span>' +
-            '<div class="rep-badges">' + (badges || '') + '</div>' +
+            '<span class="num-musica">' + (i+1) + '</span>' +
+            '<span class="rep-nome">' + (m.nome||'—') + '</span>' +
+            '<div class="rep-badges">' + badges + '</div>' +
             (links ? '<div class="rep-links">' + links + '</div>' : '') +
           '</div>';
       });
@@ -333,37 +258,33 @@
     }
     html += '</div>';
 
-    /* ── ESCALA ── */
+    /* ESCALA */
     html += '<div class="card"><div class="card-header"><i class="fa-solid fa-users"></i> Escala de Serviço</div><div class="escala-grid">';
-    var papeis = [
+    [
       { key:'vocal',        icon:'fa-microphone', label:'Vocal' },
       { key:'instrumental', icon:'fa-guitar',     label:'Instrumental' },
       { key:'multimidia',   icon:'fa-display',    label:'Multimídia' },
       { key:'midia',        icon:'fa-video',      label:'Mídia · Live / Som' }
-    ];
-    papeis.forEach(function(p) {
+    ].forEach(function(p) {
       var membros  = d[p.key];
       var conteudo = '';
       if (!membros || membros.length === 0) {
         conteudo = '<div class="escala-vazio">Não definido</div>';
-      } else if (Array.isArray(membros)) {
-        membros.forEach(function(nome, i) {
-          conteudo += '<div class="escala-membro"><span class="escala-num">' + (i + 1) + '</span><span class="escala-nome">' + nome + '</span></div>';
-        });
       } else {
-        conteudo = '<div class="escala-nome">' + membros + '</div>';
+        membros.forEach(function(nome, i) {
+          conteudo += '<div class="escala-membro"><span class="escala-num">' + (i+1) + '</span><span class="escala-nome">' + nome + '</span></div>';
+        });
       }
       html += '<div class="escala-card"><div class="escala-role"><i class="fa-solid ' + p.icon + '"></i> ' + p.label + '</div>' + conteudo + '</div>';
     });
     html += '</div></div>';
 
-    /* ── LINKS RÁPIDOS ── */
-    if (d.repertorio && d.repertorio.some(function(m) { return m.yt || m.cifra; })) {
+    /* LINKS RÁPIDOS */
+    if (d.repertorio && d.repertorio.some(function(m){ return m.yt || m.cifra; })) {
       html += '<div class="card"><div class="card-header"><i class="fa-solid fa-link"></i> Links Rápidos</div><div class="links-rapidos-lista">';
       d.repertorio.forEach(function(m) {
         if (!m.yt && !m.cifra) return;
-        html += '<div class="links-rapidos-item">';
-        html += '<span class="links-rapidos-nome">' + (m.nome || '—') + '</span>';
+        html += '<div class="links-rapidos-item"><span class="links-rapidos-nome">' + (m.nome||'—') + '</span>';
         if (m.yt)    html += '<a class="link-btn link-yt"    href="' + m.yt    + '" target="_blank"><i class="fa-brands fa-youtube"></i> YouTube</a>';
         if (m.cifra) html += '<a class="link-btn link-cifra" href="' + m.cifra + '" target="_blank"><i class="fa-solid fa-music"></i> Cifra</a>';
         html += '</div>';
@@ -374,16 +295,44 @@
     main.innerHTML = html;
   }
 
-  function capitalize(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
+  /* ===== Listener em tempo real ===== */
+  function iniciar() {
+    var id = getMinisterioId();
+    if (!id) {
+      document.getElementById('conteudo').innerHTML =
+        '<div class="empty-state">' +
+          '<div class="empty-icon"><i class="fa-solid fa-link-slash"></i></div>' +
+          '<h3>Link inválido</h3>' +
+          '<p>Este link não contém um ID de ministério. Solicite o link correto ao seu líder.</p>' +
+        '</div>';
+      document.getElementById('headerDataCulto').querySelector('span').textContent = 'Link inválido';
+      return;
+    }
 
-  /* ===== Atualização automática ===== */
-  setInterval(renderizar, 30000);
-  window.addEventListener('storage', function(e) {
-    if (e.key === 'ministerioData') renderizar();
-  });
+    // Escuta em tempo real — atualiza automaticamente quando o líder salvar
+    col.doc(id).onSnapshot(function(doc) {
+      if (!doc.exists || !doc.data().programacao) {
+        document.getElementById('conteudo').innerHTML =
+          '<div class="empty-state">' +
+            '<div class="empty-icon"><i class="fa-solid fa-music"></i></div>' +
+            '<h3>Nenhuma programação ainda</h3>' +
+            '<p>Aguarde o líder publicar a programação da semana.</p>' +
+          '</div>';
+        atualizarHeader(null);
+        return;
+      }
+      renderizar(doc.data().programacao);
+    }, function(err) {
+      document.getElementById('conteudo').innerHTML =
+        '<div class="empty-state">' +
+          '<div class="empty-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>' +
+          '<h3>Erro de conexão</h3>' +
+          '<p>' + err.message + '</p>' +
+        '</div>';
+    });
+  }
 
-  /* ===== Init ===== */
-  renderizar();
+  iniciar();
 </script>
 </body>
 </html>
