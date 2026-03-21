@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ministério de Louvor – Gerenciador</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+  :root {
+    --bg:#f0f2f8; --surface:#ffffff; --fg:#1a1a2e; --fg2:#555577;
+    --accent:#4f46e5; --accent2:#7c3aed; --success:#10b981;
+    --danger:#ef4444; --border:#e2e8f0; --radius:14px; --radius-sm:8px;
+    --shadow:0 4px 24px rgba(79,70,229,.10);
+    --shadow-lg:0 8px 40px rgba(79,70,229,.18);
+    --font:'Inter',sans-serif;
+    --grad:linear-gradient(135deg,var(--accent),var(--accent2));
+    --header-h:64px;
+  }
+  [data-theme="dark"]     { --bg:#0f0f1a; --surface:#1e1e2f; --fg:#e8e8f8; --fg2:#9999bb; --accent:#818cf8; --accent2:#a78bfa; --border:#2e2e4a; --shadow:0 4px 24px rgba(0,0,0,.4); }
+  [data-theme="rose"]     { --bg:#fff1f3; --surface:#fff; --fg:#4a0010; --fg2:#9f4459; --accent:#f43f5e; --accent2:#e11d48; --border:#fecdd3; }
+  [data-theme="ocean"]    { --bg:#e0f4ff; --surface:#fff; --fg:#0c2d48; --fg2:#2d7da0; --accent:#0ea5e9; --accent2:#0284c7; --border:#bae6fd; }
+  [data-theme="forest"]   { --bg:#ecfdf5; --surface:#fff; --fg:#052e16; --fg2:#2d6a4f; --accent:#059669; --accent2:#047857; --border:#a7f3d0; }
+  [data-theme="midnight"] { --bg:#020617; --surface:#0f172a; --fg:#f1f5f9; --fg2:#94a3b8; --accent:#6366f1; --accent2:#8b5cf6; --border:#1e293b; }
+
+  body { font-family:var(--font); background:var(--bg); color:var(--fg); min-height:100vh; transition:background .3s,color .3s; }
+
+  header { height:var(--header-h); background:var(--grad); display:flex; align-items:center; justify-content:space-between; padding:0 2rem; box-shadow:var(--shadow); position:sticky; top:0; z-index:100; }
+  header h1 { font-size:1.1rem; font-weight:700; color:#fff; display:flex; align-items:center; gap:.6rem; }
+  .header-right { display:flex; align-items:center; gap:.8rem; }
+  .user-info { color:rgba(255,255,255,.85); font-size:.8rem; font-weight:600; display:flex; align-items:center; gap:.4rem; }
+  .theme-bar { display:flex; gap:.5rem; align-items:center; }
+  .theme-btn { width:22px; height:22px; border-radius:50%; border:2.5px solid rgba(255,255,255,.5); cursor:pointer; transition:transform .2s,border-color .2s; }
+  .theme-btn:hover,.theme-btn.ativo { border-color:#fff; transform:scale(1.25); }
+  .theme-btn[data-t="light"]    { background:linear-gradient(135deg,#4f46e5,#7c3aed); }
+  .theme-btn[data-t="dark"]     { background:linear-gradient(135deg,#1e1e2f,#818cf8); }
+  .theme-btn[data-t="rose"]     { background:linear-gradient(135deg,#f43f5e,#e11d48); }
+  .theme-btn[data-t="ocean"]    { background:linear-gradient(135deg,#0ea5e9,#0284c7); }
+  .theme-btn[data-t="forest"]   { background:linear-gradient(135deg,#059669,#047857); }
+  .theme-btn[data-t="midnight"] { background:linear-gradient(135deg,#020617,#6366f1); }
+  .btn-logout { display:inline-flex; align-items:center; gap:.4rem; background:rgba(255,255,255,.15); border:1.5px solid rgba(255,255,255,.4); color:#fff; border-radius:20px; padding:.3rem .9rem; font-size:.8rem; font-weight:600; cursor:pointer; font-family:var(--font); }
+  .btn-logout:hover { background:rgba(255,255,255,.28); }
+  .validade-chip { display:inline-flex; align-items:center; gap:.35rem; background:rgba(255,255,255,.12); border:1.5px solid rgba(255,255,255,.25); color:rgba(255,255,255,.85); border-radius:20px; padding:.3rem .8rem; font-size:.75rem; font-weight:600; }
+  .validade-chip.exp { background:rgba(239,68,68,.25); border-color:rgba(239,68,68,.6); color:#fca5a5; }
+
+  /* LOGIN */
+  .login-wrap { min-height:calc(100vh - var(--header-h)); display:flex; align-items:center; justify-content:center; padding:2rem; }
+  .login-card { background:var(--surface); border-radius:var(--radius); box-shadow:var(--shadow-lg); padding:2.8rem 2.5rem; width:100%; max-width:420px; border:1px solid var(--border); animation:fadeUp .4s ease; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+  .login-icon { width:64px; height:64px; background:var(--grad); border-radius:16px; display:flex; align-items:center; justify-content:center; margin:0 auto 1.5rem; }
+  .login-icon i { font-size:1.8rem; color:#fff; }
+  .login-card h2 { text-align:center; font-size:1.4rem; font-weight:700; margin-bottom:.3rem; }
+  .login-card .sub { text-align:center; color:var(--fg2); font-size:.88rem; margin-bottom:2rem; }
+  .field { position:relative; margin-bottom:1.2rem; }
+  .field label { display:block; font-size:.78rem; font-weight:700; color:var(--fg2); text-transform:uppercase; letter-spacing:.05em; margin-bottom:.4rem; }
+  .field input { width:100%; padding:.75rem 1rem .75rem 2.8rem; background:var(--bg); border:1.5px solid var(--border); border-radius:var(--radius-sm); color:var(--fg); font-family:var(--font); font-size:.95rem; outline:none; transition:border-color .2s,box-shadow .2s; }
+  .field input:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(79,70,229,.15); }
+  .field .ico { position:absolute; left:.9rem; bottom:.8rem; color:var(--fg2); font-size:.9rem; }
+  .btn-primary { width:100%; padding:.8rem; background:var(--grad); color:#fff; font-family:var(--font); font-size:1rem; font-weight:600; border:none; border-radius:var(--radius-sm); cursor:pointer; transition:opacity .2s; }
+  .btn-primary:hover { opacity:.9; }
+  .msg-erro { color:var(--danger); font-size:.85rem; margin-top:.8rem; text-align:center; min-height:1.2rem; font-weight:600; }
+
+  /* GERENCIADOR */
+  .manager-wrap { max-width:860px; margin:0 auto; padding:2rem 1.5rem; }
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:1.5rem; margin-bottom:1.5rem; box-shadow:var(--shadow); transition:background .3s; }
+  .card h2 { font-size:1.05rem; font-weight:700; margin-bottom:1.2rem; display:flex; align-items:center; gap:.5rem; color:var(--accent); }
+  .mes-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:.5rem; margin-bottom:1rem; }
+  @media(max-width:500px){ .mes-grid{grid-template-columns:repeat(3,1fr);} }
+  .tag-mes { padding:.5rem; border-radius:var(--radius-sm); border:1.5px solid var(--border); text-align:center; font-size:.82rem; font-weight:600; cursor:pointer; background:var(--bg); color:var(--fg2); transition:all .2s; text-transform:capitalize; }
+  .tag-mes:hover { border-color:var(--accent); color:var(--accent); }
+  .tag-mes.ativa { background:var(--grad); color:#fff; border-color:transparent; }
+  .semana-tags { display:flex; flex-wrap:wrap; gap:.5rem; }
+  .tag-semana { padding:.4rem .9rem; border-radius:20px; border:1.5px solid var(--border); font-size:.82rem; font-weight:600; cursor:pointer; background:var(--bg); color:var(--fg2); transition:all .2s; }
+  .tag-semana:hover { border-color:var(--accent); color:var(--accent); }
+  .tag-semana.ativa { background:var(--grad); color:#fff; border-color:transparent; box-shadow:var(--shadow); }
+  .badge-hoje { display:inline-flex; align-items:center; gap:.4rem; background:var(--bg); border:1.5px solid var(--border); border-radius:20px; padding:.3rem .9rem; font-size:.82rem; color:var(--fg2); margin-top:.8rem; }
+  .badge-hoje i { color:var(--accent); }
+  .divisor { border:none; border-top:1.5px solid var(--border); margin:1.2rem 0; }
+  .col-header { font-size:.72rem; font-weight:700; color:var(--fg2); text-transform:uppercase; letter-spacing:.05em; }
+  .linha-musica { display:grid; grid-template-columns:2fr 80px 80px 40px; gap:.5rem; align-items:center; margin-bottom:.6rem; animation:fadeUp .25s ease; }
+  .linha-musica input { padding:.6rem .8rem; background:var(--bg); border:1.5px solid var(--border); border-radius:var(--radius-sm); color:var(--fg); font-family:var(--font); font-size:.88rem; outline:none; transition:border-color .2s; width:100%; }
+  .linha-musica input:focus { border-color:var(--accent); }
+  .btn-remover { background:transparent; border:1.5px solid var(--danger); color:var(--danger); border-radius:var(--radius-sm); padding:.55rem; cursor:pointer; font-size:.85rem; transition:background .2s; width:100%; }
+  .btn-remover:hover { background:var(--danger); color:#fff; }
+  .btn-outline { background:transparent; border:1.5px solid var(--accent); color:var(--accent); border-radius:var(--radius-sm); padding:.6rem 1.2rem; font-family:var(--font); font-size:.9rem; font-weight:600; cursor:pointer; transition:background .2s; display:inline-flex; align-items:center; gap:.4rem; margin-top:.3rem; }
+  .btn-outline:hover { background:var(--accent); color:#fff; }
+  .btn-success { background:linear-gradient(135deg,var(--success),#059669); color:#fff; border:none; border-radius:var(--radius-sm); padding:.8rem 1.5rem; font-family:var(--font); font-size:1rem; font-weight:600; cursor:pointer; transition:opacity .2s; display:inline-flex; align-items:center; gap:.5rem; width:100%; justify-content:center; }
+  .btn-success:hover { opacity:.9; }
+  .escala-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:1rem; }
+  @media(max-width:500px){ .escala-grid{grid-template-columns:1fr;} }
+  .escala-grupo { background:var(--bg); border:1.5px solid var(--border); border-radius:var(--radius-sm); padding:.8rem 1rem; }
+  .escala-grupo-header { font-size:.78rem; font-weight:700; color:var(--fg2); text-transform:uppercase; letter-spacing:.05em; display:flex; align-items:center; justify-content:space-between; margin-bottom:.6rem; }
+  .escala-grupo-header span { display:flex; align-items:center; gap:.35rem; }
+  .escala-grupo-header i { color:var(--accent); }
+  .escala-membros { display:flex; flex-direction:column; gap:.4rem; }
+  .escala-linha { display:flex; gap:.4rem; align-items:center; }
+  .escala-linha input { flex:1; padding:.55rem .8rem; background:var(--surface); border:1.5px solid var(--border); border-radius:var(--radius-sm); color:var(--fg); font-family:var(--font); font-size:.88rem; outline:none; transition:border-color .2s; }
+  .escala-linha input:focus { border-color:var(--accent); }
+  .btn-add-membro { padding:.4rem .7rem; background:transparent; border:1.5px solid var(--accent); color:var(--accent); border-radius:var(--radius-sm); cursor:pointer; font-size:.78rem; font-weight:600; transition:background .2s; font-family:var(--font); display:inline-flex; align-items:center; gap:.25rem; }
+  .btn-add-membro:hover { background:var(--accent); color:#fff; }
+  .btn-del-membro { padding:.45rem .6rem; background:transparent; border:1.5px solid var(--danger); color:var(--danger); border-radius:var(--radius-sm); cursor:pointer; font-size:.8rem; transition:background .2s; flex-shrink:0; }
+  .btn-del-membro:hover { background:var(--danger); color:#fff; }
+  textarea.codigo { font-family:'Courier New',monospace; font-size:.82rem; resize:vertical; min-height:100px; }
+  .oculto { display:none !important; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1><i class="fa-solid fa-music"></i> Ministério de Louvor</h1>
+  <div class="header-right">
+    <span class="user-info oculto" id="userInfo"><i class="fa-solid fa-circle-user"></i> <span id="userNome"></span></span>
+    <span class="validade-chip oculto" id="validadeChip"><i class="fa-solid fa-calendar-check"></i> <span id="validadeTexto"></span></span>
+    <div class="theme-bar">
+      <div class="theme-btn" data-t="light"></div>
+      <div class="theme-btn" data-t="dark"></div>
+      <div class="theme-btn" data-t="rose"></div>
+      <div class="theme-btn" data-t="ocean"></div>
+      <div class="theme-btn" data-t="forest"></div>
+      <div class="theme-btn" data-t="midnight"></div>
+    </div>
+    <button class="btn-logout oculto" id="btnLogout" onclick="logout()"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sair</button>
+  </div>
+</header>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="telaLogin">
+  <div class="login-card">
+    <div class="login-icon"><i class="fa-solid fa-lock"></i></div>
+    <h2>Gerenciador</h2>
+    <p class="sub">Ministério de Louvor — Acesso do Líder</p>
+    <div class="field">
+      <label>E-mail</label>
+      <i class="fa-solid fa-envelope ico"></i>
+      <input type="email" id="campoEmail" placeholder="seu@email.com">
+    </div>
+    <div class="field">
+      <label>Senha</label>
+      <i class="fa-solid fa-key ico"></i>
+      <input type="password" id="campoSenha" placeholder="Sua senha...">
+    </div>
+    <button class="btn-primary" id="btnEntrar"><i class="fa-solid fa-arrow-right-to-bracket"></i> Entrar</button>
+    <p class="msg-erro" id="msgErro"></p>
+  </div>
+</div>
+
+<!-- GERENCIADOR -->
+<div class="manager-wrap oculto" id="gerenciador">
+
+  <div class="card">
+    <h2><i class="fa-solid fa-calendar-days"></i> Mês e Semana</h2>
+    <div class="mes-grid" id="tagsMes"></div>
+    <hr class="divisor">
+    <p style="font-size:.85rem;font-weight:600;color:var(--fg2);margin-bottom:.6rem;">SEMANAS DO MÊS</p>
+    <div class="semana-tags" id="tagsSemana"></div>
+    <div class="badge-hoje" id="badgeHoje"><i class="fa-solid fa-circle-dot"></i> carregando...</div>
+  </div>
+
+  <div class="card">
+    <h2><i class="fa-solid fa-list-music"></i> Repertório da Semana</h2>
+    <div style="display:grid;grid-template-columns:2fr 80px 80px 40px;gap:.5rem;margin-bottom:.4rem;">
+      <span class="col-header">Música</span><span class="col-header">Tom</span><span class="col-header">Seq.</span><span></span>
+    </div>
+    <div id="linhasRepertorio"></div>
+    <button class="btn-outline" id="btnAdicionarMusica"><i class="fa-solid fa-plus"></i> Adicionar música</button>
+    <hr class="divisor">
+    <h2><i class="fa-brands fa-youtube"></i> Links das Músicas</h2>
+    <p style="font-size:.82rem;color:var(--fg2);margin-bottom:.8rem;">YouTube e Cifras por música.</p>
+    <div id="linksMusicas"></div>
+  </div>
+
+  <div class="card">
+    <h2><i class="fa-solid fa-users"></i> Escala de Serviço</h2>
+    <div class="escala-grid">
+      <div class="escala-grupo">
+        <div class="escala-grupo-header">
+          <span><i class="fa-solid fa-microphone"></i> Vocal</span>
+          <button class="btn-add-membro" onclick="addMembro('vocal')"><i class="fa-solid fa-plus"></i> Add</button>
+        </div>
+        <div class="escala-membros" id="membros-vocal">
+          <div class="escala-linha"><input type="text" placeholder="Nome do vocalista"><button class="btn-del-membro" onclick="delMembro(this)"><i class="fa-solid fa-xmark"></i></button></div>
+        </div>
+      </div>
+      <div class="escala-grupo">
+        <div class="escala-grupo-header">
+          <span><i class="fa-solid fa-guitar"></i> Instrumental</span>
+          <button class="btn-add-membro" onclick="addMembro('instrumental')"><i class="fa-solid fa-plus"></i> Add</button>
+        </div>
+        <div class="escala-membros" id="membros-instrumental">
+          <div class="escala-linha"><input type="text" placeholder="Nome e instrumento"><button class="btn-del-membro" onclick="delMembro(this)"><i class="fa-solid fa-xmark"></i></button></div>
+        </div>
+      </div>
+      <div class="escala-grupo">
+        <div class="escala-grupo-header">
+          <span><i class="fa-solid fa-display"></i> Multimídia</span>
+          <button class="btn-add-membro" onclick="addMembro('multimidia')"><i class="fa-solid fa-plus"></i> Add</button>
+        </div>
+        <div class="escala-membros" id="membros-multimidia">
+          <div class="escala-linha"><input type="text" placeholder="Nome do responsável"><button class="btn-del-membro" onclick="delMembro(this)"><i class="fa-solid fa-xmark"></i></button></div>
+        </div>
+      </div>
+      <div class="escala-grupo">
+        <div class="escala-grupo-header">
+          <span><i class="fa-solid fa-video"></i> Mídia (Live/Som)</span>
+          <button class="btn-add-membro" onclick="addMembro('midia')"><i class="fa-solid fa-plus"></i> Add</button>
+        </div>
+        <div class="escala-membros" id="membros-midia">
+          <div class="escala-linha"><input type="text" placeholder="Câmera, sonoplasta..."><button class="btn-del-membro" onclick="delMembro(this)"><i class="fa-solid fa-xmark"></i></button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><i class="fa-solid fa-code"></i> Gerar Script para Apresentação</h2>
+    <p style="font-size:.85rem;color:var(--fg2);margin-bottom:1rem;">Salva e copia os dados para o <strong>front.html</strong>.</p>
+    <button class="btn-success" id="btnGerarScript"><i class="fa-solid fa-wand-magic-sparkles"></i> Gerar Script & Salvar</button>
+    <textarea class="codigo" id="scriptGerado" rows="5" readonly
+      style="margin-top:1rem;width:100%;padding:.8rem;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-sm);color:var(--fg);font-family:'Courier New',monospace;font-size:.8rem;"
+      placeholder="O script aparecerá aqui..."></textarea>
+  </div>
+
+</div>
+
+<script>
+  var CHAVE_TEMA      = 'ministerioTemaGerenciador';
+  var CHAVE_SEM       = 'ministerioUltimaSemana';
+  var CHAVE_MES       = 'ministerioUltimoMes';
+  var CHAVE_LOGIN     = 'ministerioLoginGerenciador';
+  var CHAVE_USUARIOS  = 'ministerioUsuarios';
+  var VALIDADE_SESSAO = 8 * 60 * 60 * 1000; // 8h de sessão
+
+  /* ===== Tema ===== */
+  function aplicarTema(t) {
+    document.documentElement.setAttribute('data-theme', t);
+    localStorage.setItem(CHAVE_TEMA, t);
+    document.querySelectorAll('.theme-btn').forEach(function(b){ b.classList.toggle('ativo', b.getAttribute('data-t') === t); });
+  }
+  document.querySelectorAll('.theme-btn').forEach(function(b){ b.addEventListener('click', function(){ aplicarTema(b.getAttribute('data-t')); }); });
+  aplicarTema(localStorage.getItem(CHAVE_TEMA) || 'light');
+
+  /* ===== Login ===== */
+  function sessaoValida() {
+    var r = JSON.parse(localStorage.getItem(CHAVE_LOGIN) || 'null');
+    if (!r) return false;
+    if ((Date.now() - r.ts) > VALIDADE_SESSAO) return false;
+    // re-valida contra o banco (caso bloqueado pelo ADM depois de logar)
+    var usuarios = JSON.parse(localStorage.getItem(CHAVE_USUARIOS) || '[]');
+    var u = usuarios.find(function(x){ return x.email === r.email; });
+    return u && u.ativo && Date.now() < u.expiracao;
+  }
+
+  document.getElementById('btnEntrar').addEventListener('click', efetuarLogin);
+  document.getElementById('campoSenha').addEventListener('keydown', function(e){ if(e.key==='Enter') efetuarLogin(); });
+  document.getElementById('campoEmail').addEventListener('keydown', function(e){ if(e.key==='Enter') document.getElementById('campoSenha').focus(); });
+
+  function efetuarLogin() {
+    var email = document.getElementById('campoEmail').value.trim().toLowerCase();
+    var senha = document.getElementById('campoSenha').value.trim();
+    var msg   = document.getElementById('msgErro');
+    if (!email || !senha) { msg.textContent = 'Preencha e-mail e senha.'; return; }
+
+    var usuarios = JSON.parse(localStorage.getItem(CHAVE_USUARIOS) || '[]');
+    if (usuarios.length === 0) { msg.textContent = 'Sistema não configurado. Contate o administrador.'; return; }
+
+    var u = usuarios.find(function(x){ return x.email.toLowerCase() === email && x.senha === senha; });
+    if (!u) { msg.textContent = 'E-mail ou senha incorretos.'; document.getElementById('campoSenha').value = ''; return; }
+    if (!u.ativo) { msg.textContent = 'Acesso bloqueado. Contate o administrador.'; return; }
+    if (Date.now() > u.expiracao) { msg.textContent = 'Acesso expirado em ' + new Date(u.expiracao).toLocaleDateString('pt-BR') + '. Contate o administrador.'; return; }
+
+    localStorage.setItem(CHAVE_LOGIN, JSON.stringify({ ts: Date.now(), email: u.email, nome: u.nome, expiracao: u.expiracao }));
+    abrirGerenciador(u);
+  }
+
+  function abrirGerenciador(u) {
+    document.getElementById('telaLogin').classList.add('oculto');
+    document.getElementById('gerenciador').classList.remove('oculto');
+    document.getElementById('btnLogout').classList.remove('oculto');
+    document.getElementById('userInfo').classList.remove('oculto');
+    document.getElementById('validadeChip').classList.remove('oculto');
+    document.getElementById('userNome').textContent = u.nome || u.email;
+    var dias = Math.ceil((u.expiracao - Date.now()) / 86400000);
+    var vEl  = document.getElementById('validadeTexto');
+    vEl.textContent = 'Expira em ' + dias + 'd';
+    if (dias <= 5) document.getElementById('validadeChip').classList.add('exp');
+    iniciarGerenciador();
+  }
+
+  function logout() {
+    localStorage.removeItem(CHAVE_LOGIN);
+    document.getElementById('gerenciador').classList.add('oculto');
+    document.getElementById('btnLogout').classList.add('oculto');
+    document.getElementById('userInfo').classList.add('oculto');
+    document.getElementById('validadeChip').classList.add('oculto');
+    document.getElementById('telaLogin').classList.remove('oculto');
+    document.getElementById('campoEmail').value = '';
+    document.getElementById('campoSenha').value = '';
+    document.getElementById('msgErro').textContent = '';
+  }
+
+  /* ===== Gerenciador ===== */
+  var mesSelecionado    = parseInt(localStorage.getItem(CHAVE_MES) || new Date().getMonth());
+  var semanaSelecionada = parseInt(localStorage.getItem(CHAVE_SEM) || 0);
+
+  function iniciarGerenciador() { renderizarMeses(); mostrarHoje(); adicionarLinha(); }
+
+  function renderizarMeses() {
+    var c = document.getElementById('tagsMes'); c.innerHTML = '';
+    var agora = new Date();
+    for (var m = 0; m < 12; m++) {
+      var nome = new Date(agora.getFullYear(), m, 1).toLocaleString('pt-BR', { month:'short' });
+      var tag  = document.createElement('div');
+      tag.className = 'tag-mes' + (m === mesSelecionado ? ' ativa' : '');
+      tag.textContent = nome; tag.setAttribute('data-m', m);
+      tag.addEventListener('click', function() { mesSelecionado = parseInt(this.getAttribute('data-m')); localStorage.setItem(CHAVE_MES, mesSelecionado); renderizarMeses(); renderizarSemanas(); });
+      c.appendChild(tag);
+    }
+    renderizarSemanas();
+  }
+
+  function diasNoMes(a, m) { return new Date(a, m + 1, 0).getDate(); }
+  function semanaISO(d) { var t = new Date(d.valueOf()); var dia = (d.getDay()+6)%7; t.setDate(t.getDate()-dia+3); var j4 = new Date(t.getFullYear(),0,4); return 1+Math.ceil(((t-j4)/86400000)/7); }
+  function inicioSemanaISO(ano, sem) { var j4 = new Date(ano,0,4); var d4 = (j4.getDay()+6)%7; var d = new Date(j4); d.setDate(j4.getDate()-d4+(sem-1)*7); return d; }
+
+  function renderizarSemanas() {
+    var c = document.getElementById('tagsSemana'); c.innerHTML = '';
+    var ano = new Date().getFullYear();
+    var s1 = semanaISO(new Date(ano, mesSelecionado, 1));
+    var s2 = semanaISO(new Date(ano, mesSelecionado, diasNoMes(ano, mesSelecionado)));
+    for (var s = s1; s <= s2; s++) {
+      var ini = inicioSemanaISO(ano, s);
+      var tag = document.createElement('div');
+      tag.className = 'tag-semana' + (s === semanaSelecionada ? ' ativa' : '');
+      tag.textContent = 'Sem. ' + s + ' (' + ini.toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit' }) + ')';
+      tag.setAttribute('data-s', s);
+      tag.addEventListener('click', function() { semanaSelecionada = parseInt(this.getAttribute('data-s')); localStorage.setItem(CHAVE_SEM, semanaSelecionada); document.querySelectorAll('.tag-semana').forEach(function(t){ t.classList.remove('ativa'); }); this.classList.add('ativa'); });
+      c.appendChild(tag);
+    }
+    if (!semanaSelecionada) { var sa = document.querySelector('.tag-semana[data-s="'+semanaISO(new Date())+'"]'); if (sa) sa.click(); }
+  }
+
+  function mostrarHoje() {
+    document.getElementById('badgeHoje').innerHTML = '<i class="fa-solid fa-circle-dot"></i> Hoje: ' + new Date().toLocaleDateString('pt-BR', { weekday:'long', day:'2-digit', month:'long', year:'numeric' });
+  }
+
+  function adicionarLinha() {
+    var c = document.getElementById('linhasRepertorio');
+    var l = document.createElement('div'); l.className = 'linha-musica';
+    l.innerHTML = '<input type="text" placeholder="Nome da música" class="nomeMusica"><input type="text" placeholder="Ex: G" class="tomMusica"><input type="text" placeholder="Ex: 3ª" class="seqMusica"><button class="btn-remover" onclick="removerLinha(this)"><i class="fa-solid fa-xmark"></i></button>';
+    c.appendChild(l);
+    l.querySelector('.nomeMusica').addEventListener('input', atualizarLinks);
+  }
+  function removerLinha(btn) { btn.closest('.linha-musica').remove(); atualizarLinks(); }
+
+  function atualizarLinks() {
+    var c = document.getElementById('linksMusicas');
+    var musicas = document.querySelectorAll('#linhasRepertorio .nomeMusica');
+    var prev = {};
+    c.querySelectorAll('[data-idx]').forEach(function(el) {
+      var i = el.getAttribute('data-idx');
+      prev[i] = { yt: el.querySelector('.linkYt') ? el.querySelector('.linkYt').value : '', cifra: el.querySelector('.linkCifra') ? el.querySelector('.linkCifra').value : '' };
+    });
+    c.innerHTML = '';
+    musicas.forEach(function(inp, i) {
+      var nome = inp.value.trim() || ('Música ' + (i+1));
+      var p = prev[i] || { yt:'', cifra:'' };
+      var bloco = document.createElement('div');
+      bloco.setAttribute('data-idx', i);
+      bloco.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.6rem;align-items:center;';
+      bloco.innerHTML = '<span style="font-size:.82rem;font-weight:700;color:var(--fg2);grid-column:span 2;"><i class="fa-solid fa-music" style="color:var(--accent);"></i> ' + nome + '</span>' +
+        '<input type="url" class="linkYt" value="' + p.yt + '" placeholder="YouTube https://youtu.be/..." style="padding:.55rem .8rem;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-sm);color:var(--fg);font-family:var(--font);font-size:.82rem;width:100%;outline:none;">' +
+        '<input type="url" class="linkCifra" value="' + p.cifra + '" placeholder="Cifra https://..." style="padding:.55rem .8rem;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-sm);color:var(--fg);font-family:var(--font);font-size:.82rem;width:100%;outline:none;">';
+      c.appendChild(bloco);
+    });
+  }
+  document.getElementById('btnAdicionarMusica').addEventListener('click', function() { adicionarLinha(); atualizarLinks(); });
+
+  function addMembro(grupo) {
+    var c = document.getElementById('membros-' + grupo);
+    var l = document.createElement('div'); l.className = 'escala-linha';
+    l.innerHTML = '<input type="text" placeholder="Nome do membro"><button class="btn-del-membro" onclick="delMembro(this)"><i class="fa-solid fa-xmark"></i></button>';
+    c.appendChild(l); l.querySelector('input').focus();
+  }
+  function delMembro(btn) {
+    var c = btn.closest('.escala-membros');
+    if (c.children.length > 1) btn.closest('.escala-linha').remove();
+    else btn.closest('.escala-linha').querySelector('input').value = '';
+  }
+  function coletarMembros(grupo) {
+    var lista = [];
+    document.querySelectorAll('#membros-' + grupo + ' input').forEach(function(inp) { var v = inp.value.trim(); if (v) lista.push(v); });
+    return lista;
+  }
+
+  document.getElementById('btnGerarScript').addEventListener('click', function() {
+    var linhas = document.querySelectorAll('#linhasRepertorio .linha-musica');
+    var blocos = document.querySelectorAll('#linksMusicas [data-idx]');
+    var rep = [];
+    linhas.forEach(function(l, i) {
+      var nome = l.querySelector('.nomeMusica').value.trim();
+      var tom  = l.querySelector('.tomMusica').value.trim();
+      var seq  = l.querySelector('.seqMusica').value.trim();
+      var bloco = blocos[i];
+      var yt    = bloco ? bloco.querySelector('.linkYt').value.trim()    : '';
+      var cifra = bloco ? bloco.querySelector('.linkCifra').value.trim() : '';
+      if (nome || tom) rep.push({ nome:nome, tom:tom, seq:seq, yt:yt, cifra:cifra });
+    });
+    var dados = { mes:mesSelecionado, semana:semanaSelecionada, repertorio:rep, vocal:coletarMembros('vocal'), instrumental:coletarMembros('instrumental'), multimidia:coletarMembros('multimidia'), midia:coletarMembros('midia') };
+    localStorage.setItem('ministerioData', JSON.stringify(dados));
+    var open = '<scr'+'ipt>', close = '</sc'+'ript>';
+    var trecho = '<!-- Semana ' + semanaSelecionada + ' -->\n' + open + '\n  const dadosMinisterio = ' + JSON.stringify(dados, null, 2) + ';\n' + close;
+    document.getElementById('scriptGerado').value = trecho;
+    document.getElementById('scriptGerado').select();
+    document.execCommand('copy');
+    var btn = document.getElementById('btnGerarScript');
+    btn.innerHTML = '<i class="fa-solid fa-check"></i> Salvo e Copiado!';
+    setTimeout(function(){ btn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Gerar Script & Salvar'; }, 2500);
+  });
+
+  /* ===== Init ===== */
+  if (sessaoValida()) {
+    var r = JSON.parse(localStorage.getItem(CHAVE_LOGIN));
+    var usuarios = JSON.parse(localStorage.getItem(CHAVE_USUARIOS) || '[]');
+    var u = usuarios.find(function(x){ return x.email === r.email; });
+    if (u) abrirGerenciador(u);
+  }
+</script>
+</body>
+</html>
