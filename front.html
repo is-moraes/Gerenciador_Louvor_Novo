@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ministério de Louvor – Programação</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+  :root {
+    --bg:#f0f2f8; --surface:#ffffff; --fg:#1a1a2e; --fg2:#555577;
+    --accent:#4f46e5; --accent2:#7c3aed; --success:#10b981;
+    --danger:#ef4444; --border:#e2e8f0; --radius:14px; --radius-sm:8px;
+    --shadow:0 4px 24px rgba(79,70,229,.10);
+    --shadow-lg:0 8px 40px rgba(79,70,229,.18);
+    --font:'Inter',sans-serif;
+    --grad:linear-gradient(135deg,var(--accent),var(--accent2));
+    --header-h:60px;
+  }
+  [data-theme="dark"]     { --bg:#0f0f1a; --surface:#1e1e2f; --fg:#e8e8f8; --fg2:#9999bb; --accent:#818cf8; --accent2:#a78bfa; --border:#2e2e4a; --shadow:0 4px 24px rgba(0,0,0,.4); --shadow-lg:0 8px 40px rgba(0,0,0,.5); }
+  [data-theme="rose"]     { --bg:#fff1f3; --surface:#fff; --fg:#4a0010; --fg2:#9f4459; --accent:#f43f5e; --accent2:#e11d48; --border:#fecdd3; }
+  [data-theme="ocean"]    { --bg:#e0f4ff; --surface:#fff; --fg:#0c2d48; --fg2:#2d7da0; --accent:#0ea5e9; --accent2:#0284c7; --border:#bae6fd; }
+  [data-theme="forest"]   { --bg:#ecfdf5; --surface:#fff; --fg:#052e16; --fg2:#2d6a4f; --accent:#059669; --accent2:#047857; --border:#a7f3d0; }
+  [data-theme="midnight"] { --bg:#020617; --surface:#0f172a; --fg:#f1f5f9; --fg2:#94a3b8; --accent:#6366f1; --accent2:#8b5cf6; --border:#1e293b; --shadow:0 4px 24px rgba(0,0,0,.6); }
+
+  body { font-family:var(--font); background:var(--bg); color:var(--fg); min-height:100vh; transition:background .3s,color .3s; }
+
+  header { height:var(--header-h); background:var(--grad); display:flex; align-items:center; justify-content:space-between; padding:0 1.5rem; box-shadow:var(--shadow); position:sticky; top:0; z-index:100; gap:1rem; }
+  .header-left { display:flex; flex-direction:column; justify-content:center; min-width:0; }
+  .header-titulo { font-size:1rem; font-weight:700; color:#fff; display:flex; align-items:center; gap:.5rem; }
+  .header-data-culto { font-size:.72rem; color:rgba(255,255,255,.8); font-weight:600; display:flex; align-items:center; gap:.35rem; margin-top:.1rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .live-dot { width:7px; height:7px; border-radius:50%; background:#ef4444; display:inline-block; animation:pulseLive 1.5s infinite; flex-shrink:0; }
+  @keyframes pulseLive { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.8)} }
+  .header-right { display:flex; align-items:center; gap:.5rem; flex-shrink:0; }
+  .theme-bar { display:flex; gap:.35rem; }
+  .theme-btn { width:20px; height:20px; border-radius:50%; border:2.5px solid rgba(255,255,255,.5); cursor:pointer; transition:transform .2s,border-color .2s; }
+  .theme-btn:hover,.theme-btn.ativo { border-color:#fff; transform:scale(1.3); }
+  .theme-btn[data-t="light"]    { background:linear-gradient(135deg,#4f46e5,#7c3aed); }
+  .theme-btn[data-t="dark"]     { background:linear-gradient(135deg,#1e1e2f,#818cf8); }
+  .theme-btn[data-t="rose"]     { background:linear-gradient(135deg,#f43f5e,#e11d48); }
+  .theme-btn[data-t="ocean"]    { background:linear-gradient(135deg,#0ea5e9,#0284c7); }
+  .theme-btn[data-t="forest"]   { background:linear-gradient(135deg,#059669,#047857); }
+  .theme-btn[data-t="midnight"] { background:linear-gradient(135deg,#020617,#6366f1); }
+
+  main { max-width:800px; margin:0 auto; padding:1.5rem 1rem; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+
+  .hero { background:var(--grad); border-radius:var(--radius); padding:1.8rem 1.5rem; margin-bottom:1.2rem; box-shadow:var(--shadow-lg); color:#fff; position:relative; overflow:hidden; animation:fadeUp .5s ease; }
+  .hero::before { content:''; position:absolute; top:-40px; right:-40px; width:180px; height:180px; border-radius:50%; background:rgba(255,255,255,.07); }
+  .hero::after  { content:''; position:absolute; bottom:-50px; right:50px; width:130px; height:130px; border-radius:50%; background:rgba(255,255,255,.05); }
+  .hero-label { font-size:.72rem; font-weight:700; letter-spacing:.1em; opacity:.75; text-transform:uppercase; margin-bottom:.35rem; }
+  .hero h2 { font-size:clamp(1.4rem,4vw,1.9rem); font-weight:800; margin-bottom:.35rem; position:relative; }
+  .hero-data-box { display:inline-flex; align-items:center; gap:.5rem; background:rgba(255,255,255,.18); border:1.5px solid rgba(255,255,255,.3); border-radius:20px; padding:.35rem .9rem; font-size:.85rem; font-weight:600; margin-top:.2rem; position:relative; }
+
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:1.2rem; margin-bottom:1.2rem; box-shadow:var(--shadow); animation:fadeUp .4s ease; transition:background .3s,border-color .3s; }
+  .card-header { display:flex; align-items:center; gap:.5rem; font-size:.95rem; font-weight:700; color:var(--accent); margin-bottom:1rem; padding-bottom:.7rem; border-bottom:1.5px solid var(--border); }
+
+  .rep-list { display:flex; flex-direction:column; gap:.7rem; }
+  .rep-item { background:var(--bg); border:1.5px solid var(--border); border-radius:var(--radius-sm); padding:.9rem 1rem; display:grid; grid-template-columns:36px 1fr auto; grid-template-rows:auto auto; column-gap:.75rem; row-gap:.35rem; transition:border-color .2s; }
+  .rep-item:hover { border-color:var(--accent); }
+  .num-musica { width:34px; height:34px; border-radius:50%; background:var(--grad); color:#fff; font-size:.82rem; font-weight:700; display:flex; align-items:center; justify-content:center; grid-row:span 2; align-self:center; }
+  .rep-nome { font-size:.95rem; font-weight:700; color:var(--fg); align-self:end; }
+  .rep-badges { display:flex; gap:.4rem; align-items:center; align-self:start; }
+  .badge-tom { padding:.15rem .55rem; background:var(--grad); border-radius:20px; font-size:.72rem; font-weight:700; color:#fff; }
+  .badge-seq { padding:.15rem .55rem; background:var(--bg); border:1.5px solid var(--border); border-radius:20px; font-size:.72rem; font-weight:700; color:var(--fg2); }
+  .rep-links { grid-column:2 / span 2; display:flex; gap:.4rem; flex-wrap:wrap; }
+  .link-btn { display:inline-flex; align-items:center; gap:.3rem; padding:.22rem .6rem; border-radius:6px; font-size:.75rem; font-weight:600; text-decoration:none; transition:opacity .2s; }
+  .link-yt    { background:#ff000012; color:#e00; border:1.5px solid #ff000025; }
+  .link-cifra { background:var(--accent)12; color:var(--accent); border:1.5px solid var(--accent)25; }
+  .link-btn:hover { opacity:.7; }
+
+  .escala-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:.8rem; }
+  .escala-card { background:var(--bg); border:1.5px solid var(--border); border-radius:var(--radius-sm); padding:.9rem 1rem; transition:border-color .2s; }
+  .escala-card:hover { border-color:var(--accent); }
+  .escala-role { font-size:.7rem; font-weight:700; color:var(--fg2); text-transform:uppercase; letter-spacing:.06em; display:flex; align-items:center; gap:.35rem; margin-bottom:.6rem; }
+  .escala-role i { color:var(--accent); }
+  .escala-membro { display:flex; align-items:center; gap:.45rem; margin-bottom:.3rem; }
+  .escala-num { width:20px; height:20px; border-radius:50%; background:var(--grad); color:#fff; font-size:.65rem; font-weight:700; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .escala-nome { font-size:.88rem; font-weight:600; color:var(--fg); }
+  .escala-vazio { color:var(--fg2); font-style:italic; font-size:.82rem; }
+
+  .links-rapidos-lista { display:flex; flex-direction:column; gap:.6rem; }
+  .links-rapidos-item { display:flex; align-items:center; gap:.6rem; flex-wrap:wrap; padding:.6rem .8rem; background:var(--bg); border:1.5px solid var(--border); border-radius:var(--radius-sm); }
+  .links-rapidos-nome { font-size:.88rem; font-weight:600; flex:1; min-width:100px; }
+
+  .empty-state { text-align:center; padding:3.5rem 1.5rem; display:flex; flex-direction:column; align-items:center; gap:1rem; }
+  .empty-icon { width:72px; height:72px; border-radius:50%; background:var(--bg); border:2px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:1.8rem; color:var(--fg2); }
+  .empty-state h3 { font-size:1rem; font-weight:700; color:var(--fg2); }
+  .empty-state p  { font-size:.85rem; color:var(--fg2); max-width:280px; }
+
+  .loading-state { text-align:center; padding:4rem 2rem; color:var(--fg2); }
+  .loading-state i { font-size:2rem; animation:spin 1s linear infinite; margin-bottom:1rem; color:var(--accent); display:block; }
+  @keyframes spin { to{transform:rotate(360deg)} }
+
+  footer { text-align:center; padding:1.5rem 1rem; font-size:.75rem; color:var(--fg2); border-top:1px solid var(--border); margin-top:.5rem; }
+  footer i { color:var(--accent); }
+
+  @media(max-width:480px) {
+    header { padding:0 1rem; }
+    .header-titulo { font-size:.9rem; }
+    .theme-btn { width:17px; height:17px; }
+    main { padding:1rem .75rem; }
+    .hero { padding:1.4rem 1rem; }
+    .escala-grid { grid-template-columns:1fr; }
+  }
+  @media(max-width:360px) {
+    .header-data-culto { display:none; }
+    .theme-bar { gap:.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="header-titulo">
+      <span class="live-dot"></span>
+      <i class="fa-solid fa-music"></i>
+      Ministério de Louvor
+    </div>
+    <div class="header-data-culto" id="headerDataCulto">
+      <i class="fa-regular fa-calendar"></i>
+      <span>carregando...</span>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="theme-bar">
+      <div class="theme-btn" data-t="light"></div>
+      <div class="theme-btn" data-t="dark"></div>
+      <div class="theme-btn" data-t="rose"></div>
+      <div class="theme-btn" data-t="ocean"></div>
+      <div class="theme-btn" data-t="forest"></div>
+      <div class="theme-btn" data-t="midnight"></div>
+    </div>
+  </div>
+</header>
+
+<main id="conteudo">
+  <div class="loading-state">
+    <i class="fa-solid fa-spinner"></i>
+    Carregando programação...
+  </div>
+</main>
+
+<footer>
+  Atualização em tempo real via <i class="fa-solid fa-fire"></i> Firebase
+  &nbsp;·&nbsp; <i class="fa-solid fa-heart"></i> Ministério de Louvor
+</footer>
+
+<!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+<script>
+  /* ============================================================
+     🔥 COLE AQUI O SEU firebaseConfig
+  ============================================================ */
+  var firebaseConfig = {
+  apiKey:            "AIzaSyASRX7kZJUmp7jfx_C7buYnLfpz0reby4E",
+  authDomain:        "ministerio-de-louvor-e2eb3.firebaseapp.com",
+  projectId:         "ministerio-de-louvor-e2eb3",
+  storageBucket:     "ministerio-de-louvor-e2eb3.firebasestorage.app",
+  messagingSenderId: "319307727923",
+  appId:             "1:319307727923:web:845608da8aa866ac7ecf46"
+};
+
+  firebase.initializeApp(firebaseConfig);
+  var db  = firebase.firestore();
+  var col = db.collection('ministerios');
+
+  var CHAVE_TEMA  = 'ministerioTemaFront';
+  var MESES_LONGO = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  var DIAS_SEMANA = ['domingo','segunda-feira','terça-feira','quarta-feira','quinta-feira','sexta-feira','sábado'];
+
+  /* ===== Tema ===== */
+  function aplicarTema(t) {
+    document.documentElement.setAttribute('data-theme', t);
+    localStorage.setItem(CHAVE_TEMA, t);
+    document.querySelectorAll('.theme-btn').forEach(function(b){
+      b.classList.toggle('ativo', b.getAttribute('data-t') === t);
+    });
+  }
+  document.querySelectorAll('.theme-btn').forEach(function(b){
+    b.addEventListener('click', function(){ aplicarTema(b.getAttribute('data-t')); });
+  });
+  aplicarTema(localStorage.getItem(CHAVE_TEMA) || 'light');
+
+  /* ===== Pega o ID do ministério pela URL ===== */
+  function getMinisterioId() {
+    var params = new URLSearchParams(window.location.search);
+    return params.get('id');
+  }
+
+  /* ===== Data do culto (domingo da semana ISO) ===== */
+  function domingoSemanaISO(ano, sem) {
+    var j4  = new Date(ano, 0, 4);
+    var d4  = (j4.getDay() + 6) % 7;
+    var seg = new Date(j4);
+    seg.setDate(j4.getDate() - d4 + (sem - 1) * 7);
+    var dom = new Date(seg);
+    dom.setDate(seg.getDate() + 6);
+    return dom;
+  }
+
+  function formatarDataCulto(semana) {
+    var ano = new Date().getFullYear();
+    var dom = domingoSemanaISO(ano, semana);
+    return capitalize(DIAS_SEMANA[dom.getDay()]) + ', ' +
+      dom.getDate() + ' de ' + MESES_LONGO[dom.getMonth()] + ' de ' + dom.getFullYear();
+  }
+
+  function capitalize(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
+
+  function atualizarHeader(semana) {
+    var el = document.getElementById('headerDataCulto').querySelector('span');
+    el.textContent = semana ? 'Culto · ' + formatarDataCulto(semana) : 'Sem programação';
+  }
+
+  /* ===== Renderizar ===== */
+  function renderizar(d) {
+    var main    = document.getElementById('conteudo');
+    var mesNome = MESES_LONGO[d.mes] || ('Mês ' + (d.mes + 1));
+    var ano     = new Date().getFullYear();
+    var html    = '';
+
+    atualizarHeader(d.semana);
+
+    /* HERO */
+    html +=
+      '<div class="hero">' +
+        '<div class="hero-label"><i class="fa-solid fa-calendar-week"></i> &nbsp;Semana ' + d.semana + ' · ' + mesNome + ' ' + ano + '</div>' +
+        '<h2>Programação do Culto</h2>' +
+        '<div class="hero-data-box"><i class="fa-regular fa-calendar-check"></i> ' + formatarDataCulto(d.semana) + '</div>' +
+      '</div>';
+
+    /* REPERTÓRIO */
+    html += '<div class="card"><div class="card-header"><i class="fa-solid fa-list-music"></i> Repertório da Semana</div>';
+    if (!d.repertorio || d.repertorio.length === 0) {
+      html += '<p style="color:var(--fg2);font-size:.88rem;font-style:italic;">Nenhuma música cadastrada.</p>';
+    } else {
+      html += '<div class="rep-list">';
+      d.repertorio.forEach(function(m, i) {
+        var badges = '';
+        if (m.tom) badges += '<span class="badge-tom">' + m.tom + '</span>';
+        if (m.seq) badges += '<span class="badge-seq">' + m.seq + '</span>';
+        var links = '';
+        if (m.yt)    links += '<a class="link-btn link-yt"    href="' + m.yt    + '" target="_blank"><i class="fa-brands fa-youtube"></i> YouTube</a>';
+        if (m.cifra) links += '<a class="link-btn link-cifra" href="' + m.cifra + '" target="_blank"><i class="fa-solid fa-music"></i> Cifra</a>';
+        html +=
+          '<div class="rep-item">' +
+            '<span class="num-musica">' + (i+1) + '</span>' +
+            '<span class="rep-nome">' + (m.nome||'—') + '</span>' +
+            '<div class="rep-badges">' + badges + '</div>' +
+            (links ? '<div class="rep-links">' + links + '</div>' : '') +
+          '</div>';
+      });
+      html += '</div>';
+    }
+    html += '</div>';
+
+    /* ESCALA */
+    html += '<div class="card"><div class="card-header"><i class="fa-solid fa-users"></i> Escala de Serviço</div><div class="escala-grid">';
+    [
+      { key:'vocal',        icon:'fa-microphone', label:'Vocal' },
+      { key:'instrumental', icon:'fa-guitar',     label:'Instrumental' },
+      { key:'multimidia',   icon:'fa-display',    label:'Multimídia' },
+      { key:'midia',        icon:'fa-video',      label:'Mídia · Live / Som' }
+    ].forEach(function(p) {
+      var membros  = d[p.key];
+      var conteudo = '';
+      if (!membros || membros.length === 0) {
+        conteudo = '<div class="escala-vazio">Não definido</div>';
+      } else {
+        membros.forEach(function(nome, i) {
+          conteudo += '<div class="escala-membro"><span class="escala-num">' + (i+1) + '</span><span class="escala-nome">' + nome + '</span></div>';
+        });
+      }
+      html += '<div class="escala-card"><div class="escala-role"><i class="fa-solid ' + p.icon + '"></i> ' + p.label + '</div>' + conteudo + '</div>';
+    });
+    html += '</div></div>';
+
+    /* LINKS RÁPIDOS */
+    if (d.repertorio && d.repertorio.some(function(m){ return m.yt || m.cifra; })) {
+      html += '<div class="card"><div class="card-header"><i class="fa-solid fa-link"></i> Links Rápidos</div><div class="links-rapidos-lista">';
+      d.repertorio.forEach(function(m) {
+        if (!m.yt && !m.cifra) return;
+        html += '<div class="links-rapidos-item"><span class="links-rapidos-nome">' + (m.nome||'—') + '</span>';
+        if (m.yt)    html += '<a class="link-btn link-yt"    href="' + m.yt    + '" target="_blank"><i class="fa-brands fa-youtube"></i> YouTube</a>';
+        if (m.cifra) html += '<a class="link-btn link-cifra" href="' + m.cifra + '" target="_blank"><i class="fa-solid fa-music"></i> Cifra</a>';
+        html += '</div>';
+      });
+      html += '</div></div>';
+    }
+
+    main.innerHTML = html;
+  }
+
+  /* ===== Listener em tempo real ===== */
+  function iniciar() {
+    var id = getMinisterioId();
+    if (!id) {
+      document.getElementById('conteudo').innerHTML =
+        '<div class="empty-state">' +
+          '<div class="empty-icon"><i class="fa-solid fa-link-slash"></i></div>' +
+          '<h3>Link inválido</h3>' +
+          '<p>Este link não contém um ID de ministério. Solicite o link correto ao seu líder.</p>' +
+        '</div>';
+      document.getElementById('headerDataCulto').querySelector('span').textContent = 'Link inválido';
+      return;
+    }
+
+    // Escuta em tempo real — atualiza automaticamente quando o líder salvar
+    col.doc(id).onSnapshot(function(doc) {
+      if (!doc.exists || !doc.data().programacao) {
+        document.getElementById('conteudo').innerHTML =
+          '<div class="empty-state">' +
+            '<div class="empty-icon"><i class="fa-solid fa-music"></i></div>' +
+            '<h3>Nenhuma programação ainda</h3>' +
+            '<p>Aguarde o líder publicar a programação da semana.</p>' +
+          '</div>';
+        atualizarHeader(null);
+        return;
+      }
+      renderizar(doc.data().programacao);
+    }, function(err) {
+      document.getElementById('conteudo').innerHTML =
+        '<div class="empty-state">' +
+          '<div class="empty-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>' +
+          '<h3>Erro de conexão</h3>' +
+          '<p>' + err.message + '</p>' +
+        '</div>';
+    });
+  }
+
+  iniciar();
+</script>
+</body>
+</html>
