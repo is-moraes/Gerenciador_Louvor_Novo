@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ministério de Louvor – Gerenciador</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+  :root {
+    --bg:#f0f2f8; 
+    --surface:#ffffff; 
+    --fg:#1a1a2e; 
+    --fg2:#555577;
+    --accent:#46c5e5; 
+    --accent2:#1a7596; 
+    --success:#10b981;
+    --danger:#ef4444; 
+    --border:#e2e8f0; 
+    --radius:14px; 
+    --radius-sm:8px;
+    --shadow:0 4px 24px rgba(79,70,229,.10);
+    --shadow-lg:0 8px 40px rgba(79,70,229,.18);
+    --font:'Inter',sans-serif;
+    --grad:linear-gradient(135deg,var(--accent),var(--accent2));
+    --header-h:60px;
+  }
+  [data-theme="dark"]     { --bg:#0f0f1a; --surface:#1e1e2f; --fg:#e8e8f8; --fg2:#99babb; --accent:#228fa7; --accent2:#8b8dfa; --border:#2e2e4a; --shadow:0 4px 24px rgba(0,0,0,.4); --shadow-lg:0 8px 40px rgba(0,0,0,.5); }
+  [data-theme="rose"]     { --bg:#fff9f1; --surface:#fff; --fg:#2d2d2d; --fg2:#9f6544; --accent:#f4813f; --accent2:#e16f1d; --border:#fecdd3; }
+  [data-theme="ocean"]    { --bg:#e0f4ff; --surface:#fff; --fg:#0c2d48; --fg2:#2d7da0; --accent:#0ea5e9; --accent2:#0284c7; --border:#bae6fd; }
+  [data-theme="forest"]   { --bg:#ecfdf5; --surface:#fff; --fg:#052e16; --fg2:#2d6a4f; --accent:#059669; --accent2:#43b69d; --border:#a7f3d0; }
+  [data-theme="midnight"] { --bg:#020617; --surface:#0f172a; --fg:#f1f5f9; --fg2:#94a3b8; --accent:#63d5f1; --accent2:#0a455c; --border:#1e293b; --shadow:0 4px 24px rgba(0,0,0,.6); }
+
+  body { font-family:var(--font); background:var(--bg); color:var(--fg); min-height:100vh; transition:background .3s,color .3s; }
+
+  /* ── Header ── */
+  header { height:var(--header-h); background:var(--grad); display:flex; align-items:center; justify-content:space-between; padding:0 1.5rem; box-shadow:var(--shadow); position:sticky; top:0; z-index:100; gap:.8rem; }
+  .header-left { display:flex; flex-direction:column; min-width:0; }
+  .header-titulo { font-size:1rem; font-weight:700; color:#fff; display:flex; align-items:center; gap:.5rem; }
+  .header-user { font-size:.72rem; color:rgba(255,255,255,.8); margin-top:.1rem; }
+  .header-right { display:flex; align-items:center; gap:.5rem; flex-shrink:0; }
+  .theme-bar { display:flex; gap:.3rem; }
+  .theme-btn { width:18px; height:18px; border-radius:50%; border:2px solid rgba(255,255,255,.45); cursor:pointer; transition:transform .2s,border-color .2s; }
+  .theme-btn:hover,.theme-btn.ativo { border-color:#fff; transform:scale(1.3); }
+  .theme-btn[data-t="light"]    { background:linear-gradient(135deg,#4f46e5,#7c3aed); }
+  .theme-btn[data-t="dark"]     { background:linear-gradient(135deg,#1e1e2f,#818cf8); }
+  .theme-btn[data-t="rose"]     { background:linear-gradient(135deg,#f43f5e,#e11d48); }
+  .theme-btn[data-t="ocean"]    { background:linear-gradient(135deg,#0ea5e9,#0284c7); }
+  .theme-btn[data-t="forest"]   { background:linear-gradient(135deg,#059669,#047857); }
+  .theme-btn[data-t="midnight"] { background:linear-gradient(135deg,#020617,#6366f1); }
+  .sync-badge { display:inline-flex; align-items:center; gap:.35rem; background:rgba(16,185,129,.2); border:1.5px solid rgba(16,185,129,.5); color:#6ee7b7; border-radius:20px; padding:.25rem .7rem; font-size:.72rem; font-weight:700; }
+  .sync-badge.salvando { background:rgba(245,158,11,.2); border-color:rgba(245,158,11,.5); color:#fde68a; }
+  .sync-badge.erro     { background:rgba(239,68,68,.2);  border-color:rgba(239,68,68,.5);  color:#fca5a5; }
+  .validade-chip { display:inline-flex; align-items:center; gap:.35rem; background:rgba(255,255,255,.12); border:1.5px solid rgba(255,255,255,.25); color:rgba(255,255,255,.85); border-radius:20px; padding:.25rem .7rem; font-size:.72rem; font-weight:700; }
+  .validade-chip.exp { background:rgba(239,68,68,.25); border-color:rgba(239,68,68,.5); color:#fca5a5; }
+  .btn-header { display:inline-flex; align-items:center; gap:.35rem; background:rgba(255,255,255,.15); border:1.5px solid rgba(255,255,255,.35); color:#fff; border-radius:20px; padding:.28rem .8rem; font-size:.78rem; font-weight:600; cursor:pointer; font-family:var(--font); }
+  .btn-header:hover { background:rgba(255,255,255,.28); }
+
+  /* ── Login ── */
+  .login-wrap { min-height:calc(100vh - var(--header-h)); display:flex; align-items:center; justify-content:center; padding:2rem; }
+  .login-card { background:var(--surface); border-radius:var(--radius); box-shadow:var(--shadow-lg); padding:2.8rem 2.5rem; width:100%; max-width:420px; border:1px solid var(--border); animation:fadeUp .4s ease; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+  .login-icon { width:64px; height:64px; background:var(--grad); border-radius:16px; display:flex; align-items:center; justify-content:center; margin:0 auto 1.4rem; }
+  .login-icon i { font-size:1.8rem; color:#fff; }
+  .login-card h2 { text-align:center; font-size:1.35rem; font-weight:700; margin-bottom:.3rem; }
+  .login-card .sub { text-align:center; color:var(--fg2); font-size:.88rem; margin-bottom:1.8rem; }
+  .field { position:relative; margin-bottom:1.1rem; }
+  .field label { display:block; font-size:.75rem; font-weight:700; color:var(--fg2); text-transform:uppercase; letter-spacing:.05em; margin-bottom:.4rem; }
+  .field input { width:100%; padding:.72rem 1rem .72rem 2.8rem; background:var(--bg); border:1.5px solid var(--border); border-radius:var(--radius-sm); color:var(--fg); font-family:var(--font); font-size:.93rem; outline:none; transition:border-color .2s,box-shadow .2s; }
+  .field input:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(79,70,229,.15); }
+  .field .ico { position:absolute; left:.85rem; bottom:.8rem; color:var(--fg2); font-size:.88rem; }
+  .btn-primary { width:100%; padding:.78rem; background:var(--grad); color:#fff; font-family:var(--font); font-size:.98rem; font-weight:600; border:none; border-radius:var(--radius-sm); cursor:pointer; transition:opacity .2s; display:flex; align-items:center; justify-content:center; gap:.5rem; }
+  .btn-primary:hover { opacity:.9; }
+  .msg-erro { color:var(--danger); font-size:.83rem; margin-top:.7rem; text-align:center; min-height:1.1rem; font-weight:600; }
+
+  /* ── Gerenciador ── */
+  .gerenciador { max-width:860px; margin:0 auto; padding:1.8rem 1.2rem; }
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:1.4rem; margin-bottom:1.4rem; box-shadow:var(--shadow); animation:fadeUp .35s ease; }
+  .card-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.1rem; padding-bottom:.75rem; border-bottom:1.5px solid var(--border); flex-wrap:wrap; gap:.5rem; }
+  .card-header h2 { font-size:.98rem; font-weight:700; color:var(--accent); display:flex; align-items:center; gap:.5rem; }
+
+  /* URL do front */
+  .url-box { display:flex; align-items:center; gap:.6rem; background:var(--bg); border:1.5px solid var(--border); border-radius:var(--radius-sm); padding:.6rem .9rem; flex-wrap:wrap; }
+  .url-texto { font-size:.78rem; color:var(--fg2); flex:1; min-width:120px; word-break:break-all; }
+  .btn-copy { display:inline-flex; align-items:center; gap:.35rem; padding:.4rem .9rem; background:var(--grad); color:#fff; border:none; border-radius:6px; font-family:var(--font); font-size:.78rem; font-weight:600; cursor:pointer; white-space:nowrap; }
+  .btn-copy:hover { opacity:.9; }
+
+  /* Semanas / Meses */
+  .badge-hoje { display:inline-flex; align-items:center; gap:.4rem; background:rgba(79,70,229,.1); border:1.5px solid rgba(79,70,229,.2); color:var(--accent); border-radius:20px; padding:.3rem .9rem; font-size:.78rem; font-weight:700; margin-bottom:.9rem; }
+  .tags-scroll { display:flex; gap:.45rem; flex-wrap:wrap; margin-bottom:.6rem; }
+  .tag-mes,.tag-semana { padding:.28rem .75rem; border-radius:20px; font-size:.78rem; font-weight:600; cursor:pointer; border:1.5px solid var(--border); color:var(--fg2); background:var(--bg); transition:all .2s; user-select:none; }
+  .tag-mes:hover,.tag-semana:hover { border-color:var(--accent); color:var(--accent); }
+  .tag-mes.ativa,.tag-semana.ativa { background:var(--grad); color:#fff; border-color:transparent; }
+
+  /* Repertório */
+  .linha-musica { display:grid; grid-template-columns:1.6fr .55fr .55fr 34px; gap:.5rem; margin-bottom:.45rem; align-items:center; }
+  @media(max-width:560px){ .linha-musica{grid-template-columns:1fr 1fr;} .linha-musica .nomeMusica{grid-column:span 2;} }
+  .linha-musica input { padding:.55rem .75rem; background:var(--bg); border:1.5px solid var(--border); border-radius:var(--radius-sm); color:var(--fg); font-family:var(--font); font-size:.85rem; outline:none; transition:border-color .2s; width:100%; }
+  .linha-musica input:focus { border-color:var(--accent); }
+  .btn-remover { width:32px; height:32px; background:transparent; border:1.5px solid rgba(239,68,68,.35); color:var(--danger); border-radius:8px; cursor:pointer; font-size:.8rem; display:flex; align-items:center; justify-content:center; transition:all .2s; }
+  .btn-remover:hover { background:var(--danger); color:#fff; border-color:var(--danger); }
+
+  /* Links por música */
+  .links-secao { margin-top:.6rem; }
+  .links-secao-titulo { font-size:.75rem; font-weight:700; color:var(--fg2); text-transform:uppercase; letter-spacing:.05em; margin-bottom:.5rem; display:flex; align-items:center; gap:.35rem; }
+
+  /* Escala */
+  .escala-grupo { margin-bottom:1rem; }
+  .escala-grupo-label { font-size:.75rem; font-weight:700; color:var(--fg2); text-transform:uppercase; letter-spacing:.05em; display:flex; align-items:center; gap:.35rem; margin-bottom:.5rem; }
+  .escala-grupo-label i { color:var(--accent); }
+  .escala-membros { display:flex; flex-direction:column; gap:.35rem; }
+  .escala-linha { display:flex; gap:.5rem; align-items:center; }
+  .escala-linha input { flex:1; padding:.5rem .75rem; background:var(--bg); border:1.5px solid var(--border); border-radius:var(--radius-sm); color:var(--fg); font-family:var(--font); font-size:.85rem; outline:none; transition:border-color .2s; }
+  .escala-linha input:focus { border-color:var(--accent); }
+  .btn-del-membro { width:30px; height:30px; background:transparent; border:1.5px solid rgba(239,68,68,.3); color:var(--danger); border-radius:7px; cursor:pointer; font-size:.78rem; display:flex; align-items:center; justify-content:center; transition:all .2s; flex-shrink:0; }
+  .btn-del-membro:hover { background:var(--danger); color:#fff; }
+  .btn-add-membro { display:inline-flex; align-items:center; gap:.35rem; padding:.35rem .8rem; background:transparent; border:1.5px dashed var(--border); color:var(--fg2); border-radius:var(--radius-sm); font-family:var(--font); font-size:.78rem; cursor:pointer; margin-top:.3rem; transition:all .2s; }
+  .btn-add-membro:hover { border-color:var(--accent); color:var(--accent); }
+  .escala-grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+  @media(max-width:540px){ .escala-grid-2{grid-template-columns:1fr;} }
+
+  /* ── Quadro de Avisos ── */
+  .aviso-linha {
+    background:var(--bg); border:1.5px solid var(--border); border-radius:var(--radius-sm);
+    padding:.8rem 1rem; margin-bottom:.6rem;
+    display:grid; grid-template-columns:150px 1fr 1fr 130px 34px;
+    gap:.55rem; align-items:start;
+  }
+  @media(max-width:680px){
+    .aviso-linha { grid-template-columns:1fr 1fr; }
+    .aviso-linha .avisoTipo { grid-column:span 2; }
+    .aviso-linha .btn-del-aviso { grid-column:span 2; justify-self:end; }
+  }
+  .aviso-linha select,
+  .aviso-linha input[type="text"],
+  .aviso-linha input[type="date"] {
+    width:100%; padding:.5rem .7rem; background:var(--surface);
+    border:1.5px solid var(--border); border-radius:var(--radius-sm);
+    color:var(--fg); font-family:var(--font); font-size:.82rem; outline:none;
+    transition:border-color .2s;
+  }
+  .aviso-linha select:focus,
+  .aviso-linha input:focus { border-color:var(--accent); }
+  .aviso-linha textarea {
+    width:100%; padding:.5rem .7rem; background:var(--surface);
+    border:1.5px solid var(--border); border-radius:var(--radius-sm);
+    color:var(--fg); font-family:var(--font); font-size:.82rem;
+    outline:none; resize:vertical; min-height:120px;
+    transition:border-color .2s;
+  }
+  .aviso-linha textarea:focus { border-color:var(--accent); }
+  .btn-del-aviso {
+    width:32px; height:32px; background:transparent;
+    border:1.5px solid rgba(239,68,68,.35); color:var(--danger);
+    border-radius:8px; cursor:pointer; font-size:.82rem;
+    display:flex; align-items:center; justify-content:center; transition:all .2s;
+  }
+  .btn-del-aviso:hover { background:var(--danger); color:#fff; border-color:var(--danger); }
+  .avisos-hint { font-size:.76rem; color:var(--fg2); margin-top:.4rem; display:flex; align-items:flex-start; gap:.35rem; line-height:1.5; }
+
+  /* Botões gerais */
+  .btn-add { padding:.6rem 1.3rem; background:var(--grad); color:#fff; border:none; border-radius:var(--radius-sm); cursor:pointer; font-family:var(--font); font-size:.88rem; font-weight:600; display:inline-flex; align-items:center; gap:.4rem; }
+  .btn-add:hover { opacity:.9; }
+  .btn-salvar { width:100%; padding:.85rem; background:var(--grad); color:#fff; font-family:var(--font); font-size:1rem; font-weight:700; border:none; border-radius:var(--radius-sm); cursor:pointer; display:flex; align-items:center; justify-content:center; gap:.5rem; transition:opacity .2s; }
+  .btn-salvar:hover { opacity:.9; }
+  .btn-salvar:disabled { opacity:.6; cursor:not-allowed; }
+
+  .oculto { display:none !important; }
+  /* ── Ajustes de responsividade do cabeçalho ── */
+
+  @media (max-width: 640px) {
+    header {
+      height: auto;
+      padding: .55rem .9rem .7rem;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: .4rem;
+    }
+
+    .header-left {
+      width: 100%;
+    }
+
+    .header-right {
+      width: 100%;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      grid-template-rows: auto auto;
+      column-gap: .4rem;
+      row-gap: .35rem;
+      align-items: center;
+    }
+
+    .theme-bar {
+      grid-column: 1 / 2;
+    }
+
+    #validadeChip {
+      grid-column: 2 / 3;
+      justify-self: end;
+    }
+
+    #syncBadge {
+      grid-column: 1 / 3;
+      justify-self: stretch;
+      justify-content: center;
+    }
+
+    #btnLogout {
+      grid-column: 1 / 3;
+      justify-self: stretch;
+      justify-content: center;
+    }
+
+    .theme-btn {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  @media (max-width: 400px) {
+    #validadeChip {
+      grid-column: 1 / 3;
+      justify-self: stretch;
+      justify-content: center;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="header-titulo"><i class="fa-solid fa-music"></i> Ministério de Louvor</div>
+    <div class="header-user oculto" id="headerUser"></div>
+  </div>
+  <div class="header-right">
+    <div class="theme-bar">
+      <div class="theme-btn" data-t="light"></div>
+      <div class="theme-btn" data-t="dark"></div>
+      <div class="theme-btn" data-t="rose"></div>
+      <div class="theme-btn" data-t="ocean"></div>
+      <div class="theme-btn" data-t="forest"></div>
+      <div class="theme-btn" data-t="midnight"></div>
+    </div>
+    <div class="validade-chip oculto" id="validadeChip"><i class="fa-solid fa-clock"></i> <span id="validadeTexto"></span></div>
+    <div class="sync-badge oculto" id="syncBadge"><i class="fa-solid fa-cloud-check"></i> Sincronizado</div>
+    <button class="btn-header oculto" id="btnLogout" onclick="logout()"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sair</button>
+  </div>
+</header>
+
+<!-- ═══════════ LOGIN ═══════════ -->
+<div class="login-wrap" id="telaLogin">
+  <div class="login-card">
+    <div class="login-icon"><i class="fa-solid fa-music"></i></div>
+    <h2>Acesso do Líder</h2>
+    <p class="sub">Entre com seu e-mail e senha cadastrados pelo administrador</p>
+    <div class="field">
+      <label>E-mail</label>
+      <i class="fa-solid fa-envelope ico"></i>
+      <input type="email" id="campoEmail" placeholder="seu@email.com" autocomplete="email">
+    </div>
+    <div class="field">
+      <label>Senha</label>
+      <i class="fa-solid fa-lock ico"></i>
+      <input type="password" id="campoSenha" placeholder="Sua senha...">
+    </div>
+    <button class="btn-primary" id="btnEntrar"><i class="fa-solid fa-arrow-right-to-bracket"></i> Entrar</button>
+    <p class="msg-erro" id="msgErro"></p>
+  </div>
+</div>
+
+<!-- ═══════════ GERENCIADOR ═══════════ -->
+<div class="gerenciador oculto" id="gerenciador">
+
+  <!-- URL do Front -->
+  <div class="card">
+    <div class="card-header"><h2><i class="fa-solid fa-link"></i> Link para os Membros</h2></div>
+    <div class="url-box">
+      <span class="url-texto" id="urlFrontTexto">—</span>
+      <button class="btn-copy" id="btnCopyUrl" onclick="copiarUrlFront()"><i class="fa-solid fa-copy"></i> Copiar</button>
+    </div>
+  </div>
+
+  <!-- Semana / Mês -->
+  <div class="card">
+    <div class="card-header"><h2><i class="fa-solid fa-calendar-week"></i> Semana do Culto</h2></div>
+    <div class="badge-hoje" id="badgeHoje"></div>
+    <div class="tags-scroll" id="tagsMes"></div>
+    <div class="tags-scroll" id="tagsSemana"></div>
+  </div>
+
+  <!-- Repertório -->
+  <div class="card">
+    <div class="card-header">
+      <h2><i class="fa-solid fa-list-music"></i> Repertório</h2>
+      <button class="btn-add" id="btnAdicionarMusica"><i class="fa-solid fa-plus"></i> Música</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1.6fr .55fr .55fr 34px;gap:.5rem;margin-bottom:.3rem;padding:0 .1rem;">
+      <span style="font-size:.7rem;font-weight:700;color:var(--fg2);text-transform:uppercase;">Nome</span>
+      <span style="font-size:.7rem;font-weight:700;color:var(--fg2);text-transform:uppercase;">Tom</span>
+      <span style="font-size:.7rem;font-weight:700;color:var(--fg2);text-transform:uppercase;">Sequência</span>
+      <span></span>
+    </div>
+    <div id="linhasRepertorio"></div>
+
+    <div class="links-secao" id="linksSecao">
+      <div class="links-secao-titulo"><i class="fa-brands fa-youtube" style="color:#e00;"></i> YouTube &nbsp;·&nbsp; <i class="fa-solid fa-music" style="color:var(--accent);"></i> Cifras por música</div>
+      <div id="linksMusicas"></div>
+    </div>
+  </div>
+
+  <!-- Escala -->
+  <div class="card">
+    <div class="card-header"><h2><i class="fa-solid fa-users"></i> Escala de Serviço</h2></div>
+    <div class="escala-grid-2">
+      <div class="escala-grupo">
+        <div class="escala-grupo-label"><i class="fa-solid fa-microphone"></i> Vocal</div>
+        <div class="escala-membros" id="membros-vocal"></div>
+        <button class="btn-add-membro" onclick="addMembro('vocal')"><i class="fa-solid fa-plus"></i> Adicionar</button>
+      </div>
+      <div class="escala-grupo">
+        <div class="escala-grupo-label"><i class="fa-solid fa-guitar"></i> Instrumental</div>
+        <div class="escala-membros" id="membros-instrumental"></div>
+        <button class="btn-add-membro" onclick="addMembro('instrumental')"><i class="fa-solid fa-plus"></i> Adicionar</button>
+      </div>
+      <div class="escala-grupo">
+        <div class="escala-grupo-label"><i class="fa-solid fa-display"></i> Multimídia</div>
+        <div class="escala-membros" id="membros-multimidia"></div>
+        <button class="btn-add-membro" onclick="addMembro('multimidia')"><i class="fa-solid fa-plus"></i> Adicionar</button>
+      </div>
+      <div class="escala-grupo">
+        <div class="escala-grupo-label"><i class="fa-solid fa-video"></i> Mídia · Live / Som</div>
+        <div class="escala-membros" id="membros-midia"></div>
+        <button class="btn-add-membro" onclick="addMembro('midia')"><i class="fa-solid fa-plus"></i> Adicionar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ QUADRO DE AVISOS ══ -->
+  <div class="card">
+    <div class="card-header">
+      <h2><i class="fa-solid fa-chalkboard"></i> Quadro de Avisos</h2>
+      <button class="btn-add" onclick="adicionarAviso(null)"><i class="fa-solid fa-plus"></i> Novo Aviso</button>
+    </div>
+    <div id="listaAvisos"></div>
+    <div class="avisos-hint">
+      <i class="fa-solid fa-circle-info" style="color:var(--accent);flex-shrink:0;margin-top:.1rem;"></i>
+      Use para datas comemorativas (Páscoa, Natal, Retiros…), músicas futuras do repertório e comunicados gerais.
+      Estes avisos aparecem no Quadro de Avisos visível para todos os membros.
+    </div>
+  </div>
+
+  <!-- Salvar -->
+  <button class="btn-salvar" id="btnSalvar"><i class="fa-solid fa-cloud-arrow-up"></i> Salvar &amp; Publicar</button>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+<script>
+  /* ============================================================
+     🔥 firebaseConfig
+  ============================================================ */
+  var firebaseConfig = {
+    apiKey:            "AIzaSyASRX7kZJUmp7jfx_C7buYnLfpz0reby4E",
+    authDomain:        "ministerio-de-louvor-e2eb3.firebaseapp.com",
+    projectId:         "ministerio-de-louvor-e2eb3",
+    storageBucket:     "ministerio-de-louvor-e2eb3.firebasestorage.app",
+    messagingSenderId: "319307727923",
+    appId:             "1:319307727923:web:845608da8aa866ac7ecf46"
+  };
+  firebase.initializeApp(firebaseConfig);
+  var db  = firebase.firestore();
+  var col = db.collection('ministerios');
+
+  var CHAVE_TEMA    = 'ministerioTemaGerenciador';
+  var CHAVE_LOGIN   = 'ministerioLoginGerenciador';
+  var VALIDADE_SESS = 8 * 60 * 60 * 1000;
+  var ministerioId  = null;
+  var mesSelecionado    = new Date().getMonth();
+  var semanaSelecionada = 0;
+
+  /* ===== Tema ===== */
+  function aplicarTema(t) {
+    document.documentElement.setAttribute('data-theme', t);
+    localStorage.setItem(CHAVE_TEMA, t);
+    document.querySelectorAll('.theme-btn').forEach(function(b){
+      b.classList.toggle('ativo', b.getAttribute('data-t') === t);
+    });
+  }
+  document.querySelectorAll('.theme-btn').forEach(function(b){
+    b.addEventListener('click', function(){ aplicarTema(b.getAttribute('data-t')); });
+  });
+  aplicarTema(localStorage.getItem(CHAVE_TEMA) || 'light');
+
+  /* ===== Sessão ===== */
+  function sessaoValida() {
+    var r = JSON.parse(localStorage.getItem(CHAVE_LOGIN) || 'null');
+    return r && (Date.now() - r.ts) < VALIDADE_SESS;
+  }
+
+  /* ===== Login ===== */
+  document.getElementById('btnEntrar').addEventListener('click', efetuarLogin);
+  document.getElementById('campoSenha').addEventListener('keydown', function(e){ if(e.key==='Enter') efetuarLogin(); });
+  document.getElementById('campoEmail').addEventListener('keydown', function(e){ if(e.key==='Enter') document.getElementById('campoSenha').focus(); });
+
+  function efetuarLogin() {
+    var email = document.getElementById('campoEmail').value.trim().toLowerCase();
+    var senha = document.getElementById('campoSenha').value.trim();
+    var msg   = document.getElementById('msgErro');
+    var btn   = document.getElementById('btnEntrar');
+    if (!email || !senha) { msg.textContent = 'Preencha e-mail e senha.'; return; }
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Verificando...';
+    btn.disabled  = true;
+    col.where('liderEmail','==',email).limit(1).get().then(function(snap) {
+      btn.innerHTML = '<i class="fa-solid fa-arrow-right-to-bracket"></i> Entrar';
+      btn.disabled  = false;
+      if (snap.empty) { msg.textContent = 'E-mail não encontrado.'; return; }
+      var doc = snap.docs[0]; var u = doc.data();
+      if (u.liderSenha !== senha)    { msg.textContent = 'Senha incorreta.'; document.getElementById('campoSenha').value=''; return; }
+      if (!u.ativo)                  { msg.textContent = 'Acesso bloqueado. Contate o administrador.'; return; }
+      if (Date.now() > u.expiracao)  { msg.textContent = 'Acesso expirado em ' + new Date(u.expiracao).toLocaleDateString('pt-BR') + '.'; return; }
+      localStorage.setItem(CHAVE_LOGIN, JSON.stringify({ ts:Date.now(), id:doc.id, email:u.liderEmail, nome:u.liderNome, expiracao:u.expiracao }));
+      abrirGerenciador(doc.id, u);
+    }).catch(function(err) {
+      btn.innerHTML = '<i class="fa-solid fa-arrow-right-to-bracket"></i> Entrar';
+      btn.disabled  = false;
+      msg.textContent = 'Erro: ' + err.message;
+    });
+  }
+
+  function abrirGerenciador(id, u) {
+    ministerioId = id;
+    document.getElementById('telaLogin').classList.add('oculto');
+    document.getElementById('gerenciador').classList.remove('oculto');
+    document.getElementById('btnLogout').classList.remove('oculto');
+    document.getElementById('syncBadge').classList.remove('oculto');
+    document.getElementById('validadeChip').classList.remove('oculto');
+    document.getElementById('headerUser').classList.remove('oculto');
+    document.getElementById('headerUser').textContent = (u.liderNome || u.liderEmail) + ' · ' + id;
+    var dias = Math.ceil((u.expiracao - Date.now()) / 86400000);
+    document.getElementById('validadeTexto').textContent = 'Expira em ' + dias + 'd';
+    if (dias <= 5) document.getElementById('validadeChip').classList.add('exp');
+    var base = window.location.origin + window.location.pathname.replace('gerenciador.html','');
+    document.getElementById('urlFrontTexto').textContent = base + 'front.html?id=' + id;
+    carregarDados();
+    renderizarMeses();
+    mostrarHoje();
+  }
+
+  function logout() {
+    localStorage.removeItem(CHAVE_LOGIN);
+    ministerioId = null;
+    document.getElementById('gerenciador').classList.add('oculto');
+    ['btnLogout','syncBadge','validadeChip','headerUser'].forEach(function(i){ document.getElementById(i).classList.add('oculto'); });
+    document.getElementById('telaLogin').classList.remove('oculto');
+    document.getElementById('campoEmail').value = '';
+    document.getElementById('campoSenha').value = '';
+    document.getElementById('msgErro').textContent = '';
+  }
+
+  /* ===== Carregar dados ===== */
+  function carregarDados() {
+    col.doc(ministerioId).get().then(function(doc) {
+      if (!doc.exists || !doc.data().programacao) { adicionarLinha(null); return; }
+      var p = doc.data().programacao;
+      if (p.mes    !== undefined) mesSelecionado    = p.mes;
+      if (p.semana !== undefined) semanaSelecionada = p.semana;
+
+      document.getElementById('linhasRepertorio').innerHTML = '';
+      document.getElementById('linksMusicas').innerHTML     = '';
+      (p.repertorio || []).forEach(function(m) { adicionarLinha(m); });
+      atualizarLinks();
+      setTimeout(function() {
+        var blocos = document.querySelectorAll('#linksMusicas [data-idx]');
+        (p.repertorio || []).forEach(function(m, i) {
+          if (blocos[i]) {
+            if (m.yt)    blocos[i].querySelector('.linkYt').value    = m.yt;
+            if (m.cifra) blocos[i].querySelector('.linkCifra').value = m.cifra;
+          }
+        });
+      }, 100);
+
+      ['vocal','instrumental','multimidia','midia'].forEach(function(g) {
+        var c = document.getElementById('membros-' + g); c.innerHTML = '';
+        var list = p[g] || ['']; if (!list.length) list = [''];
+        list.forEach(function(n) {
+          var l = document.createElement('div'); l.className='escala-linha';
+          l.innerHTML='<input type="text" value="'+n+'" placeholder="Nome"><button class="btn-del-membro" onclick="delMembro(this)"><i class="fa-solid fa-xmark"></i></button>';
+          c.appendChild(l);
+        });
+      });
+
+      // Carregar avisos
+      document.getElementById('listaAvisos').innerHTML = '';
+      (p.avisos || []).forEach(function(av) { adicionarAviso(av); });
+
+      renderizarMeses();
+    });
+  }
+
+  /* ===== URL Front ===== */
+  function copiarUrlFront() {
+    var url = document.getElementById('urlFrontTexto').textContent;
+    var btn = document.getElementById('btnCopyUrl');
+    navigator.clipboard.writeText(url).then(function(){
+      btn.innerHTML = '<i class="fa-solid fa-check"></i> Copiado!';
+      setTimeout(function(){ btn.innerHTML='<i class="fa-solid fa-copy"></i> Copiar'; }, 2000);
+    }).catch(function(){ alert('URL: ' + url); });
+  }
+
+  /* ===== Semanas ===== */
+  function renderizarMeses() {
+    var c = document.getElementById('tagsMes'); c.innerHTML = '';
+    var ano = new Date().getFullYear();
+    for (var m = 0; m < 12; m++) {
+      var nome = new Date(ano, m, 1).toLocaleString('pt-BR',{month:'short'});
+      var tag  = document.createElement('div');
+      tag.className = 'tag-mes' + (m===mesSelecionado?' ativa':'');
+      tag.textContent = nome; tag.setAttribute('data-m', m);
+      tag.addEventListener('click', function() { mesSelecionado=parseInt(this.getAttribute('data-m')); renderizarMeses(); renderizarSemanas(); });
+      c.appendChild(tag);
+    }
+    renderizarSemanas();
+  }
+  function diasNoMes(a,m){ return new Date(a,m+1,0).getDate(); }
+  function semanaISO(d){ var t=new Date(d.valueOf()); var dia=(d.getDay()+6)%7; t.setDate(t.getDate()-dia+3); var j4=new Date(t.getFullYear(),0,4); return 1+Math.ceil(((t-j4)/86400000)/7); }
+  function inicioSemanaISO(ano,sem){ var j4=new Date(ano,0,4); var d4=(j4.getDay()+6)%7; var d=new Date(j4); d.setDate(j4.getDate()-d4+(sem-1)*7); return d; }
+  function renderizarSemanas() {
+    var c = document.getElementById('tagsSemana'); c.innerHTML = '';
+    var ano = new Date().getFullYear();
+    var s1  = semanaISO(new Date(ano, mesSelecionado, 1));
+    var s2  = semanaISO(new Date(ano, mesSelecionado, diasNoMes(ano, mesSelecionado)));
+    for (var s = s1; s <= s2; s++) {
+      var ini = inicioSemanaISO(ano, s);
+      var tag = document.createElement('div');
+      tag.className = 'tag-semana' + (s===semanaSelecionada?' ativa':'');
+      var domingo = new Date(ini);
+      domingo.setDate(domingo.getDate() + 6);
+      tag.textContent = 'Sem. ' + s + ' (' +
+        domingo.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}) + ')';
+      tag.setAttribute('data-s', s);
+      tag.addEventListener('click', function() {
+        semanaSelecionada = parseInt(this.getAttribute('data-s'));
+        document.querySelectorAll('.tag-semana').forEach(function(t){ t.classList.remove('ativa'); });
+        this.classList.add('ativa');
+      });
+      c.appendChild(tag);
+    }
+    if (!semanaSelecionada) {
+      var sa = document.querySelector('.tag-semana[data-s="'+semanaISO(new Date())+'"]');
+      if (sa) sa.click();
+    }
+  }
+  function mostrarHoje() {
+    document.getElementById('badgeHoje').innerHTML =
+      '<i class="fa-solid fa-circle-dot"></i> Hoje: ' +
+      new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+  }
+
+  /* ===== Repertório ===== */
+  function adicionarLinha(dados) {
+    var c = document.getElementById('linhasRepertorio');
+    var l = document.createElement('div'); l.className='linha-musica';
+    l.innerHTML =
+      '<input type="text" class="nomeMusica" placeholder="Nome da música" value="'+(dados&&dados.nome?dados.nome:'')+'">' +
+      '<input type="text" class="tomMusica"  placeholder="Ex: G"          value="'+(dados&&dados.tom ?dados.tom :'')+'">' +
+      '<input type="text" class="seqMusica"  placeholder="Ex: 3ª"         value="'+(dados&&dados.seq ?dados.seq :'')+'">' +
+      '<button class="btn-remover" onclick="removerLinha(this)"><i class="fa-solid fa-xmark"></i></button>';
+    c.appendChild(l);
+    l.querySelector('.nomeMusica').addEventListener('input', atualizarLinks);
+  }
+  function removerLinha(btn) { btn.closest('.linha-musica').remove(); atualizarLinks(); }
+  document.getElementById('btnAdicionarMusica').addEventListener('click', function(){ adicionarLinha(null); atualizarLinks(); });
+
+  function atualizarLinks() {
+    var c = document.getElementById('linksMusicas');
+    var musicas = document.querySelectorAll('#linhasRepertorio .nomeMusica');
+    var prev = {};
+    c.querySelectorAll('[data-idx]').forEach(function(el) {
+      var i = el.getAttribute('data-idx');
+      prev[i] = { yt: el.querySelector('.linkYt')?el.querySelector('.linkYt').value:'', cifra: el.querySelector('.linkCifra')?el.querySelector('.linkCifra').value:'' };
+    });
+    c.innerHTML = '';
+    musicas.forEach(function(inp, i) {
+      var nome = inp.value.trim() || ('Música '+(i+1));
+      var p    = prev[i] || {yt:'',cifra:''};
+      var bloco = document.createElement('div');
+      bloco.setAttribute('data-idx', i);
+      bloco.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:.45rem;margin-bottom:.5rem;align-items:center;';
+      bloco.innerHTML =
+        '<span style="font-size:.78rem;font-weight:700;color:var(--fg2);grid-column:span 2;"><i class="fa-solid fa-music" style="color:var(--accent);"></i> '+nome+'</span>'+
+        '<input type="url" class="linkYt"    value="'+p.yt+'"    placeholder="YouTube https://youtu.be/..." style="padding:.5rem .7rem;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-sm);color:var(--fg);font-family:var(--font);font-size:.8rem;width:100%;outline:none;">'+
+        '<input type="url" class="linkCifra" value="'+p.cifra+'" placeholder="Cifra https://..."          style="padding:.5rem .7rem;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-sm);color:var(--fg);font-family:var(--font);font-size:.8rem;width:100%;outline:none;">';
+      c.appendChild(bloco);
+    });
+  }
+
+  /* ===== Escala ===== */
+  function addMembro(grupo) {
+    var c = document.getElementById('membros-'+grupo);
+    var l = document.createElement('div'); l.className='escala-linha';
+    l.innerHTML='<input type="text" placeholder="Nome do membro"><button class="btn-del-membro" onclick="delMembro(this)"><i class="fa-solid fa-xmark"></i></button>';
+    c.appendChild(l); l.querySelector('input').focus();
+  }
+  function delMembro(btn) {
+    var c = btn.closest('.escala-membros');
+    if (c.children.length > 1) btn.closest('.escala-linha').remove();
+    else btn.closest('.escala-linha').querySelector('input').value='';
+  }
+  function coletarMembros(g) {
+    var lista=[];
+    document.querySelectorAll('#membros-'+g+' input').forEach(function(inp){ var v=inp.value.trim(); if(v) lista.push(v); });
+    return lista;
+  }
+
+  /* ===== Quadro de Avisos ===== */
+  function adicionarAviso(dados) {
+    var c = document.getElementById('listaAvisos');
+    var l = document.createElement('div'); l.className='aviso-linha';
+    var tipo = dados && dados.tipo ? dados.tipo : 'geral';
+    l.innerHTML =
+      '<select class="avisoTipo">' +
+        '<option value="comemorativa"'+(tipo==='comemorativa'?' selected':'')+'>🎉 Data Comemorativa</option>' +
+        '<option value="futura"'      +(tipo==='futura'      ?' selected':'')+'>🎵 Música Futura</option>'      +
+        '<option value="geral"'       +(tipo==='geral'       ?' selected':'')+'>📢 Aviso Geral</option>'        +
+      '</select>' +
+      '<input  type="text" class="avisoTitulo"    placeholder="Título do aviso..." value="'+(dados&&dados.titulo?dados.titulo:'')+'">' +
+      '<textarea            class="avisoDescricao" placeholder="Descrição (opcional)...">'+(dados&&dados.descricao?dados.descricao:'')+'</textarea>' +
+      '<input  type="date" class="avisoData"      value="'+(dados&&dados.data?dados.data:'')+'">' +
+      '<button class="btn-del-aviso" onclick="this.closest(\'.aviso-linha\').remove()"><i class="fa-solid fa-xmark"></i></button>';
+    c.appendChild(l);
+  }
+
+  function coletarAvisos() {
+    var lista = [];
+    document.querySelectorAll('#listaAvisos .aviso-linha').forEach(function(l) {
+      var titulo = l.querySelector('.avisoTitulo').value.trim();
+      if (!titulo) return;
+      lista.push({
+        tipo:      l.querySelector('.avisoTipo').value,
+        titulo:    titulo,
+        descricao: l.querySelector('.avisoDescricao').value.trim(),
+        data:      l.querySelector('.avisoData').value
+      });
+    });
+    return lista;
+  }
+
+  /* ===== Sync badge ===== */
+  function setSyncBadge(estado) {
+    var b = document.getElementById('syncBadge');
+    b.className = 'sync-badge'+(estado==='salvando'?' salvando':estado==='erro'?' erro':'');
+    b.innerHTML = estado==='salvando'
+      ? '<i class="fa-solid fa-spinner fa-spin"></i> Salvando...'
+      : estado==='erro'
+      ? '<i class="fa-solid fa-triangle-exclamation"></i> Erro ao salvar'
+      : '<i class="fa-solid fa-cloud-check"></i> Sincronizado';
+  }
+
+  /* ===== Salvar ===== */
+  document.getElementById('btnSalvar').addEventListener('click', publicar);
+
+  function coletarDados() {
+    var linhas = document.querySelectorAll('#linhasRepertorio .linha-musica');
+    var blocos = document.querySelectorAll('#linksMusicas [data-idx]');
+    var rep = [];
+    linhas.forEach(function(l, i) {
+      var nome  = l.querySelector('.nomeMusica').value.trim();
+      var tom   = l.querySelector('.tomMusica').value.trim();
+      var seq   = l.querySelector('.seqMusica').value.trim();
+      var bloco = blocos[i];
+      var yt    = bloco ? bloco.querySelector('.linkYt').value.trim()    : '';
+      var cifra = bloco ? bloco.querySelector('.linkCifra').value.trim() : '';
+      if (nome || tom) rep.push({nome:nome,tom:tom,seq:seq,yt:yt,cifra:cifra});
+    });
+    return {
+      mes:          mesSelecionado,
+      semana:       semanaSelecionada,
+      repertorio:   rep,
+      vocal:        coletarMembros('vocal'),
+      instrumental: coletarMembros('instrumental'),
+      multimidia:   coletarMembros('multimidia'),
+      midia:        coletarMembros('midia'),
+      avisos:       coletarAvisos(),
+      atualizadoEm: Date.now()
+    };
+  }
+
+  function publicar() {
+    if (!ministerioId) return;
+    var btn = document.getElementById('btnSalvar');
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Publicando...';
+    btn.disabled  = true;
+    setSyncBadge('salvando');
+    col.doc(ministerioId).update({ programacao: coletarDados() })
+      .then(function() {
+        setSyncBadge('ok');
+        btn.innerHTML = '<i class="fa-solid fa-check"></i> Publicado com sucesso!';
+        setTimeout(function(){ btn.innerHTML='<i class="fa-solid fa-cloud-arrow-up"></i> Salvar & Publicar'; btn.disabled=false; }, 2500);
+      })
+      .catch(function(err) {
+        setSyncBadge('erro');
+        btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> Salvar & Publicar';
+        btn.disabled  = false;
+        alert('Erro ao salvar: ' + err.message);
+      });
+  }
+
+  /* ===== Init ===== */
+  if (sessaoValida()) {
+    var r = JSON.parse(localStorage.getItem(CHAVE_LOGIN));
+    col.doc(r.id).get().then(function(doc) {
+      if (!doc.exists) { logout(); return; }
+      var u = doc.data();
+      if (!u.ativo || Date.now() > u.expiracao) { logout(); return; }
+      abrirGerenciador(r.id, u);
+    }).catch(function(){ logout(); });
+  }
+
+  // Inicializar com 1 linha vazia se não houver dados
+</script>
+</body>
+</html>
