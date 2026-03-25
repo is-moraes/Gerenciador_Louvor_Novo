@@ -9,20 +9,28 @@
 <style>
   *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
   :root {
-    --bg:#f0f2f8; --surface:#ffffff; --fg:#1a1a2e; --fg2:#555577;
-    --accent:#4f46e5; --accent2:#7c3aed; --success:#10b981;
-    --danger:#ef4444; --border:#e2e8f0; --radius:14px; --radius-sm:8px;
+    --bg:#f0f2f8; 
+    --surface:#ffffff; 
+    --fg:#1a1a2e; 
+    --fg2:#555577;
+    --accent:#46c5e5; 
+    --accent2:#1a7596; 
+    --success:#10b981;
+    --danger:#bd3636; 
+    --border:#e2e8f0; 
+    --radius:14px; 
+    --radius-sm:16px;
     --shadow:0 4px 24px rgba(79,70,229,.10);
     --shadow-lg:0 8px 40px rgba(79,70,229,.18);
     --font:'Inter',sans-serif;
     --grad:linear-gradient(135deg,var(--accent),var(--accent2));
     --header-h:60px;
   }
-  [data-theme="dark"]     { --bg:#0f0f1a; --surface:#1e1e2f; --fg:#e8e8f8; --fg2:#9999bb; --accent:#818cf8; --accent2:#a78bfa; --border:#2e2e4a; --shadow:0 4px 24px rgba(0,0,0,.4); --shadow-lg:0 8px 40px rgba(0,0,0,.5); }
-  [data-theme="rose"]     { --bg:#fff1f3; --surface:#fff; --fg:#4a0010; --fg2:#9f4459; --accent:#f43f5e; --accent2:#e11d48; --border:#fecdd3; }
+  [data-theme="dark"]     { --bg:#0f0f1a; --surface:#1e1e2f; --fg:#e8e8f8; --fg2:#99babb; --accent:#228fa7; --accent2:#a78bfa; --border:#2e2e4a; --shadow:0 4px 24px rgba(0,0,0,.4); --shadow-lg:0 8px 40px rgba(0,0,0,.5); }
+  [data-theme="rose"]     { --bg:#fff9f1; --surface:#fff; --fg:#2d2d2d; --fg2:#9f6544; --accent:#f4813f; --accent2:#e16f1d; --border:#fecdd3; }
   [data-theme="ocean"]    { --bg:#e0f4ff; --surface:#fff; --fg:#0c2d48; --fg2:#2d7da0; --accent:#0ea5e9; --accent2:#0284c7; --border:#bae6fd; }
-  [data-theme="forest"]   { --bg:#ecfdf5; --surface:#fff; --fg:#052e16; --fg2:#2d6a4f; --accent:#059669; --accent2:#047857; --border:#a7f3d0; }
-  [data-theme="midnight"] { --bg:#020617; --surface:#0f172a; --fg:#f1f5f9; --fg2:#94a3b8; --accent:#6366f1; --accent2:#8b5cf6; --border:#1e293b; --shadow:0 4px 24px rgba(0,0,0,.6); }
+  [data-theme="forest"]   { --bg:#ecfdf5; --surface:#fff; --fg:#052e16; --fg2:#2d6a4f; --accent:#059669; --accent2:#43b69d; --border:#a7f3d0; }
+  [data-theme="midnight"] { --bg:#020617; --surface:#0f172a; --fg:#f1f5f9; --fg2:#94a3b8; --accent:#63d5f1; --accent2:#0a455c; --border:#1e293b; --shadow:0 4px 24px rgba(0,0,0,.6); }
 
   body { font-family:var(--font); background:var(--bg); color:var(--fg); min-height:100vh; transition:background .3s,color .3s; }
 
@@ -36,11 +44,11 @@
   .theme-bar { display:flex; gap:.35rem; }
   .theme-btn { width:20px; height:20px; border-radius:50%; border:2.5px solid rgba(255,255,255,.5); cursor:pointer; transition:transform .2s,border-color .2s; }
   .theme-btn:hover,.theme-btn.ativo { border-color:#fff; transform:scale(1.3); }
-  .theme-btn[data-t="light"]    { background:linear-gradient(135deg,#4f46e5,#7c3aed); }
+  .theme-btn[data-t="light"]    { background:linear-gradient(135deg,#4acbe8,#1395c1); }
   .theme-btn[data-t="dark"]     { background:linear-gradient(135deg,#1e1e2f,#818cf8); }
-  .theme-btn[data-t="rose"]     { background:linear-gradient(135deg,#f43f5e,#e11d48); }
+  .theme-btn[data-t="rose"]     { background:linear-gradient(135deg,#f4873f,#e1621d); }
   .theme-btn[data-t="ocean"]    { background:linear-gradient(135deg,#0ea5e9,#0284c7); }
-  .theme-btn[data-t="forest"]   { background:linear-gradient(135deg,#059669,#047857); }
+  .theme-btn[data-t="forest"]   { background:linear-gradient(135deg,#059672,#04786e); }
   .theme-btn[data-t="midnight"] { background:linear-gradient(135deg,#020617,#6366f1); }
 
   main { max-width:800px; margin:0 auto; padding:1.5rem 1rem; }
@@ -56,6 +64,7 @@
   .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:1.2rem; margin-bottom:1.2rem; box-shadow:var(--shadow); animation:fadeUp .4s ease; transition:background .3s,border-color .3s; }
   .card-header { display:flex; align-items:center; gap:.5rem; font-size:.95rem; font-weight:700; color:var(--accent); margin-bottom:1rem; padding-bottom:.7rem; border-bottom:1.5px solid var(--border); }
 
+  /* ── Repertório ── */
   .rep-list { display:flex; flex-direction:column; gap:.7rem; }
   .rep-item { background:var(--bg); border:1.5px solid var(--border); border-radius:var(--radius-sm); padding:.9rem 1rem; display:grid; grid-template-columns:36px 1fr auto; grid-template-rows:auto auto; column-gap:.75rem; row-gap:.35rem; transition:border-color .2s; }
   .rep-item:hover { border-color:var(--accent); }
@@ -67,9 +76,10 @@
   .rep-links { grid-column:2 / span 2; display:flex; gap:.4rem; flex-wrap:wrap; }
   .link-btn { display:inline-flex; align-items:center; gap:.3rem; padding:.22rem .6rem; border-radius:6px; font-size:.75rem; font-weight:600; text-decoration:none; transition:opacity .2s; }
   .link-yt    { background:#ff000012; color:#e00; border:1.5px solid #ff000025; }
-  .link-cifra { background:var(--accent)12; color:var(--accent); border:1.5px solid var(--accent)25; }
+  .link-cifra { background:rgba(79,70,229,.08); color:var(--accent); border:1.5px solid rgba(79,70,229,.2); }
   .link-btn:hover { opacity:.7; }
 
+  /* ── Escala ── */
   .escala-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:.8rem; }
   .escala-card { background:var(--bg); border:1.5px solid var(--border); border-radius:var(--radius-sm); padding:.9rem 1rem; transition:border-color .2s; }
   .escala-card:hover { border-color:var(--accent); }
@@ -80,15 +90,28 @@
   .escala-nome { font-size:.88rem; font-weight:600; color:var(--fg); }
   .escala-vazio { color:var(--fg2); font-style:italic; font-size:.82rem; }
 
-  .links-rapidos-lista { display:flex; flex-direction:column; gap:.6rem; }
-  .links-rapidos-item { display:flex; align-items:center; gap:.6rem; flex-wrap:wrap; padding:.6rem .8rem; background:var(--bg); border:1.5px solid var(--border); border-radius:var(--radius-sm); }
-  .links-rapidos-nome { font-size:.88rem; font-weight:600; flex:1; min-width:100px; }
+  /* ── Quadro de Avisos ── */
+  .avisos-lista { display:flex; flex-direction:column; gap:.75rem; }
+  .aviso-item { display:flex; gap:.85rem; align-items:flex-start; padding:.9rem 1rem; background:var(--bg); border:1.5px solid var(--border); border-radius:var(--radius-sm); transition:border-color .2s; }
+  .aviso-item:hover { border-color:var(--accent); }
+  .aviso-icone { width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; }
+  .aviso-icone.comemorativa { background:linear-gradient(135deg,#f59e0b,#d97706); color:#fff; }
+  .aviso-icone.futura       { background:linear-gradient(135deg,#8b5cf6,#6d28d9); color:#fff; }
+  .aviso-icone.geral        { background:linear-gradient(135deg,#10b981,#059669); color:#fff; }
+  .aviso-corpo { flex:1; min-width:0; }
+  .aviso-titulo { font-size:.92rem; font-weight:700; color:var(--fg); margin-bottom:.2rem; display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; }
+  .aviso-badge { padding:.1rem .55rem; border-radius:20px; font-size:.65rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; }
+  .aviso-badge.comemorativa { background:rgba(245,158,11,.15); color:#d97706; border:1.5px solid rgba(245,158,11,.3); }
+  .aviso-badge.futura       { background:rgba(139,92,246,.15); color:#7c3aed; border:1.5px solid rgba(139,92,246,.3); }
+  .aviso-badge.geral        { background:rgba(16,185,129,.15); color:#059669; border:1.5px solid rgba(16,185,129,.3); }
+  .aviso-descricao { font-size:.85rem; color:var(--fg2); line-height:1.5; }
+  .aviso-data { font-size:.75rem; color:var(--fg2); margin-top:.3rem; display:flex; align-items:center; gap:.3rem; font-weight:600; }
 
+  /* ── Empty / Loading ── */
   .empty-state { text-align:center; padding:3.5rem 1.5rem; display:flex; flex-direction:column; align-items:center; gap:1rem; }
   .empty-icon { width:72px; height:72px; border-radius:50%; background:var(--bg); border:2px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:1.8rem; color:var(--fg2); }
   .empty-state h3 { font-size:1rem; font-weight:700; color:var(--fg2); }
   .empty-state p  { font-size:.85rem; color:var(--fg2); max-width:280px; }
-
   .loading-state { text-align:center; padding:4rem 2rem; color:var(--fg2); }
   .loading-state i { font-size:2rem; animation:spin 1s linear infinite; margin-bottom:1rem; color:var(--accent); display:block; }
   @keyframes spin { to{transform:rotate(360deg)} }
@@ -103,6 +126,7 @@
     main { padding:1rem .75rem; }
     .hero { padding:1.4rem 1rem; }
     .escala-grid { grid-template-columns:1fr; }
+    .aviso-icone { width:34px; height:34px; font-size:.95rem; }
   }
   @media(max-width:360px) {
     .header-data-culto { display:none; }
@@ -148,22 +172,17 @@
   &nbsp;·&nbsp; <i class="fa-solid fa-heart"></i> Ministério de Louvor
 </footer>
 
-<!-- FIREBASE -->
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 <script>
-  /* ============================================================
-     🔥 COLE AQUI O SEU firebaseConfig
-  ============================================================ */
   var firebaseConfig = {
-  apiKey:            "AIzaSyASRX7kZJUmp7jfx_C7buYnLfpz0reby4E",
-  authDomain:        "ministerio-de-louvor-e2eb3.firebaseapp.com",
-  projectId:         "ministerio-de-louvor-e2eb3",
-  storageBucket:     "ministerio-de-louvor-e2eb3.firebasestorage.app",
-  messagingSenderId: "319307727923",
-  appId:             "1:319307727923:web:845608da8aa866ac7ecf46"
-};
-
+    apiKey:            "AIzaSyASRX7kZJUmp7jfx_C7buYnLfpz0reby4E",
+    authDomain:        "ministerio-de-louvor-e2eb3.firebaseapp.com",
+    projectId:         "ministerio-de-louvor-e2eb3",
+    storageBucket:     "ministerio-de-louvor-e2eb3.firebasestorage.app",
+    messagingSenderId: "319307727923",
+    appId:             "1:319307727923:web:845608da8aa866ac7ecf46"
+  };
   firebase.initializeApp(firebaseConfig);
   var db  = firebase.firestore();
   var col = db.collection('ministerios');
@@ -185,13 +204,10 @@
   });
   aplicarTema(localStorage.getItem(CHAVE_TEMA) || 'light');
 
-  /* ===== Pega o ID do ministério pela URL ===== */
   function getMinisterioId() {
-    var params = new URLSearchParams(window.location.search);
-    return params.get('id');
+    return new URLSearchParams(window.location.search).get('id');
   }
 
-  /* ===== Data do culto (domingo da semana ISO) ===== */
   function domingoSemanaISO(ano, sem) {
     var j4  = new Date(ano, 0, 4);
     var d4  = (j4.getDay() + 6) % 7;
@@ -210,6 +226,13 @@
   }
 
   function capitalize(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
+
+  function formatarDataAviso(dataStr) {
+    if (!dataStr) return '';
+    var partes = dataStr.split('-');
+    if (partes.length < 2) return dataStr;
+    return partes[2] ? partes[2] + '/' + partes[1] + '/' + partes[0] : partes[1] + '/' + partes[0];
+  }
 
   function atualizarHeader(semana) {
     var el = document.getElementById('headerDataCulto').querySelector('span');
@@ -241,8 +264,8 @@
       html += '<div class="rep-list">';
       d.repertorio.forEach(function(m, i) {
         var badges = '';
-        if (m.tom) badges += '<span class="badge-tom">' + m.tom + '</span>';
-        if (m.seq) badges += '<span class="badge-seq">' + m.seq + '</span>';
+        if (m.tom)  badges += '<span class="badge-tom">' + m.tom + '</span>';
+        if (m.seq)  badges += '<span class="badge-seq">' + m.seq + '</span>';
         var links = '';
         if (m.yt)    links += '<a class="link-btn link-yt"    href="' + m.yt    + '" target="_blank"><i class="fa-brands fa-youtube"></i> YouTube</a>';
         if (m.cifra) links += '<a class="link-btn link-cifra" href="' + m.cifra + '" target="_blank"><i class="fa-solid fa-music"></i> Cifra</a>';
@@ -279,15 +302,33 @@
     });
     html += '</div></div>';
 
-    /* LINKS RÁPIDOS */
-    if (d.repertorio && d.repertorio.some(function(m){ return m.yt || m.cifra; })) {
-      html += '<div class="card"><div class="card-header"><i class="fa-solid fa-link"></i> Links Rápidos</div><div class="links-rapidos-lista">';
-      d.repertorio.forEach(function(m) {
-        if (!m.yt && !m.cifra) return;
-        html += '<div class="links-rapidos-item"><span class="links-rapidos-nome">' + (m.nome||'—') + '</span>';
-        if (m.yt)    html += '<a class="link-btn link-yt"    href="' + m.yt    + '" target="_blank"><i class="fa-brands fa-youtube"></i> YouTube</a>';
-        if (m.cifra) html += '<a class="link-btn link-cifra" href="' + m.cifra + '" target="_blank"><i class="fa-solid fa-music"></i> Cifra</a>';
-        html += '</div>';
+    /* QUADRO DE AVISOS */
+    var avisos = d.avisos || [];
+    if (avisos.length > 0) {
+      var TIPOS = {
+        comemorativa: { label:'Data Comemorativa', icon:'fa-star'       },
+        futura:       { label:'Música Futura',     icon:'fa-music'      },
+        geral:        { label:'Aviso Geral',        icon:'fa-bullhorn'   }
+      };
+
+      html += '<div class="card"><div class="card-header"><i class="fa-solid fa-chalkboard"></i> Quadro de Avisos</div><div class="avisos-lista">';
+      avisos.forEach(function(av) {
+        var tipo  = av.tipo || 'geral';
+        var info  = TIPOS[tipo] || TIPOS.geral;
+        var dataFmt = av.data ? formatarDataAviso(av.data) : '';
+
+        html +=
+          '<div class="aviso-item">' +
+            '<div class="aviso-icone ' + tipo + '"><i class="fa-solid ' + info.icon + '"></i></div>' +
+            '<div class="aviso-corpo">' +
+              '<div class="aviso-titulo">' +
+                (av.titulo || '—') +
+                '<span class="aviso-badge ' + tipo + '">' + info.label + '</span>' +
+              '</div>' +
+              (av.descricao ? '<div class="aviso-descricao">' + av.descricao + '</div>' : '') +
+              (dataFmt ? '<div class="aviso-data"><i class="fa-regular fa-calendar"></i> ' + dataFmt + '</div>' : '') +
+            '</div>' +
+          '</div>';
       });
       html += '</div></div>';
     }
@@ -309,7 +350,6 @@
       return;
     }
 
-    // Escuta em tempo real — atualiza automaticamente quando o líder salvar
     col.doc(id).onSnapshot(function(doc) {
       if (!doc.exists || !doc.data().programacao) {
         document.getElementById('conteudo').innerHTML =
