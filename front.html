@@ -190,6 +190,10 @@
   var CHAVE_TEMA  = 'ministerioTemaFront';
   var MESES_LONGO = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
   var DIAS_SEMANA = ['domingo','segunda-feira','terça-feira','quarta-feira','quinta-feira','sexta-feira','sábado'];
+  var programacoesFront  = {};
+  var semanaFrontAtual   = 0;
+  var anoFront           = new Date().getFullYear();
+
 
   /* ===== Tema ===== */
   function aplicarTema(t) {
@@ -335,6 +339,78 @@
 
     main.innerHTML = html;
   }
+    function chaveSF(s) {
+    return anoFront + '-' + String(s).padStart(2,'0');
+  }
+
+  function renderizarSemanaFront(s) {
+    semanaFrontAtual = s;
+    var dados = programacoesFront[chaveSF(s)];
+
+    // Atualizar nav
+    var lbl = document.getElementById('nav-sem-label');
+    if (lbl) lbl.textContent = 'Semana ' + s + ' · ' + anoFront;
+    document.querySelectorAll('.nav-sem-ponto').forEach(function(p){
+      var ps = parseInt(p.dataset.s);
+      p.classList.toggle('ativa',    ps === s);
+      p.classList.toggle('tem-dados', !!programacoesFront[chaveSF(ps)]);
+    });
+
+    if (!dados) {
+      atualizarHeader(s);
+      document.getElementById('conteudo').innerHTML =
+        '<div class="empty-state">' +
+          '<div class="empty-icon"><i class="fa-solid fa-calendar-xmark"></i></div>' +
+          '<h3>Sem programação</h3>' +
+          '<p>Nenhum repertório cadastrado para esta semana.</p>' +
+        '</div>';
+      return;
+    }
+    dados.semana = s;
+    renderizar(dados);
+  }
+
+  function navegarSemana(delta) {
+    var nova = semanaFrontAtual + delta;
+    if (nova < 1)  nova = 1;
+    if (nova > 53) nova = 53;
+    renderizarSemanaFront(nova);
+  }
+
+  function criarNavSemanas() {
+    if (document.getElementById('nav-semanas-front')) return;
+    var nav = document.createElement('div');
+    nav.id = 'nav-semanas-front';
+    nav.style.cssText =
+      'display:flex;align-items:center;justify-content:space-between;' +
+      'padding:.6rem 1.25rem;background:var(--surface);' +
+      'border-bottom:1px solid var(--border);position:sticky;top:var(--header-h);z-index:90;';
+
+    // Gerar pontos de semanas (1–53) para o ano
+    var pontos = '';
+    for (var si = 1; si <= 53; si++) {
+      pontos += '<span class="nav-sem-ponto" data-s="'+si+'" ' +
+        'style="display:inline-block;width:8px;height:8px;border-radius:50%;' +
+        'background:var(--border);margin:0 2px;cursor:pointer;transition:.2s;" ' +
+        'onclick="navegarSemana('+(si - (semanaFrontAtual || si))+')"></span>';
+    }
+
+    nav.innerHTML =
+      '<button onclick="navegarSemana(-1)" style="background:none;border:none;cursor:pointer;' +
+        'color:var(--fg);font-size:1.1rem;padding:.3rem .6rem;">' +
+        '<i class="fa-solid fa-chevron-left"></i></button>' +
+      '<div style="display:flex;flex-direction:column;align-items:center;gap:.3rem;">' +
+        '<span id="nav-sem-label" style="font-size:.85rem;font-weight:600;color:var(--fg);">Semana</span>' +
+        '<div>'+pontos+'</div>' +
+      '</div>' +
+      '<button onclick="navegarSemana(1)" style="background:none;border:none;cursor:pointer;' +
+        'color:var(--fg);font-size:1.1rem;padding:.3rem .6rem;">' +
+        '<i class="fa-solid fa-chevron-right"></i></button>';
+
+    var conteudo = document.getElementById('conteudo');
+    conteudo.parentNode.insertBefore(nav, conteudo);
+  }
+
 
   /* ===== Listener em tempo real ===== */
   function iniciar() {
@@ -350,18 +426,36 @@
       return;
     }
 
-    col.doc(id).onSnapshot(function(doc) {
-      if (!doc.exists || !doc.data().programacao) {
+        criarNavSemanas();
+
+    col.doc(id).onSnapshot(function(doc){
+      if (!doc.exists) {
         document.getElementById('conteudo').innerHTML =
           '<div class="empty-state">' +
             '<div class="empty-icon"><i class="fa-solid fa-music"></i></div>' +
-            '<h3>Nenhuma programação ainda</h3>' +
-            '<p>Aguarde o líder publicar a programação da semana.</p>' +
+            '<h3>Sem programação</h3>' +
+            '<p>Seu líder ainda não publicou o repertório.</p>' +
           '</div>';
-        atualizarHeader(null);
+        atualizarHeader(0);
         return;
       }
-      renderizar(doc.data().programacao);
+      var data = doc.data();
+
+      // Carregar mapa de semanas
+      if (data.programacoes && Object.keys(data.programacoes).length > 0) {
+        programacoesFront = data.programacoes;
+      } else if (data.programacao) {
+        var p0 = data.programacao;
+        programacoesFront[chaveSF(p0.semana || 1)] = p0;
+      }
+
+      // Determinar semana inicial apenas na primeira carga
+      if (!semanaFrontAtual) {
+        var pRef = data.programacao || {};
+        semanaFrontAtual = pRef.semana || semanaISO(new Date());
+      }
+
+      renderizarSemanaFront(semanaFrontAtual);
     }, function(err) {
       document.getElementById('conteudo').innerHTML =
         '<div class="empty-state">' +
