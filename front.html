@@ -255,10 +255,24 @@
     /* HERO */
     html +=
       '<div class="hero">' +
-        '<div class="hero-label"><i class="fa-solid fa-calendar-week"></i> &nbsp;Semana ' + d.semana + ' · ' + mesNome + ' ' + ano + '</div>' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem;">' +
+          '<div class="hero-label" style="margin:0;">' +
+            '<i class="fa-solid fa-calendar-week"></i>&nbsp; Semana ' + d.semana + ' · ' + mesNome + ' ' + ano +
+          '</div>' +
+          '<div style="display:flex;align-items:center;gap:.45rem;z-index:1;position:relative;">' +
+            '<button onclick="navegarSemana(-1)" style="background:rgba(255,255,255,.22);border:none;border-radius:8px;' +
+              'color:#fff;width:30px;height:30px;cursor:pointer;font-size:.85rem;display:flex;align-items:center;justify-content:center;">' +
+              '<i class="fa-solid fa-chevron-left"></i></button>' +
+            '<span style="color:#fff;font-size:.8rem;font-weight:700;white-space:nowrap;">Sem. ' + d.semana + '</span>' +
+            '<button onclick="navegarSemana(1)" style="background:rgba(255,255,255,.22);border:none;border-radius:8px;' +
+              'color:#fff;width:30px;height:30px;cursor:pointer;font-size:.85rem;display:flex;align-items:center;justify-content:center;">' +
+              '<i class="fa-solid fa-chevron-right"></i></button>' +
+          '</div>' +
+        '</div>' +
         '<h2>Programação do Culto</h2>' +
         '<div class="hero-data-box"><i class="fa-regular fa-calendar-check"></i> ' + formatarDataCulto(d.semana) + '</div>' +
       '</div>';
+
 
     /* REPERTÓRIO */
     html += '<div class="card"><div class="card-header"><i class="fa-solid fa-list-music"></i> Repertório da Semana</div>';
@@ -377,39 +391,7 @@
     renderizarSemanaFront(nova);
   }
 
-  function criarNavSemanas() {
-    if (document.getElementById('nav-semanas-front')) return;
-    var nav = document.createElement('div');
-    nav.id = 'nav-semanas-front';
-    nav.style.cssText =
-      'display:flex;align-items:center;justify-content:space-between;' +
-      'padding:.6rem 1.25rem;background:var(--surface);' +
-      'border-bottom:1px solid var(--border);position:sticky;top:var(--header-h);z-index:90;';
-
-    // Gerar pontos de semanas (1–53) para o ano
-    var pontos = '';
-    for (var si = 1; si <= 53; si++) {
-      pontos += '<span class="nav-sem-ponto" data-s="'+si+'" ' +
-        'style="display:inline-block;width:8px;height:8px;border-radius:50%;' +
-        'background:var(--border);margin:0 2px;cursor:pointer;transition:.2s;" ' +
-        'onclick="navegarSemana('+(si - (semanaFrontAtual || si))+')"></span>';
-    }
-
-    nav.innerHTML =
-      '<button onclick="navegarSemana(-1)" style="background:none;border:none;cursor:pointer;' +
-        'color:var(--fg);font-size:1.1rem;padding:.3rem .6rem;">' +
-        '<i class="fa-solid fa-chevron-left"></i></button>' +
-      '<div style="display:flex;flex-direction:column;align-items:center;gap:.3rem;">' +
-        '<span id="nav-sem-label" style="font-size:.85rem;font-weight:600;color:var(--fg);">Semana</span>' +
-        '<div>'+pontos+'</div>' +
-      '</div>' +
-      '<button onclick="navegarSemana(1)" style="background:none;border:none;cursor:pointer;' +
-        'color:var(--fg);font-size:1.1rem;padding:.3rem .6rem;">' +
-        '<i class="fa-solid fa-chevron-right"></i></button>';
-
-    var conteudo = document.getElementById('conteudo');
-    conteudo.parentNode.insertBefore(nav, conteudo);
-  }
+  
 
 
   /* ===== Listener em tempo real ===== */
@@ -426,7 +408,7 @@
       return;
     }
 
-        criarNavSemanas();
+        
 
     col.doc(id).onSnapshot(function(doc){
       if (!doc.exists) {
