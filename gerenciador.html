@@ -787,6 +787,8 @@ lista.push    c.appendChild(l);
       abrirGerenciador(r.id, u);
     }).catch(function(){ logout(); });
   }
+   document.getElementById('btnEntrar').addEventListener('click', efetuarLogin);
+   document.getElementById('campoSenha').addEventListener('keydown', function(e){ if(e.key==='Enter') efetuarLogin(); });
 
   // Inicializar com 1 linha vazia se não houver dados
 </script>
