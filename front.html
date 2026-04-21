@@ -345,6 +345,7 @@
               '</div>' +
               (av.descricao ? '<div class="aviso-descricao">' + av.descricao + '</div>' : '') +
               (dataFmt ? '<div class="aviso-data"><i class="fa-regular fa-calendar"></i> ' + dataFmt + '</div>' : '') +
+                       (av.tipo === 'futura' && av.youtube ? '<a class="aviso-yt-link" href="' + av.youtube + '" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-youtube"></i> Assistir no YouTube</a>' : '') +
             '</div>' +
           '</div>';
       });
