@@ -620,19 +620,20 @@
     var c = document.getElementById('listaAvisos');
     var l = document.createElement('div'); l.className='aviso-linha';
     var tipo = dados && dados.tipo ? dados.tipo : 'geral';
-    l.innerHTML =
-      '<select class="avisoTipo">' +
-        '<option value="comemorativa"'+(tipo==='comemorativa'?' selected':'')+'>🎉 Data Comemorativa</option>' +
-        '<option value="futura"'      +(tipo==='futura'      ?' selected':'')+'>🎵 Música Futura</option>'      +
-        '<option value="geral"'       +(tipo==='geral'       ?' selected':'')+'>📢 Aviso Geral</option>'        +
-      '</select>' +
-      '<input  type="text" class="avisoTitulo"    placeholder="Título do aviso..." value="'+(dados&&dados.titulo?dados.titulo:'')+'">' +
-      '<textarea            class="avisoDescricao" placeholder="Descrição (opcional)...">'+(dados&&dados.descricao?dados.descricao:'')+'</textarea>' +
-      '<input  type="date" class="avisoData"      value="'+(dados&&dados.data?dados.data:'')+'">' +
-             '<div class="campo-youtube" style="display:none;grid-column:1/-2;gap:6px;align-items:center;padding:4px 0;">' +
-             '<i class="fa-brands fa-youtube" style="color:#ff0000;font-size:1.1rem;"></i>' +
-                     '<input type="text" class="avisoYoutube" placeholder="Link do YouTube (https://youtu.be/...)" value="'+(dados&&dados.youtube?dados.youtube:'')+'"> ' +
-             '</div>' +
+    l.innerHTML = `
+        <select class="avisoTipo">
+          <option value="comemorativa"${tipo==='comemorativa'?' selected':''}>🎉 Data Comemorativa</option>
+          <option value="futura"${tipo==='futura'?' selected':''}>🎵 Música Futura</option>
+          <option value="geral"${tipo==='geral'?' selected':''}>📢 Aviso Geral</option>
+        </select>
+        <input type="text" class="avisoTitulo" placeholder="Título do aviso..." value="${dados&&dados.titulo?dados.titulo:''}">
+        <textarea class="avisoDescricao" placeholder="Descrição (opcional)...">${dados&&dados.descricao?dados.descricao:''}</textarea>
+        <input type="date" class="avisoData" value="${dados&&dados.data?dados.data:''}">
+        <div class="campo-youtube" style="display:none;grid-column:1/-1;gap:6px;align-items:center;padding:4px 0;">
+          <i class="fa-brands fa-youtube" style="color:#ff0000;font-size:1.1rem;"></i>
+          <input type="text" class="avisoYoutube" placeholder="Link do YouTube (https://youtu.be/...)" value="${dados&&dados.youtube?dados.youtube:''}">
+        </div>
+      `
 lista.push    c.appendChild(l);
        var selAviso = l.querySelector('.avisoTipo');
        var campoYt = l.querySelector('.campo-youtube');
