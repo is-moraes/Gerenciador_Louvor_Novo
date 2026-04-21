@@ -629,8 +629,19 @@
       '<input  type="text" class="avisoTitulo"    placeholder="Título do aviso..." value="'+(dados&&dados.titulo?dados.titulo:'')+'">' +
       '<textarea            class="avisoDescricao" placeholder="Descrição (opcional)...">'+(dados&&dados.descricao?dados.descricao:'')+'</textarea>' +
       '<input  type="date" class="avisoData"      value="'+(dados&&dados.data?dados.data:'')+'">' +
-      '<button class="btn-del-aviso" onclick="this.closest(\'.aviso-linha\').remove()"><i class="fa-solid fa-xmark"></i></button>';
-    c.appendChild(l);
+             '<div class="campo-youtube" style="display:none;grid-column:1/-2;gap:6px;align-items:center;padding:4px 0;">' +
+             '<i class="fa-brands fa-youtube" style="color:#ff0000;font-size:1.1rem;"></i>' +
+             '<input type="text" class="avisoYoutube" placeholder="Link do YouTube (https://youtu.be/...)" value="'+(dados&&dados.youtube?dados.youtube:'')+"\"> " +
+             '</div>' +
+lista.push    c.appendChild(l);
+       var selAviso = l.querySelector('.avisoTipo');
+       var campoYt = l.querySelector('.campo-youtube');
+       if (tipo === 'futura') campoYt.style.display = 'flex';
+       selAviso.addEventListener('change', function() {
+              var ehFutura = selAviso.value === 'futura';
+              campoYt.style.display = ehFutura ? 'flex' : 'none';
+              if (!ehFutura) l.querySelector('.avisoYoutube').value = '';
+            });
   }
 
   function coletarAvisos() {
@@ -642,7 +653,8 @@
         tipo:      l.querySelector('.avisoTipo').value,
         titulo:    titulo,
         descricao: l.querySelector('.avisoDescricao').value.trim(),
-        data:      l.querySelector('.avisoData').value
+        data:      l.querySelector('.avisoData').value,
+             youtube: l.querySelector('.avisoYoutube') ? l.querySelector('.avisoYoutube').value.trim() : ''
       });
     });
     return lista;
