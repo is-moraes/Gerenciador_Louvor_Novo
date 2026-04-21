@@ -108,6 +108,7 @@
   }
   .oculto { display:none !important; }
 </style>
+ <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 </head>
 <body>
 
@@ -125,9 +126,14 @@
     <h2>Acesso Administrador</h2>
     <p class="sub">Painel de controle de ministérios</p>
     <div class="field">
-      <label>Senha Master</label>
+      abel>E-mail</label>
+      <input type="email" id="emailAdm" placeholder="E-mail do administrador..." autofocus>
+      <i class="fa-solid fa-envelope ico"></i>
+    </div>
+    <div class="field">
+      abel>Senha</label>
       <i class="fa-solid fa-key ico"></i>
-      <input type="password" id="senhaAdm" placeholder="Senha do administrador..." autofocus>
+      <input type="password" id="senhaAdm" placeholder="Senha do administrador..." >
     </div>
     <button class="btn-primary" id="btnEntrarAdm"><i class="fa-solid fa-arrow-right-to-bracket"></i> Entrar</button>
     <p class="msg-erro" id="msgErroAdm"></p>
@@ -237,45 +243,56 @@
   /* ============================================================
      CONFIGURAÇÃO — mude a senha master aqui
   ============================================================ */
-  var SENHA_MASTER  = 'master2024';
-  var CHAVE_ADM     = 'ministerioAdmLogin';
-  var VALIDADE_ADM  = 4 * 60 * 60 * 1000; // 4 horas
-  var UID_ATIVO     = null;
-  var listaCache    = [];
-
-  /* ===== Sessão ADM ===== */
-  function admLogado() {
-    var r = JSON.parse(localStorage.getItem(CHAVE_ADM) || 'null');
-    return r && (Date.now() - r.ts) < VALIDADE_ADM;
-  }
-
+  var UID_ATIVO = null;
+  var listaCache = [];
+  
+  /* ===== Firebase Auth Login ===== */
+  var auth = firebase.auth();
+  
+  auth.onAuthStateChanged(function(user) {
+    if (user) {
+      abrirPainel();
+    } else {
+      document.getElementById('telaLoginAdm').classList.remove('oculto');
+      document.getElementById('painelAdm').classList.add('oculto');
+      document.getElementById('btnLogoutAdm').classList.add('oculto');
+    }
+  });
+  
   document.getElementById('btnEntrarAdm').addEventListener('click', loginAdm);
-  document.getElementById('senhaAdm').addEventListener('keydown', function(e){ if(e.key==='Enter') loginAdm(); });
-
+  document.getElementById('senhaAdm').addEventListener('keydown', function(e){
+    if(e.key==='Enter') loginAdm();
+  });
+  
   function loginAdm() {
-    var s   = document.getElementById('senhaAdm').value.trim();
+    var email = document.getElementById('emailAdm').value.trim();
+    var senha = document.getElementById('senhaAdm').value.trim();
     var msg = document.getElementById('msgErroAdm');
-    if (!s)                { msg.textContent = 'Informe a senha.';   return; }
-    if (s !== SENHA_MASTER){ msg.textContent = 'Senha incorreta.';   document.getElementById('senhaAdm').value=''; return; }
-    localStorage.setItem(CHAVE_ADM, JSON.stringify({ ts: Date.now() }));
-    abrirPainel();
+    if (!email || !senha) { msg.textContent = 'Preencha e-mail e senha.'; return; }
+    msg.textContent = '';
+    document.getElementById('btnEntrarAdm').innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Entrando...';
+    auth.signInWithEmailAndPassword(email, senha)
+      .then(function() {
+        document.getElementById('btnEntrarAdm').innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Entrar';
+      })
+      .catch(function(err) {
+        document.getElementById('btnEntrarAdm').innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Entrar';
+        msg.textContent = 'E-mail ou senha incorretos.';
+        document.getElementById('senhaAdm').value = '';
+      });
   }
-
+  
   function abrirPainel() {
     document.getElementById('telaLoginAdm').classList.add('oculto');
     document.getElementById('painelAdm').classList.remove('oculto');
     document.getElementById('btnLogoutAdm').classList.remove('oculto');
     carregarMinisterios();
   }
-
+  
   function logoutAdm() {
-    localStorage.removeItem(CHAVE_ADM);
-    document.getElementById('painelAdm').classList.add('oculto');
-    document.getElementById('btnLogoutAdm').classList.add('oculto');
-    document.getElementById('telaLoginAdm').classList.remove('oculto');
-    document.getElementById('senhaAdm').value = '';
+    auth.signOut();
   }
-
+  
   /* ===== Firestore: escutar ministérios em tempo real ===== */
   function carregarMinisterios() {
     col.orderBy('criadoEm', 'desc').onSnapshot(function(snapshot) {
@@ -451,8 +468,6 @@
     o.addEventListener('click', function(e){ if(e.target===o) o.classList.add('oculto'); });
   });
 
-  /* ===== Init ===== */
-  if (admLogado()) abrirPainel();
 </script>
 </body>
 </html>
