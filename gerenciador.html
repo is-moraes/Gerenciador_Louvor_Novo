@@ -634,7 +634,7 @@
           <input type="text" class="avisoYoutube" placeholder="Link do YouTube (https://youtu.be/...)" value="${dados&&dados.youtube?dados.youtube:''}">
         </div>
       `
-lista.push    c.appendChild(l);
+c.appendChild(l);
        var selAviso = l.querySelector('.avisoTipo');
        var campoYt = l.querySelector('.campo-youtube');
        if (tipo === 'futura') campoYt.style.display = 'flex';
