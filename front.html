@@ -3,453 +3,628 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ministério de Louvor – Programação</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<title>Ministério de Louvor</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
-  :root {
-    --bg:#f0f2f8; 
-    --surface:#ffffff; 
-    --fg:#1a1a2e; 
-    --fg2:#555577;
-    --accent:#46c5e5; 
-    --accent2:#1a7596; 
-    --success:#10b981;
-    --danger:#bd3636; 
-    --border:#e2e8f0; 
-    --radius:14px; 
-    --radius-sm:16px;
-    --shadow:0 4px 24px rgba(79,70,229,.10);
-    --shadow-lg:0 8px 40px rgba(79,70,229,.18);
-    --font:'Inter',sans-serif;
-    --grad:linear-gradient(135deg,var(--accent),var(--accent2));
-    --header-h:60px;
-  }
-  [data-theme="dark"]     { --bg:#0f0f1a; --surface:#1e1e2f; --fg:#e8e8f8; --fg2:#99babb; --accent:#228fa7; --accent2:#a78bfa; --border:#2e2e4a; --shadow:0 4px 24px rgba(0,0,0,.4); --shadow-lg:0 8px 40px rgba(0,0,0,.5); }
-  [data-theme="rose"]     { --bg:#fff9f1; --surface:#fff; --fg:#2d2d2d; --fg2:#9f6544; --accent:#f4813f; --accent2:#e16f1d; --border:#fecdd3; }
-  [data-theme="ocean"]    { --bg:#e0f4ff; --surface:#fff; --fg:#0c2d48; --fg2:#2d7da0; --accent:#0ea5e9; --accent2:#0284c7; --border:#bae6fd; }
-  [data-theme="forest"]   { --bg:#ecfdf5; --surface:#fff; --fg:#052e16; --fg2:#2d6a4f; --accent:#059669; --accent2:#43b69d; --border:#a7f3d0; }
-  [data-theme="midnight"] { --bg:#020617; --surface:#0f172a; --fg:#f1f5f9; --fg2:#94a3b8; --accent:#63d5f1; --accent2:#0a455c; --border:#1e293b; --shadow:0 4px 24px rgba(0,0,0,.6); }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
-  body { font-family:var(--font); background:var(--bg); color:var(--fg); min-height:100vh; transition:background .3s,color .3s; }
+/* ═══ TOKENS ═══ */
+:root{
+  --bg:#08080f;
+  --surface:#0e0e1c;
+  --surface2:#141428;
+  --border:rgba(255,255,255,.07);
+  --border-glow:rgba(160,120,255,.25);
+  --fg:#f0eeff;
+  --fg2:#8a85b0;
+  --fg3:#5a557a;
 
-  header { height:var(--header-h); background:var(--grad); display:flex; align-items:center; justify-content:space-between; padding:0 1.5rem; box-shadow:var(--shadow); position:sticky; top:0; z-index:100; gap:1rem; }
-  .header-left { display:flex; flex-direction:column; justify-content:center; min-width:0; }
-  .header-titulo { font-size:1rem; font-weight:700; color:#fff; display:flex; align-items:center; gap:.5rem; }
-  .header-data-culto { font-size:.72rem; color:rgba(255,255,255,.8); font-weight:600; display:flex; align-items:center; gap:.35rem; margin-top:.1rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .live-dot { width:7px; height:7px; border-radius:50%; background:#ef4444; display:inline-block; animation:pulseLive 1.5s infinite; flex-shrink:0; }
-  @keyframes pulseLive { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.8)} }
-  .header-right { display:flex; align-items:center; gap:.5rem; flex-shrink:0; }
-  .theme-bar { display:flex; gap:.35rem; }
-  .theme-btn { width:20px; height:20px; border-radius:50%; border:2.5px solid rgba(255,255,255,.5); cursor:pointer; transition:transform .2s,border-color .2s; }
-  .theme-btn:hover,.theme-btn.ativo { border-color:#fff; transform:scale(1.3); }
-  .theme-btn[data-t="light"]    { background:linear-gradient(135deg,#4acbe8,#1395c1); }
-  .theme-btn[data-t="dark"]     { background:linear-gradient(135deg,#1e1e2f,#818cf8); }
-  .theme-btn[data-t="rose"]     { background:linear-gradient(135deg,#f4873f,#e1621d); }
-  .theme-btn[data-t="ocean"]    { background:linear-gradient(135deg,#0ea5e9,#0284c7); }
-  .theme-btn[data-t="forest"]   { background:linear-gradient(135deg,#059672,#04786e); }
-  .theme-btn[data-t="midnight"] { background:linear-gradient(135deg,#020617,#6366f1); }
+  --violet:#a78bfa;
+  --violet-d:#7c3aed;
+  --cyan:#67e8f9;
+  --cyan-d:#0891b2;
+  --rose:#fb7185;
+  --amber:#fbbf24;
+  --green:#34d399;
 
-  main { max-width:800px; margin:0 auto; padding:1.5rem 1rem; }
-  @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+  --glow-v:rgba(167,139,250,.18);
+  --glow-c:rgba(103,232,249,.15);
 
-  .hero { background:var(--grad); border-radius:var(--radius); padding:1.8rem 1.5rem; margin-bottom:1.2rem; box-shadow:var(--shadow-lg); color:#fff; position:relative; overflow:hidden; animation:fadeUp .5s ease; }
-  .hero::before { content:''; position:absolute; top:-40px; right:-40px; width:180px; height:180px; border-radius:50%; background:rgba(255,255,255,.07); }
-  .hero::after  { content:''; position:absolute; bottom:-50px; right:50px; width:130px; height:130px; border-radius:50%; background:rgba(255,255,255,.05); }
-  .hero-label { font-size:.72rem; font-weight:700; letter-spacing:.1em; opacity:.75; text-transform:uppercase; margin-bottom:.35rem; }
-  .hero h2 { font-size:clamp(1.4rem,4vw,1.9rem); font-weight:800; margin-bottom:.35rem; position:relative; }
-  .hero-data-box { display:inline-flex; align-items:center; gap:.5rem; background:rgba(255,255,255,.18); border:1.5px solid rgba(255,255,255,.3); border-radius:20px; padding:.35rem .9rem; font-size:.85rem; font-weight:600; margin-top:.2rem; position:relative; }
+  --r:16px;
+  --r-sm:10px;
+  --font-head:'Syne',sans-serif;
+  --font-body:'DM Sans',sans-serif;
+  --hh:64px;
+}
 
-  .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:1.2rem; margin-bottom:1.2rem; box-shadow:var(--shadow); animation:fadeUp .4s ease; transition:background .3s,border-color .3s; }
-  .card-header { display:flex; align-items:center; gap:.5rem; font-size:.95rem; font-weight:700; color:var(--accent); margin-bottom:1rem; padding-bottom:.7rem; border-bottom:1.5px solid var(--border); }
+/* TEMAS */
+[data-theme="aurora"]{
+  --bg:#08080f;--surface:#0e0e1c;--surface2:#141428;
+  --border:rgba(255,255,255,.07);--border-glow:rgba(160,120,255,.25);
+  --fg:#f0eeff;--fg2:#8a85b0;--fg3:#5a557a;
+  --violet:#a78bfa;--violet-d:#7c3aed;--cyan:#67e8f9;
+  --glow-v:rgba(167,139,250,.18);--glow-c:rgba(103,232,249,.15);
+  --orb1:#4c1d95;--orb2:#0e7490;--orb3:#7c3aed;
+}
+[data-theme="obsidian"]{
+  --bg:#0a0a0a;--surface:#111;--surface2:#191919;
+  --border:rgba(255,255,255,.06);--border-glow:rgba(250,191,36,.2);
+  --fg:#f5f0e8;--fg2:#9e9880;--fg3:#5a5748;
+  --violet:#fbbf24;--violet-d:#d97706;--cyan:#fb923c;
+  --glow-v:rgba(251,191,36,.15);--glow-c:rgba(251,146,60,.12);
+  --orb1:#451a03;--orb2:#78350f;--orb3:#92400e;
+}
+[data-theme="sakura"]{
+  --bg:#0d0709;--surface:#160c10;--surface2:#1e1015;
+  --border:rgba(255,255,255,.06);--border-glow:rgba(251,113,133,.22);
+  --fg:#ffe8ed;--fg2:#c2849a;--fg3:#7a4e5e;
+  --violet:#fb7185;--violet-d:#e11d48;--cyan:#f9a8d4;
+  --glow-v:rgba(251,113,133,.18);--glow-c:rgba(249,168,212,.12);
+  --orb1:#4c0519;--orb2:#881337;--orb3:#9f1239;
+}
+[data-theme="glacier"]{
+  --bg:#040c14;--surface:#071523;--surface2:#0a1c2e;
+  --border:rgba(255,255,255,.07);--border-glow:rgba(56,189,248,.2);
+  --fg:#e0f2fe;--fg2:#7eb8d4;--fg3:#4a7d97;
+  --violet:#38bdf8;--violet-d:#0284c7;--cyan:#34d399;
+  --glow-v:rgba(56,189,248,.18);--glow-c:rgba(52,211,153,.13);
+  --orb1:#0c4a6e;--orb2:#164e63;--orb3:#065f46;
+}
+[data-theme="dawn"]{
+  --bg:#fafaf8;--surface:#ffffff;--surface2:#f3f2ee;
+  --border:rgba(0,0,0,.07);--border-glow:rgba(124,58,237,.2);
+  --fg:#1c1a2e;--fg2:#6b6580;--fg3:#a9a4c0;
+  --violet:#7c3aed;--violet-d:#5b21b6;--cyan:#0891b2;
+  --glow-v:rgba(124,58,237,.12);--glow-c:rgba(8,145,178,.1);
+  --orb1:rgba(167,139,250,.15);--orb2:rgba(103,232,249,.12);--orb3:rgba(251,113,133,.1);
+}
 
-  /* ── Repertório ── */
-  .rep-list { display:flex; flex-direction:column; gap:.7rem; }
-  .rep-item { background:var(--bg); border:1.5px solid var(--border); border-radius:var(--radius-sm); padding:.9rem 1rem; display:grid; grid-template-columns:36px 1fr auto; grid-template-rows:auto auto; column-gap:.75rem; row-gap:.35rem; transition:border-color .2s; }
-  .rep-item:hover { border-color:var(--accent); }
-  .num-musica { width:34px; height:34px; border-radius:50%; background:var(--grad); color:#fff; font-size:.82rem; font-weight:700; display:flex; align-items:center; justify-content:center; grid-row:span 2; align-self:center; }
-  .rep-nome { font-size:.95rem; font-weight:700; color:var(--fg); align-self:end; }
-  .rep-badges { display:flex; gap:.4rem; align-items:center; align-self:start; }
-  .badge-tom { padding:.15rem .55rem; background:var(--grad); border-radius:20px; font-size:.72rem; font-weight:700; color:#fff; }
-  .badge-seq { padding:.15rem .55rem; background:var(--bg); border:1.5px solid var(--border); border-radius:20px; font-size:.72rem; font-weight:700; color:var(--fg2); }
-  .rep-links { grid-column:2 / span 2; display:flex; gap:.4rem; flex-wrap:wrap; }
-  .link-btn { display:inline-flex; align-items:center; gap:.3rem; padding:.22rem .6rem; border-radius:6px; font-size:.75rem; font-weight:600; text-decoration:none; transition:opacity .2s; }
-  .link-yt    { background:#ff000012; color:#e00; border:1.5px solid #ff000025; }
-  .link-cifra { background:rgba(79,70,229,.08); color:var(--accent); border:1.5px solid rgba(79,70,229,.2); }
-  .link-btn:hover { opacity:.7; }
+body{font-family:var(--font-body);background:var(--bg);color:var(--fg);min-height:100vh;transition:background .4s,color .3s;overflow-x:hidden}
 
-  /* ── Escala ── */
-  .escala-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:.8rem; }
-  .escala-card { background:var(--bg); border:1.5px solid var(--border); border-radius:var(--radius-sm); padding:.9rem 1rem; transition:border-color .2s; }
-  .escala-card:hover { border-color:var(--accent); }
-  .escala-role { font-size:.7rem; font-weight:700; color:var(--fg2); text-transform:uppercase; letter-spacing:.06em; display:flex; align-items:center; gap:.35rem; margin-bottom:.6rem; }
-  .escala-role i { color:var(--accent); }
-  .escala-membro { display:flex; align-items:center; gap:.45rem; margin-bottom:.3rem; }
-  .escala-num { width:20px; height:20px; border-radius:50%; background:var(--grad); color:#fff; font-size:.65rem; font-weight:700; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; }
-  .escala-nome { font-size:.88rem; font-weight:600; color:var(--fg); }
-  .escala-vazio { color:var(--fg2); font-style:italic; font-size:.82rem; }
+/* ── Orbs de fundo ── */
+.orb-wrap{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.orb{position:absolute;border-radius:50%;filter:blur(80px);animation:floatOrb 20s ease-in-out infinite}
+.orb1{width:600px;height:600px;background:var(--orb1);top:-150px;left:-100px;animation-delay:0s}
+.orb2{width:500px;height:500px;background:var(--orb2);top:40%;right:-150px;animation-delay:-7s}
+.orb3{width:400px;height:400px;background:var(--orb3);bottom:-100px;left:30%;animation-delay:-13s}
+@keyframes floatOrb{
+  0%,100%{transform:translate(0,0) scale(1)}
+  33%{transform:translate(30px,-40px) scale(1.05)}
+  66%{transform:translate(-20px,30px) scale(.97)}
+}
 
-  /* ── Quadro de Avisos ── */
-  .avisos-lista { display:flex; flex-direction:column; gap:.75rem; }
-  .aviso-item { display:flex; gap:.85rem; align-items:flex-start; padding:.9rem 1rem; background:var(--bg); border:1.5px solid var(--border); border-radius:var(--radius-sm); transition:border-color .2s; }
-  .aviso-item:hover { border-color:var(--accent); }
-  .aviso-icone { width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; }
-  .aviso-icone.comemorativa { background:linear-gradient(135deg,#f59e0b,#d97706); color:#fff; }
-  .aviso-icone.futura       { background:linear-gradient(135deg,#8b5cf6,#6d28d9); color:#fff; }
-  .aviso-icone.geral        { background:linear-gradient(135deg,#10b981,#059669); color:#fff; }
-  .aviso-corpo { flex:1; min-width:0; }
-  .aviso-titulo { font-size:.92rem; font-weight:700; color:var(--fg); margin-bottom:.2rem; display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; }
-  .aviso-badge { padding:.1rem .55rem; border-radius:20px; font-size:.65rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; }
-  .aviso-badge.comemorativa { background:rgba(245,158,11,.15); color:#d97706; border:1.5px solid rgba(245,158,11,.3); }
-  .aviso-badge.futura       { background:rgba(139,92,246,.15); color:#7c3aed; border:1.5px solid rgba(139,92,246,.3); }
-  .aviso-badge.geral        { background:rgba(16,185,129,.15); color:#059669; border:1.5px solid rgba(16,185,129,.3); }
-  .aviso-descricao { font-size:.85rem; color:var(--fg2); line-height:1.5; }
-  .aviso-data { font-size:.75rem; color:var(--fg2); margin-top:.3rem; display:flex; align-items:center; gap:.3rem; font-weight:600; }
+/* ── Header ── */
+header{
+  height:var(--hh);position:sticky;top:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 1.5rem;gap:1rem;
+  background:rgba(8,8,15,.75);
+  backdrop-filter:blur(24px) saturate(1.5);
+  -webkit-backdrop-filter:blur(24px) saturate(1.5);
+  border-bottom:1px solid var(--border);
+}
+.logo-area{display:flex;align-items:center;gap:.65rem}
+.logo-icon{
+  width:36px;height:36px;border-radius:10px;
+  background:linear-gradient(135deg,var(--violet),var(--cyan));
+  display:flex;align-items:center;justify-content:center;
+  font-size:.95rem;color:#fff;flex-shrink:0;
+  box-shadow:0 0 20px var(--glow-v);
+}
+.logo-text{display:flex;flex-direction:column}
+.logo-name{font-family:var(--font-head);font-size:.95rem;font-weight:700;color:var(--fg);line-height:1.1;letter-spacing:.01em}
+.logo-sub{font-size:.68rem;color:var(--fg2);font-weight:400;display:flex;align-items:center;gap:.3rem}
+.live-pill{
+  display:inline-flex;align-items:center;gap:.3rem;
+  padding:.1rem .45rem;border-radius:20px;
+  background:rgba(251,113,133,.12);border:1px solid rgba(251,113,133,.25);
+  font-size:.62rem;font-weight:600;color:var(--rose);letter-spacing:.05em;text-transform:uppercase;
+}
+.live-dot{width:5px;height:5px;border-radius:50%;background:var(--rose);animation:blink 1.4s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
 
-  /* ── Empty / Loading ── */
-  .empty-state { text-align:center; padding:3.5rem 1.5rem; display:flex; flex-direction:column; align-items:center; gap:1rem; }
-  .empty-icon { width:72px; height:72px; border-radius:50%; background:var(--bg); border:2px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:1.8rem; color:var(--fg2); }
-  .empty-state h3 { font-size:1rem; font-weight:700; color:var(--fg2); }
-  .empty-state p  { font-size:.85rem; color:var(--fg2); max-width:280px; }
-  .loading-state { text-align:center; padding:4rem 2rem; color:var(--fg2); }
-  .loading-state i { font-size:2rem; animation:spin 1s linear infinite; margin-bottom:1rem; color:var(--accent); display:block; }
-  @keyframes spin { to{transform:rotate(360deg)} }
+/* Themes strip */
+.themes{display:flex;gap:.4rem;align-items:center}
+.tb{
+  width:22px;height:22px;border-radius:50%;border:2px solid transparent;
+  cursor:pointer;transition:transform .2s,border-color .2s;outline:none;
+}
+.tb:hover,.tb.on{transform:scale(1.35);border-color:var(--fg)}
+.tb[data-t="aurora"]  {background:conic-gradient(#a78bfa,#67e8f9,#a78bfa)}
+.tb[data-t="obsidian"]{background:conic-gradient(#fbbf24,#f97316,#fbbf24)}
+.tb[data-t="sakura"]  {background:conic-gradient(#fb7185,#f9a8d4,#fb7185)}
+.tb[data-t="glacier"] {background:conic-gradient(#38bdf8,#34d399,#38bdf8)}
+.tb[data-t="dawn"]    {background:conic-gradient(#e2e8f0,#c4b5fd,#e2e8f0)}
 
-  footer { text-align:center; padding:1.5rem 1rem; font-size:.75rem; color:var(--fg2); border-top:1px solid var(--border); margin-top:.5rem; }
-  footer i { color:var(--accent); }
+/* ── Conteúdo ── */
+main{position:relative;z-index:1;max-width:820px;margin:0 auto;padding:2rem 1.2rem 3rem}
 
-  @media(max-width:480px) {
-    header { padding:0 1rem; }
-    .header-titulo { font-size:.9rem; }
-    .theme-btn { width:17px; height:17px; }
-    main { padding:1rem .75rem; }
-    .hero { padding:1.4rem 1rem; }
-    .escala-grid { grid-template-columns:1fr; }
-    .aviso-icone { width:34px; height:34px; font-size:.95rem; }
-  }
-  @media(max-width:360px) {
-    .header-data-culto { display:none; }
-    .theme-bar { gap:.2rem; }
-  }
+/* Animação de entrada */
+@keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.anim{animation:rise .5s cubic-bezier(.22,1,.36,1) both}
+.d1{animation-delay:.05s}.d2{animation-delay:.12s}.d3{animation-delay:.18s}.d4{animation-delay:.24s}
+
+/* ── Hero Banner ── */
+.hero{
+  position:relative;overflow:hidden;
+  border-radius:24px;padding:2.2rem 2rem;margin-bottom:1.5rem;
+  background:linear-gradient(145deg,rgba(124,58,237,.25),rgba(8,145,178,.15),rgba(124,58,237,.1));
+  border:1px solid var(--border-glow);
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(167,139,250,.06) 0%,transparent 60%,rgba(103,232,249,.06) 100%);
+  pointer-events:none;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:.4rem;
+  padding:.25rem .8rem;border-radius:20px;
+  background:rgba(167,139,250,.12);border:1px solid rgba(167,139,250,.3);
+  font-size:.7rem;font-weight:600;color:var(--violet);
+  letter-spacing:.08em;text-transform:uppercase;margin-bottom:1rem;
+}
+.hero h1{
+  font-family:var(--font-head);
+  font-size:clamp(1.8rem,5vw,2.6rem);font-weight:800;
+  background:linear-gradient(135deg,var(--fg) 30%,var(--violet));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  line-height:1.1;margin-bottom:.6rem;
+}
+.hero-date{
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.4rem 1rem;border-radius:12px;
+  background:rgba(255,255,255,.05);border:1px solid var(--border);
+  font-size:.85rem;font-weight:500;color:var(--fg2);
+}
+.hero-date i{color:var(--cyan)}
+.hero-nav{
+  display:flex;align-items:center;gap:.6rem;
+  position:absolute;top:1.5rem;right:1.5rem;
+}
+.nav-btn{
+  width:32px;height:32px;border-radius:8px;border:1px solid var(--border);
+  background:rgba(255,255,255,.05);color:var(--fg2);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  font-size:.8rem;transition:all .2s;
+}
+.nav-btn:hover{background:var(--glow-v);border-color:var(--border-glow);color:var(--violet)}
+.nav-week{font-family:var(--font-head);font-size:.78rem;font-weight:700;color:var(--fg2);white-space:nowrap}
+
+/* ── Cards ── */
+.card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r);padding:1.4rem;margin-bottom:1.2rem;
+  transition:background .3s;position:relative;overflow:hidden;
+}
+.card::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.02) 0%,transparent 50%);
+  pointer-events:none;
+}
+.sec-title{
+  display:flex;align-items:center;gap:.55rem;
+  font-family:var(--font-head);font-size:.82rem;font-weight:700;
+  color:var(--fg2);text-transform:uppercase;letter-spacing:.1em;
+  margin-bottom:1.2rem;padding-bottom:.8rem;
+  border-bottom:1px solid var(--border);
+}
+.sec-title i{color:var(--violet);font-size:.95rem}
+
+/* ── Repertório ── */
+.rep-list{display:flex;flex-direction:column;gap:.7rem}
+.rep-item{
+  display:grid;grid-template-columns:42px 1fr auto;grid-template-rows:auto auto;
+  column-gap:.85rem;row-gap:.3rem;align-items:center;
+  padding:1rem 1.1rem;
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:var(--r-sm);
+  transition:border-color .25s,transform .2s,background .2s;
+  cursor:default;
+}
+.rep-item:hover{
+  border-color:var(--border-glow);
+  background:rgba(167,139,250,.04);
+  transform:translateX(3px);
+}
+.num{
+  width:36px;height:36px;border-radius:50%;grid-row:span 2;align-self:center;
+  background:linear-gradient(135deg,var(--violet),var(--cyan));
+  color:#fff;font-family:var(--font-head);font-size:.78rem;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 14px var(--glow-v);flex-shrink:0;
+}
+.rep-nome{font-family:var(--font-head);font-size:.95rem;font-weight:600;color:var(--fg);align-self:end}
+.rep-tags{display:flex;gap:.35rem;align-items:center;align-self:start}
+.tag-tom{
+  padding:.12rem .5rem;border-radius:6px;font-size:.7rem;font-weight:700;
+  background:linear-gradient(135deg,var(--violet),var(--cyan));color:#fff;
+  letter-spacing:.03em;
+}
+.tag-seq{
+  padding:.12rem .5rem;border-radius:6px;font-size:.7rem;font-weight:600;
+  background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--fg2);
+}
+.rep-links{grid-column:2 / span 2;display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.1rem}
+.lnk{
+  display:inline-flex;align-items:center;gap:.3rem;
+  padding:.2rem .6rem;border-radius:6px;font-size:.72rem;font-weight:600;
+  text-decoration:none;transition:opacity .2s,transform .15s;border:1px solid transparent;
+}
+.lnk:hover{opacity:.75;transform:scale(.97)}
+.lnk-yt{background:rgba(255,0,0,.08);color:#ff4444;border-color:rgba(255,0,0,.15)}
+.lnk-ci{background:rgba(167,139,250,.08);color:var(--violet);border-color:rgba(167,139,250,.2)}
+
+/* ── Escala ── */
+.esc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.8rem}
+.esc-card{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:var(--r-sm);padding:1rem 1.1rem;
+  transition:border-color .2s;
+}
+.esc-card:hover{border-color:var(--border-glow)}
+.esc-role{
+  font-family:var(--font-head);font-size:.7rem;font-weight:700;
+  color:var(--fg2);text-transform:uppercase;letter-spacing:.08em;
+  display:flex;align-items:center;gap:.4rem;margin-bottom:.75rem;
+}
+.esc-role i{color:var(--violet);font-size:.85rem}
+.esc-membro{display:flex;align-items:center;gap:.5rem;margin-bottom:.35rem}
+.esc-av{
+  width:24px;height:24px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--violet-d),var(--cyan-d));
+  color:#fff;font-family:var(--font-head);font-size:.62rem;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+}
+.esc-nome{font-size:.87rem;font-weight:500;color:var(--fg)}
+.esc-vazio{color:var(--fg3);font-style:italic;font-size:.82rem}
+
+/* ── Avisos ── */
+.avisos-list{display:flex;flex-direction:column;gap:.75rem}
+.av-item{
+  display:flex;gap:.9rem;align-items:flex-start;
+  padding:.95rem 1.1rem;
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:var(--r-sm);transition:border-color .2s;
+}
+.av-item:hover{border-color:var(--border-glow)}
+.av-icon{
+  width:42px;height:42px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1rem;flex-shrink:0;
+}
+.av-icon.comemorativa{background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.2);color:var(--amber)}
+.av-icon.futura      {background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.2);color:var(--violet)}
+.av-icon.geral       {background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.2);color:var(--green)}
+.av-body{flex:1;min-width:0}
+.av-title{font-family:var(--font-head);font-size:.9rem;font-weight:700;color:var(--fg);margin-bottom:.25rem;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.av-pill{
+  padding:.08rem .45rem;border-radius:5px;font-size:.62rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:.06em;
+}
+.av-pill.comemorativa{background:rgba(251,191,36,.12);color:var(--amber);border:1px solid rgba(251,191,36,.22)}
+.av-pill.futura      {background:rgba(167,139,250,.12);color:var(--violet);border:1px solid rgba(167,139,250,.22)}
+.av-pill.geral       {background:rgba(52,211,153,.12);color:var(--green);border:1px solid rgba(52,211,153,.22)}
+.av-desc{font-size:.84rem;color:var(--fg2);line-height:1.55}
+.av-date{font-size:.75rem;color:var(--fg3);margin-top:.3rem;display:flex;align-items:center;gap:.3rem;font-weight:500}
+.av-yt{
+  display:inline-flex;align-items:center;gap:.35rem;
+  margin-top:.5rem;font-size:.76rem;font-weight:600;
+  color:#ff4444;text-decoration:none;opacity:.9;transition:opacity .2s;
+}
+.av-yt:hover{opacity:.6}
+
+/* ── States ── */
+.empty{display:flex;flex-direction:column;align-items:center;text-align:center;padding:4rem 2rem;gap:1rem}
+.empty-ico{
+  width:72px;height:72px;border-radius:50%;
+  background:var(--surface2);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.8rem;color:var(--fg3);
+}
+.empty h3{font-family:var(--font-head);font-size:1rem;font-weight:700;color:var(--fg2)}
+.empty p{font-size:.85rem;color:var(--fg3);max-width:280px}
+.loading{text-align:center;padding:5rem 2rem;color:var(--fg3)}
+.loading i{font-size:2rem;color:var(--violet);display:block;margin-bottom:1rem;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── Footer ── */
+footer{
+  position:relative;z-index:1;
+  text-align:center;padding:1.5rem 1rem;
+  font-size:.73rem;color:var(--fg3);
+  border-top:1px solid var(--border);
+}
+footer i{color:var(--violet)}
+
+/* ── Shimmer/glow line decorativo ── */
+.glow-line{
+  height:1px;
+  background:linear-gradient(90deg,transparent,var(--violet),transparent);
+  opacity:.35;margin:-1px 0 1.2rem;
+}
+
+@media(max-width:520px){
+  header{padding:0 1rem}
+  .esc-grid{grid-template-columns:1fr}
+  .hero{padding:1.5rem 1.2rem}
+  .hero h1{font-size:1.7rem}
+  .hero-nav{top:1rem;right:1rem}
+  main{padding:1.2rem .8rem 2.5rem}
+}
 </style>
 </head>
-<body>
+<body data-theme="aurora">
+
+<!-- Orbs de fundo -->
+<div class="orb-wrap" aria-hidden="true">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+</div>
 
 <header>
-  <div class="header-left">
-    <div class="header-titulo">
-      <span class="live-dot"></span>
-      <i class="fa-solid fa-music"></i>
-      Ministério de Louvor
-    </div>
-    <div class="header-data-culto" id="headerDataCulto">
-      <i class="fa-regular fa-calendar"></i>
-      <span>carregando...</span>
+  <div class="logo-area">
+    <div class="logo-icon"><i class="fa-solid fa-music"></i></div>
+    <div class="logo-text">
+      <span class="logo-name">Ministério de Louvor</span>
+      <div class="logo-sub">
+        <span class="live-pill"><span class="live-dot"></span>ao vivo</span>
+        <span id="headerDate">carregando…</span>
+      </div>
     </div>
   </div>
-  <div class="header-right">
-    <div class="theme-bar">
-      <div class="theme-btn" data-t="light"></div>
-      <div class="theme-btn" data-t="dark"></div>
-      <div class="theme-btn" data-t="rose"></div>
-      <div class="theme-btn" data-t="ocean"></div>
-      <div class="theme-btn" data-t="forest"></div>
-      <div class="theme-btn" data-t="midnight"></div>
-    </div>
+  <div class="themes">
+    <button class="tb on" data-t="aurora"  title="Aurora"  aria-label="Tema Aurora"></button>
+    <button class="tb"    data-t="obsidian" title="Obsidian" aria-label="Tema Obsidian"></button>
+    <button class="tb"    data-t="sakura"  title="Sakura"  aria-label="Tema Sakura"></button>
+    <button class="tb"    data-t="glacier" title="Glacier" aria-label="Tema Glacier"></button>
+    <button class="tb"    data-t="dawn"    title="Dawn"    aria-label="Tema Dawn"></button>
   </div>
 </header>
 
 <main id="conteudo">
-  <div class="loading-state">
+  <div class="loading">
     <i class="fa-solid fa-spinner"></i>
-    Carregando programação...
+    Carregando programação…
   </div>
 </main>
 
 <footer>
-  Atualização em tempo real via <i class="fa-solid fa-fire"></i> Firebase
-  &nbsp;·&nbsp; <i class="fa-solid fa-heart"></i> Ministério de Louvor
+  <i class="fa-solid fa-fire-flame-curved"></i> Firebase Realtime
+  &nbsp;·&nbsp; Feito com <i class="fa-solid fa-heart"></i>
 </footer>
 
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 <script>
-  var firebaseConfig = {
-    apiKey:            "AIzaSyASRX7kZJUmp7jfx_C7buYnLfpz0reby4E",
-    authDomain:        "ministerio-de-louvor-e2eb3.firebaseapp.com",
-    projectId:         "ministerio-de-louvor-e2eb3",
-    storageBucket:     "ministerio-de-louvor-e2eb3.firebasestorage.app",
-    messagingSenderId: "319307727923",
-    appId:             "1:319307727923:web:845608da8aa866ac7ecf46"
-  };
-  firebase.initializeApp(firebaseConfig);
-  var db  = firebase.firestore();
-  var col = db.collection('ministerios');
+var CHAVE_TEMA='mlTema';
+var MESES=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+var DIAS=['domingo','segunda-feira','terça-feira','quarta-feira','quinta-feira','sexta-feira','sábado'];
+var programacoes={};
+var semAtual=0;
+var anoAtual=new Date().getFullYear();
 
-  var CHAVE_TEMA  = 'ministerioTemaFront';
-  var MESES_LONGO = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-  var DIAS_SEMANA = ['domingo','segunda-feira','terça-feira','quarta-feira','quinta-feira','sexta-feira','sábado'];
-  var programacoesFront  = {};
-  var semanaFrontAtual   = 0;
-  var anoFront           = new Date().getFullYear();
+/* ── Tema ── */
+function setTema(t){
+  document.body.setAttribute('data-theme',t);
+  localStorage.setItem(CHAVE_TEMA,t);
+  document.querySelectorAll('.tb').forEach(function(b){b.classList.toggle('on',b.dataset.t===t)});
+}
+document.querySelectorAll('.tb').forEach(function(b){b.addEventListener('click',function(){setTema(b.dataset.t)})});
+setTema(localStorage.getItem(CHAVE_TEMA)||'aurora');
 
+/* ── Firebase ── */
+var firebaseConfig={
+  apiKey:"AIzaSyASRX7kZJUmp7jfx_C7buYnLfpz0reby4E",
+  authDomain:"ministerio-de-louvor-e2eb3.firebaseapp.com",
+  projectId:"ministerio-de-louvor-e2eb3",
+  storageBucket:"ministerio-de-louvor-e2eb3.firebasestorage.app",
+  messagingSenderId:"319307727923",
+  appId:"1:319307727923:web:845608da8aa866ac7ecf46"
+};
+firebase.initializeApp(firebaseConfig);
+var db=firebase.firestore();
+var col=db.collection('ministerios');
 
-  /* ===== Tema ===== */
-  function aplicarTema(t) {
-    document.documentElement.setAttribute('data-theme', t);
-    localStorage.setItem(CHAVE_TEMA, t);
-    document.querySelectorAll('.theme-btn').forEach(function(b){
-      b.classList.toggle('ativo', b.getAttribute('data-t') === t);
-    });
-  }
-  document.querySelectorAll('.theme-btn').forEach(function(b){
-    b.addEventListener('click', function(){ aplicarTema(b.getAttribute('data-t')); });
-  });
-  aplicarTema(localStorage.getItem(CHAVE_TEMA) || 'light');
+/* ── Helpers de data ── */
+function domingoISO(ano,sem){
+  var j4=new Date(ano,0,4);
+  var d4=(j4.getDay()+6)%7;
+  var seg=new Date(j4);seg.setDate(j4.getDate()-d4+(sem-1)*7);
+  var dom=new Date(seg);dom.setDate(seg.getDate()+6);
+  return dom;
+}
+function semAtualISO(){
+  var now=new Date(),j4=new Date(now.getFullYear(),0,4);
+  var d4=(j4.getDay()+6)%7,seg=new Date(j4);
+  seg.setDate(j4.getDate()-d4);
+  return Math.ceil((now-seg)/(7*864e5));
+}
+function fmtData(sem){
+  var d=domingoISO(anoAtual,sem);
+  return DIAS[d.getDay()].replace(/^\w/,function(c){return c.toUpperCase()})+
+    ', '+d.getDate()+' de '+MESES[d.getMonth()]+' de '+d.getFullYear();
+}
+function fmtAviso(s){
+  if(!s)return'';
+  var p=s.split('-');
+  return p[2]?p[2]+'/'+p[1]+'/'+p[0]:p[1]+'/'+p[0];
+}
+function chave(s){return anoAtual+'-'+String(s).padStart(2,'0')}
+function initials(nome){
+  var pts=nome.trim().split(/\s+/);
+  return (pts[0][0]+(pts[1]?pts[1][0]:'')).toUpperCase();
+}
 
-  function getMinisterioId() {
-    return new URLSearchParams(window.location.search).get('id');
-  }
+/* ── Navegação ── */
+function navSem(delta){
+  var n=semAtual+delta;
+  if(n<1)n=1;if(n>53)n=53;
+  renderSem(n);
+}
+window.navegarSemana=navSem;
 
-  function domingoSemanaISO(ano, sem) {
-    var j4  = new Date(ano, 0, 4);
-    var d4  = (j4.getDay() + 6) % 7;
-    var seg = new Date(j4);
-    seg.setDate(j4.getDate() - d4 + (sem - 1) * 7);
-    var dom = new Date(seg);
-    dom.setDate(seg.getDate() + 6);
-    return dom;
-  }
-
-  function formatarDataCulto(semana) {
-    var ano = new Date().getFullYear();
-    var dom = domingoSemanaISO(ano, semana);
-    return capitalize(DIAS_SEMANA[dom.getDay()]) + ', ' +
-      dom.getDate() + ' de ' + MESES_LONGO[dom.getMonth()] + ' de ' + dom.getFullYear();
-  }
-
-  function capitalize(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
-
-  function formatarDataAviso(dataStr) {
-    if (!dataStr) return '';
-    var partes = dataStr.split('-');
-    if (partes.length < 2) return dataStr;
-    return partes[2] ? partes[2] + '/' + partes[1] + '/' + partes[0] : partes[1] + '/' + partes[0];
-  }
-
-  function atualizarHeader(semana) {
-    var el = document.getElementById('headerDataCulto').querySelector('span');
-    el.textContent = semana ? 'Culto · ' + formatarDataCulto(semana) : 'Sem programação';
-  }
-
-  /* ===== Renderizar ===== */
-  function renderizar(d) {
-    var main    = document.getElementById('conteudo');
-    var mesNome = MESES_LONGO[d.mes] || ('Mês ' + (d.mes + 1));
-    var ano     = new Date().getFullYear();
-    var html    = '';
-
-    atualizarHeader(d.semana);
-
-    /* HERO */
-    html +=
-      '<div class="hero">' +
-        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem;">' +
-          '<div class="hero-label" style="margin:0;">' +
-            '<i class="fa-solid fa-calendar-week"></i>&nbsp; Semana ' + d.semana + ' · ' + mesNome + ' ' + ano +
-          '</div>' +
-          '<div style="display:flex;align-items:center;gap:.45rem;z-index:1;position:relative;">' +
-            '<button onclick="navegarSemana(-1)" style="background:rgba(255,255,255,.22);border:none;border-radius:8px;' +
-              'color:#fff;width:30px;height:30px;cursor:pointer;font-size:.85rem;display:flex;align-items:center;justify-content:center;">' +
-              '<i class="fa-solid fa-chevron-left"></i></button>' +
-            '<span style="color:#fff;font-size:.8rem;font-weight:700;white-space:nowrap;">Sem. ' + d.semana + '</span>' +
-            '<button onclick="navegarSemana(1)" style="background:rgba(255,255,255,.22);border:none;border-radius:8px;' +
-              'color:#fff;width:30px;height:30px;cursor:pointer;font-size:.85rem;display:flex;align-items:center;justify-content:center;">' +
-              '<i class="fa-solid fa-chevron-right"></i></button>' +
-          '</div>' +
-        '</div>' +
-        '<h2>Programação do Culto</h2>' +
-        '<div class="hero-data-box"><i class="fa-regular fa-calendar-check"></i> ' + formatarDataCulto(d.semana) + '</div>' +
+function renderSem(s){
+  semAtual=s;
+  var d=programacoes[chave(s)];
+  var hdr=document.getElementById('headerDate');
+  if(hdr)hdr.textContent=s?'Culto · '+fmtData(s):'Sem programação';
+  if(!d){
+    document.getElementById('conteudo').innerHTML=
+      '<div class="empty anim">'+
+        '<div class="empty-ico"><i class="fa-solid fa-calendar-xmark"></i></div>'+
+        '<h3>Sem programação</h3>'+
+        '<p>Nenhum repertório cadastrado para esta semana.</p>'+
       '</div>';
+    return;
+  }
+  d.semana=s;
+  render(d);
+}
 
+/* ── Render principal ── */
+function render(d){
+  var mesNome=MESES[d.mes]||('Mês '+(d.mes+1));
+  var s=d.semana;
+  var h='';
 
-    /* REPERTÓRIO */
-    html += '<div class="card"><div class="card-header"><i class="fa-solid fa-list-music"></i> Repertório da Semana</div>';
-    if (!d.repertorio || d.repertorio.length === 0) {
-      html += '<p style="color:var(--fg2);font-size:.88rem;font-style:italic;">Nenhuma música cadastrada.</p>';
+  /* HERO */
+  h+=
+    '<div class="hero anim d1">'+
+      '<div class="hero-nav">'+
+        '<button class="nav-btn" onclick="navSem(-1)" aria-label="Semana anterior"><i class="fa-solid fa-chevron-left"></i></button>'+
+        '<span class="nav-week">Sem. '+s+'</span>'+
+        '<button class="nav-btn" onclick="navSem(1)" aria-label="Próxima semana"><i class="fa-solid fa-chevron-right"></i></button>'+
+      '</div>'+
+      '<div class="hero-badge"><i class="fa-solid fa-calendar-week"></i> Semana '+s+' · '+mesNome+' '+anoAtual+'</div>'+
+      '<h1>Programação<br>do Culto</h1>'+
+      '<div class="hero-date"><i class="fa-regular fa-calendar-check"></i> '+fmtData(s)+'</div>'+
+    '</div>';
+
+  /* REPERTÓRIO */
+  h+='<div class="card anim d2"><div class="sec-title"><i class="fa-solid fa-list-music"></i> Repertório da Semana</div>';
+  if(!d.repertorio||!d.repertorio.length){
+    h+='<p style="color:var(--fg3);font-style:italic;font-size:.88rem">Nenhuma música cadastrada.</p>';
+  } else {
+    h+='<div class="rep-list">';
+    d.repertorio.forEach(function(m,i){
+      var tags='';
+      if(m.tom)tags+='<span class="tag-tom">'+m.tom+'</span>';
+      if(m.seq)tags+='<span class="tag-seq">'+m.seq+'</span>';
+      var lnks='';
+      if(m.yt)   lnks+='<a class="lnk lnk-yt" href="'+m.yt+'" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i> YouTube</a>';
+      if(m.cifra)lnks+='<a class="lnk lnk-ci" href="'+m.cifra+'" target="_blank" rel="noopener"><i class="fa-solid fa-music"></i> Cifra</a>';
+      h+=
+        '<div class="rep-item">'+
+          '<span class="num">'+(i+1)+'</span>'+
+          '<span class="rep-nome">'+(m.nome||'—')+'</span>'+
+          '<div class="rep-tags">'+tags+'</div>'+
+          (lnks?'<div class="rep-links">'+lnks+'</div>':'')+
+        '</div>';
+    });
+    h+='</div>';
+  }
+  h+='</div>';
+
+  /* ESCALA */
+  h+='<div class="card anim d3"><div class="sec-title"><i class="fa-solid fa-users"></i> Escala de Serviço</div><div class="esc-grid">';
+  [
+    {key:'vocal',       icon:'fa-microphone',label:'Vocal'},
+    {key:'instrumental',icon:'fa-guitar',    label:'Instrumental'},
+    {key:'multimidia',  icon:'fa-display',   label:'Multimídia'},
+    {key:'midia',       icon:'fa-video',     label:'Mídia · Live / Som'}
+  ].forEach(function(p){
+    var mbrs=d[p.key];
+    var cnt='';
+    if(!mbrs||!mbrs.length){
+      cnt='<div class="esc-vazio">Não definido</div>';
     } else {
-      html += '<div class="rep-list">';
-      d.repertorio.forEach(function(m, i) {
-        var badges = '';
-        if (m.tom)  badges += '<span class="badge-tom">' + m.tom + '</span>';
-        if (m.seq)  badges += '<span class="badge-seq">' + m.seq + '</span>';
-        var links = '';
-        if (m.yt)    links += '<a class="link-btn link-yt"    href="' + m.yt    + '" target="_blank"><i class="fa-brands fa-youtube"></i> YouTube</a>';
-        if (m.cifra) links += '<a class="link-btn link-cifra" href="' + m.cifra + '" target="_blank"><i class="fa-solid fa-music"></i> Cifra</a>';
-        html +=
-          '<div class="rep-item">' +
-            '<span class="num-musica">' + (i+1) + '</span>' +
-            '<span class="rep-nome">' + (m.nome||'—') + '</span>' +
-            '<div class="rep-badges">' + badges + '</div>' +
-            (links ? '<div class="rep-links">' + links + '</div>' : '') +
+      mbrs.forEach(function(nome,i){
+        cnt+=
+          '<div class="esc-membro">'+
+            '<div class="esc-av">'+initials(nome||'?')+'</div>'+
+            '<span class="esc-nome">'+nome+'</span>'+
           '</div>';
       });
-      html += '</div>';
     }
-    html += '</div>';
+    h+='<div class="esc-card"><div class="esc-role"><i class="fa-solid '+p.icon+'"></i> '+p.label+'</div>'+cnt+'</div>';
+  });
+  h+='</div></div>';
 
-    /* ESCALA */
-    html += '<div class="card"><div class="card-header"><i class="fa-solid fa-users"></i> Escala de Serviço</div><div class="escala-grid">';
-    [
-      { key:'vocal',        icon:'fa-microphone', label:'Vocal' },
-      { key:'instrumental', icon:'fa-guitar',     label:'Instrumental' },
-      { key:'multimidia',   icon:'fa-display',    label:'Multimídia' },
-      { key:'midia',        icon:'fa-video',      label:'Mídia · Live / Som' }
-    ].forEach(function(p) {
-      var membros  = d[p.key];
-      var conteudo = '';
-      if (!membros || membros.length === 0) {
-        conteudo = '<div class="escala-vazio">Não definido</div>';
-      } else {
-        membros.forEach(function(nome, i) {
-          conteudo += '<div class="escala-membro"><span class="escala-num">' + (i+1) + '</span><span class="escala-nome">' + nome + '</span></div>';
-        });
-      }
-      html += '<div class="escala-card"><div class="escala-role"><i class="fa-solid ' + p.icon + '"></i> ' + p.label + '</div>' + conteudo + '</div>';
+  /* AVISOS */
+  var avisos=d.avisos||[];
+  if(avisos.length){
+    var TIPOS={
+      comemorativa:{label:'Data Comemorativa',icon:'fa-star'},
+      futura:{label:'Música Futura',icon:'fa-music'},
+      geral:{label:'Aviso Geral',icon:'fa-bullhorn'}
+    };
+    h+='<div class="card anim d4"><div class="sec-title"><i class="fa-solid fa-chalkboard"></i> Quadro de Avisos</div><div class="avisos-list">';
+    avisos.forEach(function(av){
+      var tipo=av.tipo||'geral';
+      var inf=TIPOS[tipo]||TIPOS.geral;
+      h+=
+        '<div class="av-item">'+
+          '<div class="av-icon '+tipo+'"><i class="fa-solid '+inf.icon+'"></i></div>'+
+          '<div class="av-body">'+
+            '<div class="av-title">'+(av.titulo||'—')+'<span class="av-pill '+tipo+'">'+inf.label+'</span></div>'+
+            (av.descricao?'<div class="av-desc">'+av.descricao+'</div>':'')+
+            (av.data?'<div class="av-date"><i class="fa-regular fa-calendar"></i> '+fmtAviso(av.data)+'</div>':'')+
+            (av.tipo==='futura'&&av.youtube?'<a class="av-yt" href="'+av.youtube+'" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i> Assistir no YouTube</a>':'')+
+          '</div>'+
+        '</div>';
     });
-    html += '</div></div>';
-
-    /* QUADRO DE AVISOS */
-    var avisos = d.avisos || [];
-    if (avisos.length > 0) {
-      var TIPOS = {
-        comemorativa: { label:'Data Comemorativa', icon:'fa-star'       },
-        futura:       { label:'Música Futura',     icon:'fa-music'      },
-        geral:        { label:'Aviso Geral',        icon:'fa-bullhorn'   }
-      };
-
-      html += '<div class="card"><div class="card-header"><i class="fa-solid fa-chalkboard"></i> Quadro de Avisos</div><div class="avisos-lista">';
-      avisos.forEach(function(av) {
-        var tipo  = av.tipo || 'geral';
-        var info  = TIPOS[tipo] || TIPOS.geral;
-        var dataFmt = av.data ? formatarDataAviso(av.data) : '';
-
-        html +=
-          '<div class="aviso-item">' +
-            '<div class="aviso-icone ' + tipo + '"><i class="fa-solid ' + info.icon + '"></i></div>' +
-            '<div class="aviso-corpo">' +
-              '<div class="aviso-titulo">' +
-                (av.titulo || '—') +
-                '<span class="aviso-badge ' + tipo + '">' + info.label + '</span>' +
-              '</div>' +
-              (av.descricao ? '<div class="aviso-descricao">' + av.descricao + '</div>' : '') +
-              (dataFmt ? '<div class="aviso-data"><i class="fa-regular fa-calendar"></i> ' + dataFmt + '</div>' : '') +
-                       (av.tipo === 'futura' && av.youtube ? '<a class="aviso-yt-link" href="' + av.youtube + '" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-youtube"></i> Assistir no YouTube</a>' : '') +
-            '</div>' +
-          '</div>';
-      });
-      html += '</div></div>';
-    }
-
-    main.innerHTML = html;
-  }
-    function chaveSF(s) {
-    return anoFront + '-' + String(s).padStart(2,'0');
+    h+='</div></div>';
   }
 
-  function renderizarSemanaFront(s) {
-    semanaFrontAtual = s;
-    var dados = programacoesFront[chaveSF(s)];
+  document.getElementById('conteudo').innerHTML=h;
+}
 
-    // Atualizar nav
-    var lbl = document.getElementById('nav-sem-label');
-    if (lbl) lbl.textContent = 'Semana ' + s + ' · ' + anoFront;
-    document.querySelectorAll('.nav-sem-ponto').forEach(function(p){
-      var ps = parseInt(p.dataset.s);
-      p.classList.toggle('ativa',    ps === s);
-      p.classList.toggle('tem-dados', !!programacoesFront[chaveSF(ps)]);
-    });
-
-    if (!dados) {
-      atualizarHeader(s);
-      document.getElementById('conteudo').innerHTML =
-        '<div class="empty-state">' +
-          '<div class="empty-icon"><i class="fa-solid fa-calendar-xmark"></i></div>' +
-          '<h3>Sem programação</h3>' +
-          '<p>Nenhum repertório cadastrado para esta semana.</p>' +
+/* ── Init ── */
+(function(){
+  var id=new URLSearchParams(window.location.search).get('id');
+  if(!id){
+    document.getElementById('conteudo').innerHTML=
+      '<div class="empty anim">'+
+        '<div class="empty-ico"><i class="fa-solid fa-link-slash"></i></div>'+
+        '<h3>Link inválido</h3>'+
+        '<p>Solicite o link correto ao seu líder.</p>'+
+      '</div>';
+    document.getElementById('headerDate').textContent='Link inválido';
+    return;
+  }
+  col.doc(id).onSnapshot(function(doc){
+    if(!doc.exists){
+      document.getElementById('conteudo').innerHTML=
+        '<div class="empty anim">'+
+          '<div class="empty-ico"><i class="fa-solid fa-music"></i></div>'+
+          '<h3>Sem programação</h3>'+
+          '<p>Seu líder ainda não publicou o repertório.</p>'+
         '</div>';
       return;
     }
-    dados.semana = s;
-    renderizar(dados);
-  }
-
-  function navegarSemana(delta) {
-    var nova = semanaFrontAtual + delta;
-    if (nova < 1)  nova = 1;
-    if (nova > 53) nova = 53;
-    renderizarSemanaFront(nova);
-  }
-
-  
-
-
-  /* ===== Listener em tempo real ===== */
-  function iniciar() {
-    var id = getMinisterioId();
-    if (!id) {
-      document.getElementById('conteudo').innerHTML =
-        '<div class="empty-state">' +
-          '<div class="empty-icon"><i class="fa-solid fa-link-slash"></i></div>' +
-          '<h3>Link inválido</h3>' +
-          '<p>Este link não contém um ID de ministério. Solicite o link correto ao seu líder.</p>' +
-        '</div>';
-      document.getElementById('headerDataCulto').querySelector('span').textContent = 'Link inválido';
-      return;
+    var data=doc.data();
+    if(data.programacoes&&Object.keys(data.programacoes).length){
+      programacoes=data.programacoes;
+    } else if(data.programacao){
+      var p0=data.programacao;
+      programacoes[chave(p0.semana||1)]=p0;
     }
-
-        
-
-    col.doc(id).onSnapshot(function(doc){
-      if (!doc.exists) {
-        document.getElementById('conteudo').innerHTML =
-          '<div class="empty-state">' +
-            '<div class="empty-icon"><i class="fa-solid fa-music"></i></div>' +
-            '<h3>Sem programação</h3>' +
-            '<p>Seu líder ainda não publicou o repertório.</p>' +
-          '</div>';
-        atualizarHeader(0);
-        return;
-      }
-      var data = doc.data();
-
-      // Carregar mapa de semanas
-      if (data.programacoes && Object.keys(data.programacoes).length > 0) {
-        programacoesFront = data.programacoes;
-      } else if (data.programacao) {
-        var p0 = data.programacao;
-        programacoesFront[chaveSF(p0.semana || 1)] = p0;
-      }
-
-      // Determinar semana inicial apenas na primeira carga
-      if (!semanaFrontAtual) {
-        var pRef = data.programacao || {};
-        semanaFrontAtual = pRef.semana || semanaISO(new Date());
-      }
-
-      renderizarSemanaFront(semanaFrontAtual);
-    }, function(err) {
-      document.getElementById('conteudo').innerHTML =
-        '<div class="empty-state">' +
-          '<div class="empty-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>' +
-          '<h3>Erro de conexão</h3>' +
-          '<p>' + err.message + '</p>' +
-        '</div>';
-    });
-  }
-
-  iniciar();
+    if(!semAtual){
+      var pRef=data.programacao||{};
+      semAtual=pRef.semana||semAtualISO();
+    }
+    renderSem(semAtual);
+  },function(err){
+    document.getElementById('conteudo').innerHTML=
+      '<div class="empty anim">'+
+        '<div class="empty-ico"><i class="fa-solid fa-triangle-exclamation"></i></div>'+
+        '<h3>Erro de conexão</h3>'+
+        '<p>'+err.message+'</p>'+
+      '</div>';
+  });
+})();
 </script>
 </body>
 </html>
