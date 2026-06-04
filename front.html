@@ -371,6 +371,35 @@ main{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:1.2rem .9
   border-color:rgba(176,110,243,.25);
 }
 .lnk-ci:hover{box-shadow:0 0 12px var(--neon-a-glow);transform:translateY(-2px)}
+.lnk-sp{
+  background:rgba(29,185,84,.08);color:#1db954;
+  border-color:rgba(29,185,84,.22);
+}
+.lnk-sp:hover{box-shadow:0 0 12px rgba(29,185,84,.4);transform:translateY(-2px)}
+
+/* ══ PLAYLIST AVISO ══ */
+.av-playlist{
+  margin-top:.55rem;display:flex;flex-direction:column;gap:.4rem;
+}
+.av-playlist-label{
+  font-family:var(--fd);font-size:.68rem;font-weight:700;
+  color:var(--neon-b);text-transform:uppercase;letter-spacing:.08em;
+  display:flex;align-items:center;gap:.35rem;margin-bottom:.15rem;
+}
+.av-playlist-btns{display:flex;gap:.45rem;flex-wrap:wrap;}
+.av-pl-btn{
+  display:inline-flex;align-items:center;gap:.4rem;
+  padding:.38rem .85rem;border-radius:9px;
+  font-size:.78rem;font-weight:600;text-decoration:none;
+  border:1px solid;transition:transform .2s,box-shadow .2s,opacity .2s;
+  -webkit-tap-highlight-color:transparent;
+}
+.av-pl-btn:hover{transform:translateY(-2px);opacity:.85}
+.av-pl-btn:active{transform:scale(.93)}
+.av-pl-btn.yt{background:rgba(255,50,50,.1);color:#ff5555;border-color:rgba(255,50,50,.25)}
+.av-pl-btn.yt:hover{box-shadow:0 0 14px rgba(255,50,50,.35)}
+.av-pl-btn.sp{background:rgba(29,185,84,.1);color:#1db954;border-color:rgba(29,185,84,.25)}
+.av-pl-btn.sp:hover{box-shadow:0 0 14px rgba(29,185,84,.35)}
 
 /* ══ ESCALA ══ */
 .esc-grid{display:grid;grid-template-columns:1fr 1fr;gap:.55rem}
@@ -413,6 +442,7 @@ main{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:1.2rem .9
 }
 .av-icon.comemorativa{background:rgba(255,215,64,.08);border:1px solid rgba(255,215,64,.22);color:#ffd740}
 .av-icon.futura      {background:var(--neon-a-soft);border:1px solid rgba(176,110,243,.22);color:var(--neon-a)}
+.av-icon.playlist    {background:rgba(29,185,84,.1);border:1px solid rgba(29,185,84,.22);color:#1db954}
 .av-icon.geral       {background:rgba(105,255,71,.08);border:1px solid rgba(105,255,71,.22);color:#69ff47}
 .av-body{flex:1;min-width:0}
 .av-titulo{font-size:.9rem;font-weight:600;color:var(--t1);margin-bottom:.22rem;display:flex;align-items:center;gap:.4rem;flex-wrap:wrap}
@@ -422,6 +452,7 @@ main{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:1.2rem .9
 }
 .av-pill.comemorativa{background:rgba(255,215,64,.1);color:#ffd740;border:1px solid rgba(255,215,64,.2)}
 .av-pill.futura      {background:var(--neon-a-soft);color:var(--neon-a);border:1px solid rgba(176,110,243,.2)}
+.av-pill.playlist    {background:rgba(29,185,84,.1);color:#1db954;border:1px solid rgba(29,185,84,.2)}
 .av-pill.geral       {background:rgba(105,255,71,.08);color:#69ff47;border:1px solid rgba(105,255,71,.18)}
 .av-desc{font-size:.83rem;color:var(--t2);line-height:1.55}
 .av-date{font-size:.73rem;color:var(--t3);margin-top:.28rem;display:flex;align-items:center;gap:.3rem;font-weight:500}
@@ -615,6 +646,7 @@ function render(d){
       if(m.seq)tags+='<span class="tag-seq">'+m.seq+'</span>';
       var lnks='';
       if(m.yt)   lnks+='<a class="lnk lnk-yt" href="'+m.yt+'" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i> YouTube</a>';
+      if(m.sp)   lnks+='<a class="lnk lnk-sp" href="'+m.sp+'" target="_blank" rel="noopener"><i class="fa-brands fa-spotify"></i> Spotify</a>';
       if(m.cifra)lnks+='<a class="lnk lnk-ci" href="'+m.cifra+'" target="_blank" rel="noopener"><i class="fa-solid fa-music"></i> Cifra</a>';
       h+=
         '<div class="rep-item">'+
@@ -657,6 +689,7 @@ function render(d){
     var TIPOS={
       comemorativa:{label:'Data Comemorativa',icon:'fa-star'},
       futura:{label:'Música Futura',icon:'fa-music'},
+      playlist:{label:'Playlist do Dia',icon:'fa-list-music'},
       geral:{label:'Aviso Geral',icon:'fa-bullhorn'}
     };
     h+='<div class="sc su su4">'+
@@ -673,6 +706,15 @@ function render(d){
             (av.descricao?'<div class="av-desc">'+av.descricao+'</div>':'')+
             (av.data?'<div class="av-date"><i class="fa-regular fa-calendar"></i> '+fmtAv(av.data)+'</div>':'')+
             (av.tipo==='futura'&&av.youtube?'<a class="av-yt" href="'+av.youtube+'" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i> Assistir no YouTube</a>':'')+
+            (av.tipo==='playlist'&&(av.playlistYt||av.playlistSp)?
+              '<div class="av-playlist">'+
+                '<div class="av-playlist-label"><i class="fa-solid fa-list-music"></i> Ouvir a Playlist</div>'+
+                '<div class="av-playlist-btns">'+
+                  (av.playlistYt?'<a class="av-pl-btn yt" href="'+av.playlistYt+'" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i> YouTube</a>':'')+
+                  (av.playlistSp?'<a class="av-pl-btn sp" href="'+av.playlistSp+'" target="_blank" rel="noopener"><i class="fa-brands fa-spotify"></i> Spotify</a>':'')+
+                '</div>'+
+              '</div>'
+            : '')+
           '</div>'+
         '</div>';
     });
