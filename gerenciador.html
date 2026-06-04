@@ -9,28 +9,19 @@
 <style>
   *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
   :root {
-    --bg:#f0f2f8; 
-    --surface:#ffffff; 
-    --fg:#1a1a2e; 
-    --fg2:#555577;
-    --accent:#46c5e5; 
-    --accent2:#1a7596; 
-    --success:#10b981;
-    --danger:#ef4444; 
-    --border:#e2e8f0; 
-    --radius:14px; 
-    --radius-sm:8px;
-    --shadow:0 4px 24px rgba(79,70,229,.10);
-    --shadow-lg:0 8px 40px rgba(79,70,229,.18);
-    --font:'Inter',sans-serif;
-    --grad:linear-gradient(135deg,var(--accent),var(--accent2));
+    --bg:#f0f2f8; --surface:#ffffff; --fg:#1a1a2e; --fg2:#555577;
+    --accent:#46c5e5; --accent2:#1a7596; --success:#10b981;
+    --danger:#ef4444; --border:#e2e8f0; --radius:14px; --radius-sm:8px;
+    --shadow:0 4px 24px rgba(79,70,229,.10); --shadow-lg:0 8px 40px rgba(79,70,229,.18);
+    --font:'Inter',sans-serif; --grad:linear-gradient(135deg,var(--accent),var(--accent2));
     --header-h:60px;
+    --yt:#ff0000; --sp:#1db954;
   }
-  [data-theme="dark"]     { --bg:#0f0f1a; --surface:#1e1e2f; --fg:#e8e8f8; --fg2:#99babb; --accent:#228fa7; --accent2:#8b8dfa; --border:#2e2e4a; --shadow:0 4px 24px rgba(0,0,0,.4); --shadow-lg:0 8px 40px rgba(0,0,0,.5); }
+  [data-theme="dark"]     { --bg:#0f0f1a; --surface:#1e1e2f; --fg:#e8e8f8; --fg2:#99babb; --accent:#228fa7; --accent2:#8b8dfa; --border:#2e2e4a; --shadow:0 4px 24px rgba(0,0,0,.4); }
   [data-theme="rose"]     { --bg:#fff9f1; --surface:#fff; --fg:#2d2d2d; --fg2:#9f6544; --accent:#f4813f; --accent2:#e16f1d; --border:#fecdd3; }
   [data-theme="ocean"]    { --bg:#e0f4ff; --surface:#fff; --fg:#0c2d48; --fg2:#2d7da0; --accent:#0ea5e9; --accent2:#0284c7; --border:#bae6fd; }
   [data-theme="forest"]   { --bg:#ecfdf5; --surface:#fff; --fg:#052e16; --fg2:#2d6a4f; --accent:#059669; --accent2:#43b69d; --border:#a7f3d0; }
-  [data-theme="midnight"] { --bg:#020617; --surface:#0f172a; --fg:#f1f5f9; --fg2:#94a3b8; --accent:#63d5f1; --accent2:#0a455c; --border:#1e293b; --shadow:0 4px 24px rgba(0,0,0,.6); }
+  [data-theme="midnight"] { --bg:#020617; --surface:#0f172a; --fg:#f1f5f9; --fg2:#94a3b8; --accent:#63d5f1; --accent2:#0a455c; --border:#1e293b; }
 
   body { font-family:var(--font); background:var(--bg); color:var(--fg); min-height:100vh; transition:background .3s,color .3s; }
 
@@ -67,8 +58,8 @@
   .login-card .sub { text-align:center; color:var(--fg2); font-size:.88rem; margin-bottom:1.8rem; }
   .field { position:relative; margin-bottom:1.1rem; }
   .field label { display:block; font-size:.75rem; font-weight:700; color:var(--fg2); text-transform:uppercase; letter-spacing:.05em; margin-bottom:.4rem; }
-  .field input { width:100%; padding:.72rem 1rem .72rem 2.8rem; background:var(--bg); border:1.5px solid var(--border); border-radius:var(--radius-sm); color:var(--fg); font-family:var(--font); font-size:.93rem; outline:none; transition:border-color .2s,box-shadow .2s; }
-  .field input:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(79,70,229,.15); }
+  .field input { width:100%; padding:.72rem 1rem .72rem 2.8rem; background:var(--bg); border:1.5px solid var(--border); border-radius:var(--radius-sm); color:var(--fg); font-family:var(--font); font-size:.93rem; outline:none; transition:border-color .2s; }
+  .field input:focus { border-color:var(--accent); }
   .field .ico { position:absolute; left:.85rem; bottom:.8rem; color:var(--fg2); font-size:.88rem; }
   .btn-primary { width:100%; padding:.78rem; background:var(--grad); color:#fff; font-family:var(--font); font-size:.98rem; font-weight:600; border:none; border-radius:var(--radius-sm); cursor:pointer; transition:opacity .2s; display:flex; align-items:center; justify-content:center; gap:.5rem; }
   .btn-primary:hover { opacity:.9; }
@@ -80,20 +71,18 @@
   .card-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.1rem; padding-bottom:.75rem; border-bottom:1.5px solid var(--border); flex-wrap:wrap; gap:.5rem; }
   .card-header h2 { font-size:.98rem; font-weight:700; color:var(--accent); display:flex; align-items:center; gap:.5rem; }
 
-  /* URL do front */
   .url-box { display:flex; align-items:center; gap:.6rem; background:var(--bg); border:1.5px solid var(--border); border-radius:var(--radius-sm); padding:.6rem .9rem; flex-wrap:wrap; }
   .url-texto { font-size:.78rem; color:var(--fg2); flex:1; min-width:120px; word-break:break-all; }
   .btn-copy { display:inline-flex; align-items:center; gap:.35rem; padding:.4rem .9rem; background:var(--grad); color:#fff; border:none; border-radius:6px; font-family:var(--font); font-size:.78rem; font-weight:600; cursor:pointer; white-space:nowrap; }
   .btn-copy:hover { opacity:.9; }
 
-  /* Semanas / Meses */
   .badge-hoje { display:inline-flex; align-items:center; gap:.4rem; background:rgba(79,70,229,.1); border:1.5px solid rgba(79,70,229,.2); color:var(--accent); border-radius:20px; padding:.3rem .9rem; font-size:.78rem; font-weight:700; margin-bottom:.9rem; }
   .tags-scroll { display:flex; gap:.45rem; flex-wrap:wrap; margin-bottom:.6rem; }
   .tag-mes,.tag-semana { padding:.28rem .75rem; border-radius:20px; font-size:.78rem; font-weight:600; cursor:pointer; border:1.5px solid var(--border); color:var(--fg2); background:var(--bg); transition:all .2s; user-select:none; }
   .tag-mes:hover,.tag-semana:hover { border-color:var(--accent); color:var(--accent); }
   .tag-mes.ativa,.tag-semana.ativa { background:var(--grad); color:#fff; border-color:transparent; }
 
-  /* Repertório */
+  /* ── Repertório ── */
   .linha-musica { display:grid; grid-template-columns:1.6fr .55fr .55fr 34px; gap:.5rem; margin-bottom:.45rem; align-items:center; }
   @media(max-width:560px){ .linha-musica{grid-template-columns:1fr 1fr;} .linha-musica .nomeMusica{grid-column:span 2;} }
   .linha-musica input { padding:.55rem .75rem; background:var(--bg); border:1.5px solid var(--border); border-radius:var(--radius-sm); color:var(--fg); font-family:var(--font); font-size:.85rem; outline:none; transition:border-color .2s; width:100%; }
@@ -101,11 +90,59 @@
   .btn-remover { width:32px; height:32px; background:transparent; border:1.5px solid rgba(239,68,68,.35); color:var(--danger); border-radius:8px; cursor:pointer; font-size:.8rem; display:flex; align-items:center; justify-content:center; transition:all .2s; }
   .btn-remover:hover { background:var(--danger); color:#fff; border-color:var(--danger); }
 
-  /* Links por música */
+  /* ── Links por música ── */
   .links-secao { margin-top:.6rem; }
-  .links-secao-titulo { font-size:.75rem; font-weight:700; color:var(--fg2); text-transform:uppercase; letter-spacing:.05em; margin-bottom:.5rem; display:flex; align-items:center; gap:.35rem; }
+  .links-secao-titulo { font-size:.75rem; font-weight:700; color:var(--fg2); text-transform:uppercase; letter-spacing:.05em; margin-bottom:.5rem; display:flex; align-items:center; gap:.35rem; flex-wrap:wrap; }
 
-  /* Escala */
+  /* bloco de links de uma música */
+  .link-musica-bloco {
+    background:var(--bg); border:1.5px solid var(--border);
+    border-radius:var(--radius-sm); padding:.8rem 1rem;
+    margin-bottom:.6rem;
+  }
+  .link-musica-nome {
+    font-size:.78rem; font-weight:700; color:var(--fg2);
+    margin-bottom:.65rem; display:flex; align-items:center; gap:.4rem;
+  }
+  .link-musica-nome i { color:var(--accent); }
+
+  /* linha de um campo de link */
+  .link-row {
+    display:grid; grid-template-columns:auto 1fr auto;
+    gap:.45rem; align-items:center; margin-bottom:.45rem;
+  }
+  .link-row:last-child { margin-bottom:0; }
+  .link-row-icon {
+    width:30px; height:30px; border-radius:8px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:.9rem; flex-shrink:0;
+  }
+  .link-row-icon.yt    { background:rgba(255,0,0,.1);   color:var(--yt); border:1.5px solid rgba(255,0,0,.2); }
+  .link-row-icon.sp    { background:rgba(29,185,84,.1); color:var(--sp); border:1.5px solid rgba(29,185,84,.2); }
+  .link-row-icon.cifra { background:rgba(70,197,229,.1); color:var(--accent); border:1.5px solid rgba(70,197,229,.2); }
+  .link-row input {
+    padding:.48rem .7rem; background:var(--surface);
+    border:1.5px solid var(--border); border-radius:var(--radius-sm);
+    color:var(--fg); font-family:var(--font); font-size:.8rem;
+    outline:none; transition:border-color .2s; width:100%;
+  }
+  .link-row input:focus { border-color:var(--accent); }
+
+  /* botão buscar */
+  .btn-buscar {
+    display:inline-flex; align-items:center; gap:.3rem;
+    padding:.4rem .65rem; border-radius:var(--radius-sm);
+    font-family:var(--font); font-size:.72rem; font-weight:600;
+    cursor:pointer; border:1.5px solid; white-space:nowrap;
+    transition:opacity .2s, transform .15s;
+    text-decoration:none; flex-shrink:0;
+  }
+  .btn-buscar:hover { opacity:.8; transform:translateY(-1px); }
+  .btn-buscar:active { transform:scale(.95); }
+  .btn-buscar.yt    { background:rgba(255,0,0,.08);   color:var(--yt); border-color:rgba(255,0,0,.25); }
+  .btn-buscar.sp    { background:rgba(29,185,84,.08); color:var(--sp); border-color:rgba(29,185,84,.25); }
+
+  /* ── Escala ── */
   .escala-grupo { margin-bottom:1rem; }
   .escala-grupo-label { font-size:.75rem; font-weight:700; color:var(--fg2); text-transform:uppercase; letter-spacing:.05em; display:flex; align-items:center; gap:.35rem; margin-bottom:.5rem; }
   .escala-grupo-label i { color:var(--accent); }
@@ -121,110 +158,79 @@
   @media(max-width:540px){ .escala-grid-2{grid-template-columns:1fr;} }
 
   /* ── Quadro de Avisos ── */
-  .aviso-linha {
-    background:var(--bg); border:1.5px solid var(--border); border-radius:var(--radius-sm);
-    padding:.8rem 1rem; margin-bottom:.6rem;
-    display:grid; grid-template-columns:150px 1fr 1fr 130px 34px;
-    gap:.55rem; align-items:start;
+  .aviso-bloco {
+    background:var(--bg); border:1.5px solid var(--border);
+    border-radius:var(--radius-sm); padding:.9rem 1rem;
+    margin-bottom:.7rem; display:flex; flex-direction:column; gap:.55rem;
   }
-  @media(max-width:680px){
-    .aviso-linha { grid-template-columns:1fr 1fr; }
-    .aviso-linha .avisoTipo { grid-column:span 2; }
-    .aviso-linha .btn-del-aviso { grid-column:span 2; justify-self:end; }
-  }
-  .aviso-linha select,
-  .aviso-linha input[type="text"],
-  .aviso-linha input[type="date"] {
-    width:100%; padding:.5rem .7rem; background:var(--surface);
+  .aviso-bloco-header { display:flex; align-items:center; gap:.55rem; flex-wrap:wrap; }
+  .aviso-bloco-header select,
+  .aviso-bloco-header input[type="text"],
+  .aviso-bloco-header input[type="date"] {
+    padding:.5rem .7rem; background:var(--surface);
     border:1.5px solid var(--border); border-radius:var(--radius-sm);
-    color:var(--fg); font-family:var(--font); font-size:.82rem; outline:none;
-    transition:border-color .2s;
+    color:var(--fg); font-family:var(--font); font-size:.82rem;
+    outline:none; transition:border-color .2s;
   }
-  .aviso-linha select:focus,
-  .aviso-linha input:focus { border-color:var(--accent); }
-  .aviso-linha textarea {
+  .aviso-bloco-header select:focus,
+  .aviso-bloco-header input:focus { border-color:var(--accent); }
+  .aviso-sel-tipo { flex:0 0 170px; }
+  .aviso-inp-titulo { flex:1; min-width:160px; }
+  .aviso-inp-data { flex:0 0 145px; }
+  .aviso-bloco textarea {
     width:100%; padding:.5rem .7rem; background:var(--surface);
     border:1.5px solid var(--border); border-radius:var(--radius-sm);
     color:var(--fg); font-family:var(--font); font-size:.82rem;
-    outline:none; resize:vertical; min-height:120px;
-    transition:border-color .2s;
+    outline:none; resize:vertical; min-height:70px; transition:border-color .2s;
   }
-  .aviso-linha textarea:focus { border-color:var(--accent); }
+  .aviso-bloco textarea:focus { border-color:var(--accent); }
   .btn-del-aviso {
     width:32px; height:32px; background:transparent;
     border:1.5px solid rgba(239,68,68,.35); color:var(--danger);
-    border-radius:8px; cursor:pointer; font-size:.82rem;
+    border-radius:8px; cursor:pointer; font-size:.82rem; flex-shrink:0;
     display:flex; align-items:center; justify-content:center; transition:all .2s;
+    margin-left:auto;
   }
   .btn-del-aviso:hover { background:var(--danger); color:#fff; border-color:var(--danger); }
-  .avisos-hint { font-size:.76rem; color:var(--fg2); margin-top:.4rem; display:flex; align-items:flex-start; gap:.35rem; line-height:1.5; }
 
-  /* Botões gerais */
-  .btn-add { padding:.6rem 1.3rem; background:var(--grad); color:#fff; border:none; border-radius:var(--radius-sm); cursor:pointer; font-family:var(--font); font-size:.88rem; font-weight:600; display:inline-flex; align-items:center; gap:.4rem; }
+  /* campos extras de aviso */
+  .aviso-extra { display:flex; flex-direction:column; gap:.45rem; }
+  .aviso-extra-label { font-size:.72rem; font-weight:700; color:var(--fg2); text-transform:uppercase; letter-spacing:.05em; display:flex; align-items:center; gap:.35rem; }
+  .aviso-link-row { display:grid; grid-template-columns:auto 1fr auto; gap:.45rem; align-items:center; }
+  .aviso-link-row input {
+    padding:.48rem .7rem; background:var(--surface);
+    border:1.5px solid var(--border); border-radius:var(--radius-sm);
+    color:var(--fg); font-family:var(--font); font-size:.8rem;
+    outline:none; transition:border-color .2s; width:100%;
+  }
+  .aviso-link-row input:focus { border-color:var(--accent); }
+
+  /* ── Botões gerais ── */
+  .btn-add { padding:.6rem 1.3rem; background:var(--grad); color:#fff; border:none; border-radius:var(--radius-sm); cursor:pointer; font-family:var(--font); font-size:.88rem; font-weight:600; display:inline-flex; align-items:center; gap:.4rem; transition:opacity .2s; }
   .btn-add:hover { opacity:.9; }
   .btn-salvar { width:100%; padding:.85rem; background:var(--grad); color:#fff; font-family:var(--font); font-size:1rem; font-weight:700; border:none; border-radius:var(--radius-sm); cursor:pointer; display:flex; align-items:center; justify-content:center; gap:.5rem; transition:opacity .2s; }
   .btn-salvar:hover { opacity:.9; }
   .btn-salvar:disabled { opacity:.6; cursor:not-allowed; }
+  .avisos-hint { font-size:.76rem; color:var(--fg2); margin-top:.4rem; display:flex; align-items:flex-start; gap:.35rem; line-height:1.5; }
 
   .oculto { display:none !important; }
-  /* ── Ajustes de responsividade do cabeçalho ── */
 
-  @media (max-width: 640px) {
-    header {
-      height: auto;
-      padding: .55rem .9rem .7rem;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: .4rem;
-    }
-
-    .header-left {
-      width: 100%;
-    }
-
-    .header-right {
-      width: 100%;
-      display: grid;
-      grid-template-columns: auto 1fr;
-      grid-template-rows: auto auto;
-      column-gap: .4rem;
-      row-gap: .35rem;
-      align-items: center;
-    }
-
-    .theme-bar {
-      grid-column: 1 / 2;
-    }
-
-    #validadeChip {
-      grid-column: 2 / 3;
-      justify-self: end;
-    }
-
-    #syncBadge {
-      grid-column: 1 / 3;
-      justify-self: stretch;
-      justify-content: center;
-    }
-
-    #btnLogout {
-      grid-column: 1 / 3;
-      justify-self: stretch;
-      justify-content: center;
-    }
-
-    .theme-btn {
-      width: 16px;
-      height: 16px;
-    }
+  @media(max-width:640px){
+    header { height:auto; padding:.55rem .9rem .7rem; flex-direction:column; align-items:flex-start; gap:.4rem; }
+    .header-left { width:100%; }
+    .header-right { width:100%; display:grid; grid-template-columns:auto 1fr; grid-template-rows:auto auto; column-gap:.4rem; row-gap:.35rem; align-items:center; }
+    .theme-bar { grid-column:1/2; }
+    #validadeChip { grid-column:2/3; justify-self:end; }
+    #syncBadge    { grid-column:1/3; justify-self:stretch; justify-content:center; }
+    #btnLogout    { grid-column:1/3; justify-self:stretch; justify-content:center; }
+    .theme-btn { width:16px; height:16px; }
+    .aviso-bloco-header { flex-direction:column; align-items:stretch; }
+    .aviso-sel-tipo,.aviso-inp-titulo,.aviso-inp-data { flex:unset; width:100%; }
+    .link-row { grid-template-columns:auto 1fr; }
+    .btn-buscar { grid-column:2; }
   }
-
-  @media (max-width: 400px) {
-    #validadeChip {
-      grid-column: 1 / 3;
-      justify-self: stretch;
-      justify-content: center;
-    }
+  @media(max-width:400px){
+    #validadeChip { grid-column:1/3; justify-self:stretch; justify-content:center; }
   }
 </style>
 </head>
@@ -232,10 +238,7 @@
 
 <header>
   <div class="header-left">
-    <div class="header-titulo">
-      <i class="fa-solid fa-music"></i> 
-    <span id="tituloMinisterio">Ministério de Louvor</span>
-  </div>
+    <div class="header-titulo"><i class="fa-solid fa-music"></i> <span id="tituloMinisterio">Ministério de Louvor</span></div>
     <div class="header-user oculto" id="headerUser"></div>
   </div>
   <div class="header-right">
@@ -253,7 +256,7 @@
   </div>
 </header>
 
-<!-- ═══════════ LOGIN ═══════════ -->
+<!-- LOGIN -->
 <div class="login-wrap" id="telaLogin">
   <div class="login-card">
     <div class="login-icon"><i class="fa-solid fa-music"></i></div>
@@ -269,12 +272,12 @@
       <i class="fa-solid fa-lock ico"></i>
       <input type="password" id="campoSenha" placeholder="Sua senha...">
     </div>
-    <button class="btn-primary" id="btnEntrar" onclick="efetuarLogin()"><i class="fa-solid fa-arrow-right-to-bracket"></i> Entrar</button>
+    <button class="btn-primary" id="btnEntrar"><i class="fa-solid fa-arrow-right-to-bracket"></i> Entrar</button>
     <p class="msg-erro" id="msgErro"></p>
   </div>
 </div>
 
-<!-- ═══════════ GERENCIADOR ═══════════ -->
+<!-- GERENCIADOR -->
 <div class="gerenciador oculto" id="gerenciador">
 
   <!-- URL do Front -->
@@ -309,7 +312,12 @@
     <div id="linhasRepertorio"></div>
 
     <div class="links-secao" id="linksSecao">
-      <div class="links-secao-titulo"><i class="fa-brands fa-youtube" style="color:#e00;"></i> YouTube &nbsp;·&nbsp; <i class="fa-solid fa-music" style="color:var(--accent);"></i> Cifras por música</div>
+      <div class="links-secao-titulo">
+        <i class="fa-brands fa-youtube" style="color:#e00;"></i> YouTube &nbsp;·&nbsp;
+        <i class="fa-brands fa-spotify" style="color:#1db954;"></i> Spotify &nbsp;·&nbsp;
+        <i class="fa-solid fa-music" style="color:var(--accent);"></i> Cifras
+        <span style="font-size:.68rem;font-weight:400;color:var(--fg2);">— links por música</span>
+      </div>
       <div id="linksMusicas"></div>
     </div>
   </div>
@@ -341,7 +349,7 @@
     </div>
   </div>
 
-  <!-- ══ QUADRO DE AVISOS ══ -->
+  <!-- Quadro de Avisos -->
   <div class="card">
     <div class="card-header">
       <h2><i class="fa-solid fa-chalkboard"></i> Quadro de Avisos</h2>
@@ -350,448 +358,453 @@
     <div id="listaAvisos"></div>
     <div class="avisos-hint">
       <i class="fa-solid fa-circle-info" style="color:var(--accent);flex-shrink:0;margin-top:.1rem;"></i>
-      Use para datas comemorativas (Páscoa, Natal, Retiros…), músicas futuras do repertório e comunicados gerais.
-      Estes avisos aparecem no Quadro de Avisos visível para todos os membros.
+      Use para datas comemorativas, músicas futuras, playlists do dia e comunicados gerais.
     </div>
   </div>
 
-  <!-- Salvar -->
   <button class="btn-salvar" id="btnSalvar"><i class="fa-solid fa-cloud-arrow-up"></i> Salvar &amp; Publicar</button>
-
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 <script>
-  /* ============================================================
-     🔥 firebaseConfig
-  ============================================================ */
-  var firebaseConfig = {
-    apiKey:            "AIzaSyASRX7kZJUmp7jfx_C7buYnLfpz0reby4E",
-    authDomain:        "ministerio-de-louvor-e2eb3.firebaseapp.com",
-    projectId:         "ministerio-de-louvor-e2eb3",
-    storageBucket:     "ministerio-de-louvor-e2eb3.firebasestorage.app",
-    messagingSenderId: "319307727923",
-    appId:             "1:319307727923:web:845608da8aa866ac7ecf46"
-  };
-  firebase.initializeApp(firebaseConfig);
-  var db  = firebase.firestore();
-  var col = db.collection('ministerios');
+var firebaseConfig = {
+  apiKey:"AIzaSyASRX7kZJUmp7jfx_C7buYnLfpz0reby4E",
+  authDomain:"ministerio-de-louvor-e2eb3.firebaseapp.com",
+  projectId:"ministerio-de-louvor-e2eb3",
+  storageBucket:"ministerio-de-louvor-e2eb3.firebasestorage.app",
+  messagingSenderId:"319307727923",
+  appId:"1:319307727923:web:845608da8aa866ac7ecf46"
+};
+firebase.initializeApp(firebaseConfig);
+var db  = firebase.firestore();
+var col = db.collection('ministerios');
 
-  var CHAVE_TEMA    = 'ministerioTemaGerenciador';
-  var CHAVE_LOGIN   = 'ministerioLoginGerenciador';
-  var VALIDADE_SESS = 8 * 60 * 60 * 1000;
-  var ministerioId  = null;
-  var mesSelecionado    = new Date().getMonth();
-  var semanaSelecionada = 0;
-  var programacoesPorSemana = {};
+var CHAVE_TEMA  = 'ministerioTemaGerenciador';
+var CHAVE_LOGIN = 'ministerioLoginGerenciador';
+var VALIDADE_SESS = 8*60*60*1000;
+var ministerioId = null;
+var mesSelecionado = new Date().getMonth();
+var semanaSelecionada = 0;
+var programacoesPorSemana = {};
 
+/* ── Tema ── */
+function aplicarTema(t){
+  document.documentElement.setAttribute('data-theme',t);
+  localStorage.setItem(CHAVE_TEMA,t);
+  document.querySelectorAll('.theme-btn').forEach(function(b){ b.classList.toggle('ativo',b.getAttribute('data-t')===t); });
+}
+document.querySelectorAll('.theme-btn').forEach(function(b){ b.addEventListener('click',function(){ aplicarTema(b.getAttribute('data-t')); }); });
+aplicarTema(localStorage.getItem(CHAVE_TEMA)||'light');
 
+/* ── Sessão ── */
+function sessaoValida(){ var r=JSON.parse(localStorage.getItem(CHAVE_LOGIN)||'null'); return r&&(Date.now()-r.ts)<VALIDADE_SESS; }
 
+/* ── Login ── */
+document.getElementById('btnEntrar').addEventListener('click',efetuarLogin);
+document.getElementById('campoSenha').addEventListener('keydown',function(e){ if(e.key==='Enter') efetuarLogin(); });
+document.getElementById('campoEmail').addEventListener('keydown',function(e){ if(e.key==='Enter') document.getElementById('campoSenha').focus(); });
 
-  /* ===== Tema ===== */
-  function aplicarTema(t) {
-    document.documentElement.setAttribute('data-theme', t);
-    localStorage.setItem(CHAVE_TEMA, t);
-    document.querySelectorAll('.theme-btn').forEach(function(b){
-      b.classList.toggle('ativo', b.getAttribute('data-t') === t);
-    });
-  }
-  document.querySelectorAll('.theme-btn').forEach(function(b){
-    b.addEventListener('click', function(){ aplicarTema(b.getAttribute('data-t')); });
+function efetuarLogin(){
+  var email=document.getElementById('campoEmail').value.trim().toLowerCase();
+  var senha=document.getElementById('campoSenha').value.trim();
+  var msg=document.getElementById('msgErro');
+  var btn=document.getElementById('btnEntrar');
+  if(!email||!senha){ msg.textContent='Preencha e-mail e senha.'; return; }
+  btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Verificando...'; btn.disabled=true;
+  col.where('liderEmail','==',email).limit(1).get().then(function(snap){
+    btn.innerHTML='<i class="fa-solid fa-arrow-right-to-bracket"></i> Entrar'; btn.disabled=false;
+    if(snap.empty){ msg.textContent='E-mail não encontrado.'; return; }
+    var doc=snap.docs[0]; var u=doc.data();
+    if(u.liderSenha!==senha)   { msg.textContent='Senha incorreta.'; document.getElementById('campoSenha').value=''; return; }
+    if(!u.ativo)               { msg.textContent='Acesso bloqueado. Contate o administrador.'; return; }
+    if(Date.now()>u.expiracao) { msg.textContent='Acesso expirado em '+new Date(u.expiracao).toLocaleDateString('pt-BR')+'.'; return; }
+    localStorage.setItem(CHAVE_LOGIN,JSON.stringify({ts:Date.now(),id:doc.id,email:u.liderEmail,nome:u.liderNome,expiracao:u.expiracao}));
+    abrirGerenciador(doc.id,u);
+  }).catch(function(err){ btn.innerHTML='<i class="fa-solid fa-arrow-right-to-bracket"></i> Entrar'; btn.disabled=false; msg.textContent='Erro: '+err.message; });
+}
+
+function abrirGerenciador(id,u){
+  ministerioId=id;
+  document.getElementById('telaLogin').classList.add('oculto');
+  document.getElementById('gerenciador').classList.remove('oculto');
+  ['btnLogout','syncBadge','validadeChip','headerUser'].forEach(function(i){ document.getElementById(i).classList.remove('oculto'); });
+  document.getElementById('headerUser').textContent=(u.liderNome||u.liderEmail)+' · '+id;
+  var dias=Math.ceil((u.expiracao-Date.now())/86400000);
+  document.getElementById('validadeTexto').textContent='Expira em '+dias+'d';
+  if(dias<=5) document.getElementById('validadeChip').classList.add('exp');
+  var base=window.location.origin+window.location.pathname.replace('gerenciador.html','');
+  document.getElementById('urlFrontTexto').textContent=base+'front.html?id='+id;
+  carregarDados(); renderizarMeses(); mostrarHoje();
+}
+
+function logout(){
+  localStorage.removeItem(CHAVE_LOGIN); ministerioId=null;
+  document.getElementById('gerenciador').classList.add('oculto');
+  ['btnLogout','syncBadge','validadeChip','headerUser'].forEach(function(i){ document.getElementById(i).classList.add('oculto'); });
+  document.getElementById('telaLogin').classList.remove('oculto');
+  document.getElementById('campoEmail').value=''; document.getElementById('campoSenha').value=''; document.getElementById('msgErro').textContent='';
+}
+
+/* ── Carregar dados ── */
+function carregarDados(){
+  col.doc(ministerioId).get().then(function(doc){
+    if(!doc.exists){ adicionarLinha(null); renderizarMeses(); return; }
+    var data=doc.data();
+    if(data.programacoes&&Object.keys(data.programacoes).length>0){
+      programacoesPorSemana=data.programacoes;
+    } else if(data.programacao){
+      var pa=data.programacao;
+      programacoesPorSemana[chaveS(pa.semana||semanaISO(new Date()))]=pa;
+    }
+    var p=data.programacao||{};
+    if(p.mes!==undefined) mesSelecionado=p.mes;
+    if(p.semana!==undefined) semanaSelecionada=p.semana;
+    if(!semanaSelecionada) semanaSelecionada=semanaISO(new Date());
+    carregarSemanaLocal(semanaSelecionada); renderizarMeses();
   });
-  aplicarTema(localStorage.getItem(CHAVE_TEMA) || 'light');
+}
 
-  /* ===== Sessão ===== */
-  function sessaoValida() {
-    var r = JSON.parse(localStorage.getItem(CHAVE_LOGIN) || 'null');
-    return r && (Date.now() - r.ts) < VALIDADE_SESS;
+function copiarUrlFront(){
+  var url=document.getElementById('urlFrontTexto').textContent;
+  var btn=document.getElementById('btnCopyUrl');
+  navigator.clipboard.writeText(url).then(function(){
+    btn.innerHTML='<i class="fa-solid fa-check"></i> Copiado!';
+    setTimeout(function(){ btn.innerHTML='<i class="fa-solid fa-copy"></i> Copiar'; },2000);
+  }).catch(function(){ alert('URL: '+url); });
+}
+
+/* ── Semanas ── */
+function renderizarMeses(){
+  var c=document.getElementById('tagsMes'); c.innerHTML='';
+  var ano=new Date().getFullYear();
+  for(var m=0;m<12;m++){
+    var nome=new Date(ano,m,1).toLocaleString('pt-BR',{month:'short'});
+    var tag=document.createElement('div');
+    tag.className='tag-mes'+(m===mesSelecionado?' ativa':'');
+    tag.textContent=nome; tag.setAttribute('data-m',m);
+    tag.addEventListener('click',function(){ mesSelecionado=parseInt(this.getAttribute('data-m')); renderizarMeses(); renderizarSemanas(); });
+    c.appendChild(tag);
   }
-
-  /* ===== Login ===== */
-  document.getElementById('btnEntrar').addEventListener('click', efetuarLogin);
-  document.getElementById('campoSenha').addEventListener('keydown', function(e){ if(e.key==='Enter') efetuarLogin(); });
-  document.getElementById('campoEmail').addEventListener('keydown', function(e){ if(e.key==='Enter') document.getElementById('campoSenha').focus(); });
-
-  function efetuarLogin() {
-    var email = document.getElementById('campoEmail').value.trim().toLowerCase();
-    var senha = document.getElementById('campoSenha').value.trim();
-    var msg   = document.getElementById('msgErro');
-    var btn   = document.getElementById('btnEntrar');
-    if (!email || !senha) { msg.textContent = 'Preencha e-mail e senha.'; return; }
-    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Verificando...';
-    btn.disabled  = true;
-    col.where('liderEmail','==',email).limit(1).get().then(function(snap) {
-      btn.innerHTML = '<i class="fa-solid fa-arrow-right-to-bracket"></i> Entrar';
-      btn.disabled  = false;
-      if (snap.empty) { msg.textContent = 'E-mail não encontrado.'; return; }
-      var doc = snap.docs[0]; var u = doc.data();
-      if (u.liderSenha !== senha)    { msg.textContent = 'Senha incorreta.'; document.getElementById('campoSenha').value=''; return; }
-      if (!u.ativo)                  { msg.textContent = 'Acesso bloqueado. Contate o administrador.'; return; }
-      if (Date.now() > u.expiracao)  { msg.textContent = 'Acesso expirado em ' + new Date(u.expiracao).toLocaleDateString('pt-BR') + '.'; return; }
-      localStorage.setItem(CHAVE_LOGIN, JSON.stringify({ ts:Date.now(), id:doc.id, email:u.liderEmail, nome:u.liderNome, expiracao:u.expiracao }));
-      abrirGerenciador(doc.id, u);
-    }).catch(function(err) {
-      btn.innerHTML = '<i class="fa-solid fa-arrow-right-to-bracket"></i> Entrar';
-      btn.disabled  = false;
-      msg.textContent = 'Erro: ' + err.message;
+  renderizarSemanas();
+}
+function diasNoMes(a,m){ return new Date(a,m+1,0).getDate(); }
+function semanaISO(d){ var t=new Date(d.valueOf()); var dia=(d.getDay()+6)%7; t.setDate(t.getDate()-dia+3); var j4=new Date(t.getFullYear(),0,4); return 1+Math.ceil(((t-j4)/86400000)/7); }
+function inicioSemanaISO(ano,sem){ var j4=new Date(ano,0,4); var d4=(j4.getDay()+6)%7; var d=new Date(j4); d.setDate(j4.getDate()-d4+(sem-1)*7); return d; }
+function renderizarSemanas(){
+  var c=document.getElementById('tagsSemana'); c.innerHTML='';
+  var ano=new Date().getFullYear();
+  var s1=semanaISO(new Date(ano,mesSelecionado,1));
+  var s2=semanaISO(new Date(ano,mesSelecionado,diasNoMes(ano,mesSelecionado)));
+  for(var s=s1;s<=s2;s++){
+    var ini=inicioSemanaISO(ano,s);
+    var tag=document.createElement('div');
+    tag.className='tag-semana'+(s===semanaSelecionada?' ativa':'');
+    var domingo=new Date(ini); domingo.setDate(domingo.getDate()+6);
+    tag.textContent='Sem. '+s+' ('+domingo.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})+')';
+    tag.setAttribute('data-s',s);
+    tag.addEventListener('click',function(){
+      var nova=parseInt(this.getAttribute('data-s'));
+      if(nova===semanaSelecionada) return;
+      salvarSemanaAtual(); semanaSelecionada=nova;
+      document.querySelectorAll('.tag-semana').forEach(function(t){ t.classList.remove('ativa'); });
+      this.classList.add('ativa'); carregarSemanaLocal(semanaSelecionada);
     });
+    c.appendChild(tag);
   }
+}
+function mostrarHoje(){
+  document.getElementById('badgeHoje').innerHTML='<i class="fa-solid fa-circle-dot"></i> Hoje: '+new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+}
 
-  function abrirGerenciador(id, u) {
-    ministerioId = id;
-    document.getElementById('telaLogin').classList.add('oculto');
-    document.getElementById('gerenciador').classList.remove('oculto');
-    document.getElementById('btnLogout').classList.remove('oculto');
-    document.getElementById('syncBadge').classList.remove('oculto');
-    document.getElementById('validadeChip').classList.remove('oculto');
-    document.getElementById('headerUser').classList.remove('oculto');
-    document.getElementById('headerUser').textContent = (u.liderNome || u.liderEmail) + ' · ' + id;
-    var dias = Math.ceil((u.expiracao - Date.now()) / 86400000);
-    document.getElementById('validadeTexto').textContent = 'Expira em ' + dias + 'd';
-    if (dias <= 5) document.getElementById('validadeChip').classList.add('exp');
-    var base = window.location.origin + window.location.pathname.replace('gerenciador.html','');
-    document.getElementById('urlFrontTexto').textContent = base + 'front.html?id=' + id;
-    carregarDados();
-    renderizarMeses();
-    mostrarHoje();
-  }
+/* ── Repertório ── */
+function adicionarLinha(dados){
+  var c=document.getElementById('linhasRepertorio');
+  var l=document.createElement('div'); l.className='linha-musica';
+  l.innerHTML=
+    '<input type="text" class="nomeMusica" placeholder="Nome da música" value="'+(dados&&dados.nome?dados.nome:'')+'">' +
+    '<input type="text" class="tomMusica"  placeholder="Ex: G"          value="'+(dados&&dados.tom?dados.tom:'')+'">' +
+    '<input type="text" class="seqMusica"  placeholder="Ex: 3ª"         value="'+(dados&&dados.seq?dados.seq:'')+'">' +
+    '<button class="btn-remover" onclick="removerLinha(this)"><i class="fa-solid fa-xmark"></i></button>';
+  c.appendChild(l);
+  l.querySelector('.nomeMusica').addEventListener('input',atualizarLinks);
+}
+function removerLinha(btn){ btn.closest('.linha-musica').remove(); atualizarLinks(); }
+document.getElementById('btnAdicionarMusica').addEventListener('click',function(){ adicionarLinha(null); atualizarLinks(); });
 
-  function logout() {
-    localStorage.removeItem(CHAVE_LOGIN);
-    ministerioId = null;
-    document.getElementById('gerenciador').classList.add('oculto');
-    ['btnLogout','syncBadge','validadeChip','headerUser'].forEach(function(i){ document.getElementById(i).classList.add('oculto'); });
-    document.getElementById('telaLogin').classList.remove('oculto');
-    document.getElementById('campoEmail').value = '';
-    document.getElementById('campoSenha').value = '';
-    document.getElementById('msgErro').textContent = '';
-  }
+/* ── Busca rápida ── */
+function buscarYoutube(nomeMusica){
+  var q=encodeURIComponent((nomeMusica||'').trim()||'música gospel');
+  window.open('https://www.youtube.com/results?search_query='+q,'_blank');
+}
+function buscarSpotify(nomeMusica){
+  var q=encodeURIComponent((nomeMusica||'').trim()||'música gospel');
+  window.open('https://open.spotify.com/search/'+q,'_blank');
+}
 
-  /* ===== Carregar dados ===== */
-    function carregarDados() {
-    col.doc(ministerioId).get().then(function(doc){
-      if (!doc.exists) { adicionarLinha(null); renderizarMeses(); return; }
-      var data = doc.data();
+function atualizarLinks(){
+  var c=document.getElementById('linksMusicas');
+  var musicas=document.querySelectorAll('#linhasRepertorio .nomeMusica');
 
-      // Novo formato: mapa de semanas
-      if (data.programacoes && Object.keys(data.programacoes).length > 0) {
-        programacoesPorSemana = data.programacoes;
-      } else if (data.programacao) {
-        // migrar formato antigo
-        var pa = data.programacao;
-        programacoesPorSemana[chaveS(pa.semana || semanaISO(new Date()))] = pa;
-      }
-
-      // Definir semana ativa inicial
-      var p = data.programacao || {};
-      if (p.mes    !== undefined) mesSelecionado    = p.mes;
-      if (p.semana !== undefined) semanaSelecionada = p.semana;
-      if (!semanaSelecionada)     semanaSelecionada = semanaISO(new Date());
-
-      carregarSemanaLocal(semanaSelecionada);
-      renderizarMeses();
-    });
-  }
-
-
-  /* ===== URL Front ===== */
-  function copiarUrlFront() {
-    var url = document.getElementById('urlFrontTexto').textContent;
-    var btn = document.getElementById('btnCopyUrl');
-    navigator.clipboard.writeText(url).then(function(){
-      btn.innerHTML = '<i class="fa-solid fa-check"></i> Copiado!';
-      setTimeout(function(){ btn.innerHTML='<i class="fa-solid fa-copy"></i> Copiar'; }, 2000);
-    }).catch(function(){ alert('URL: ' + url); });
-  }
-
-  /* ===== Semanas ===== */
-  function renderizarMeses() {
-    var c = document.getElementById('tagsMes'); c.innerHTML = '';
-    var ano = new Date().getFullYear();
-    for (var m = 0; m < 12; m++) {
-      var nome = new Date(ano, m, 1).toLocaleString('pt-BR',{month:'short'});
-      var tag  = document.createElement('div');
-      tag.className = 'tag-mes' + (m===mesSelecionado?' ativa':'');
-      tag.textContent = nome; tag.setAttribute('data-m', m);
-      tag.addEventListener('click', function() { mesSelecionado=parseInt(this.getAttribute('data-m')); renderizarMeses(); renderizarSemanas(); });
-      c.appendChild(tag);
-    }
-    renderizarSemanas();
-  }
-  function diasNoMes(a,m){ return new Date(a,m+1,0).getDate(); }
-  function semanaISO(d){ var t=new Date(d.valueOf()); var dia=(d.getDay()+6)%7; t.setDate(t.getDate()-dia+3); var j4=new Date(t.getFullYear(),0,4); return 1+Math.ceil(((t-j4)/86400000)/7); }
-  function inicioSemanaISO(ano,sem){ var j4=new Date(ano,0,4); var d4=(j4.getDay()+6)%7; var d=new Date(j4); d.setDate(j4.getDate()-d4+(sem-1)*7); return d; }
-  function renderizarSemanas() {
-    var c = document.getElementById('tagsSemana'); c.innerHTML = '';
-    var ano = new Date().getFullYear();
-    var s1  = semanaISO(new Date(ano, mesSelecionado, 1));
-    var s2  = semanaISO(new Date(ano, mesSelecionado, diasNoMes(ano, mesSelecionado)));
-    for (var s = s1; s <= s2; s++) {
-      var ini = inicioSemanaISO(ano, s);
-      var tag = document.createElement('div');
-      tag.className = 'tag-semana' + (s===semanaSelecionada?' ativa':'');
-      var domingo = new Date(ini);
-      domingo.setDate(domingo.getDate() + 6);
-      tag.textContent = 'Sem. ' + s + ' (' +
-        domingo.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}) + ')';
-      tag.setAttribute('data-s', s);
-      tag.addEventListener('click', function() {
-        var nova = parseInt(this.getAttribute('data-s'));
-        if (nova === semanaSelecionada) return;
-        salvarSemanaAtual();
-        semanaSelecionada = nova;
-        document.querySelectorAll('.tag-semana').forEach(function(t){ t.classList.remove('ativa'); });
-        this.classList.add('ativa');
-        carregarSemanaLocal(semanaSelecionada);
-      });
-
-      c.appendChild(tag);
-    }
-    if (!semanaSelecionada) {
-      var sa = document.querySelector('.tag-semana[data-s="'+semanaISO(new Date())+'"]');
-      if (sa) sa.click();
-    }
-  }
-  function mostrarHoje() {
-    document.getElementById('badgeHoje').innerHTML =
-      '<i class="fa-solid fa-circle-dot"></i> Hoje: ' +
-      new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
-  }
-
-  /* ===== Repertório ===== */
-  function adicionarLinha(dados) {
-    var c = document.getElementById('linhasRepertorio');
-    var l = document.createElement('div'); l.className='linha-musica';
-    l.innerHTML =
-      '<input type="text" class="nomeMusica" placeholder="Nome da música" value="'+(dados&&dados.nome?dados.nome:'')+'">' +
-      '<input type="text" class="tomMusica"  placeholder="Ex: G"          value="'+(dados&&dados.tom ?dados.tom :'')+'">' +
-      '<input type="text" class="seqMusica"  placeholder="Ex: 3ª"         value="'+(dados&&dados.seq ?dados.seq :'')+'">' +
-      '<button class="btn-remover" onclick="removerLinha(this)"><i class="fa-solid fa-xmark"></i></button>';
-    c.appendChild(l);
-    l.querySelector('.nomeMusica').addEventListener('input', atualizarLinks);
-  }
-  function removerLinha(btn) { btn.closest('.linha-musica').remove(); atualizarLinks(); }
-  document.getElementById('btnAdicionarMusica').addEventListener('click', function(){ adicionarLinha(null); atualizarLinks(); });
-
-  function atualizarLinks() {
-    var c = document.getElementById('linksMusicas');
-    var musicas = document.querySelectorAll('#linhasRepertorio .nomeMusica');
-    var prev = {};
-    c.querySelectorAll('[data-idx]').forEach(function(el) {
-      var i = el.getAttribute('data-idx');
-      prev[i] = { yt: el.querySelector('.linkYt')?el.querySelector('.linkYt').value:'', cifra: el.querySelector('.linkCifra')?el.querySelector('.linkCifra').value:'' };
-    });
-    c.innerHTML = '';
-    musicas.forEach(function(inp, i) {
-      var nome = inp.value.trim() || ('Música '+(i+1));
-      var p    = prev[i] || {yt:'',cifra:''};
-      var bloco = document.createElement('div');
-      bloco.setAttribute('data-idx', i);
-      bloco.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:.45rem;margin-bottom:.5rem;align-items:center;';
-      bloco.innerHTML =
-        '<span style="font-size:.78rem;font-weight:700;color:var(--fg2);grid-column:span 2;"><i class="fa-solid fa-music" style="color:var(--accent);"></i> '+nome+'</span>'+
-        '<input type="url" class="linkYt"    value="'+p.yt+'"    placeholder="YouTube https://youtu.be/..." style="padding:.5rem .7rem;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-sm);color:var(--fg);font-family:var(--font);font-size:.8rem;width:100%;outline:none;">'+
-        '<input type="url" class="linkCifra" value="'+p.cifra+'" placeholder="Cifra https://..."          style="padding:.5rem .7rem;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-sm);color:var(--fg);font-family:var(--font);font-size:.8rem;width:100%;outline:none;">';
-      c.appendChild(bloco);
-    });
-  }
-
-  /* ===== Escala ===== */
-  function addMembro(grupo) {
-    var c = document.getElementById('membros-'+grupo);
-    var l = document.createElement('div'); l.className='escala-linha';
-    l.innerHTML='<input type="text" placeholder="Nome do membro"><button class="btn-del-membro" onclick="delMembro(this)"><i class="fa-solid fa-xmark"></i></button>';
-    c.appendChild(l); l.querySelector('input').focus();
-  }
-  function delMembro(btn) {
-    var c = btn.closest('.escala-membros');
-    if (c.children.length > 1) btn.closest('.escala-linha').remove();
-    else btn.closest('.escala-linha').querySelector('input').value='';
-  }
-  function coletarMembros(g) {
-    var lista=[];
-    document.querySelectorAll('#membros-'+g+' input').forEach(function(inp){ var v=inp.value.trim(); if(v) lista.push(v); });
-    return lista;
-  }
-
-  /* ===== Quadro de Avisos ===== */
-  function adicionarAviso(dados) {
-    var c = document.getElementById('listaAvisos');
-    var l = document.createElement('div'); l.className='aviso-linha';
-    var tipo = dados && dados.tipo ? dados.tipo : 'geral';
-    l.innerHTML = `
-        <select class="avisoTipo">
-          <option value="comemorativa"${tipo==='comemorativa'?' selected':''}>🎉 Data Comemorativa</option>
-          <option value="futura"${tipo==='futura'?' selected':''}>🎵 Música Futura</option>
-          <option value="geral"${tipo==='geral'?' selected':''}>📢 Aviso Geral</option>
-        </select>
-        <input type="text" class="avisoTitulo" placeholder="Título do aviso..." value="${dados&&dados.titulo?dados.titulo:''}">
-        <textarea class="avisoDescricao" placeholder="Descrição (opcional)...">${dados&&dados.descricao?dados.descricao:''}</textarea>
-        <input type="date" class="avisoData" value="${dados&&dados.data?dados.data:''}">
-        <div class="campo-youtube" style="display:none;grid-column:1/-1;gap:6px;align-items:center;padding:4px 0;">
-          <i class="fa-brands fa-youtube" style="color:#ff0000;font-size:1.1rem;"></i>
-          <input type="text" class="avisoYoutube" placeholder="Link do YouTube (https://youtu.be/...)" value="${dados&&dados.youtube?dados.youtube:''}">
-        </div>
-      `
-c.appendChild(l);
-       var selAviso = l.querySelector('.avisoTipo');
-       var campoYt = l.querySelector('.campo-youtube');
-       if (tipo === 'futura') campoYt.style.display = 'flex';
-       selAviso.addEventListener('change', function() {
-              var ehFutura = selAviso.value === 'futura';
-              campoYt.style.display = ehFutura ? 'flex' : 'none';
-              if (!ehFutura) l.querySelector('.avisoYoutube').value = '';
-            });
-  }
-
-  function coletarAvisos() {
-    var lista = [];
-    document.querySelectorAll('#listaAvisos .aviso-linha').forEach(function(l) {
-      var titulo = l.querySelector('.avisoTitulo').value.trim();
-      if (!titulo) return;
-      lista.push({
-        tipo:      l.querySelector('.avisoTipo').value,
-        titulo:    titulo,
-        descricao: l.querySelector('.avisoDescricao').value.trim(),
-        data:      l.querySelector('.avisoData').value,
-             youtube: l.querySelector('.avisoYoutube') ? l.querySelector('.avisoYoutube').value.trim() : ''
-      });
-    });
-    return lista;
-  }
-
-  /* ===== Sync badge ===== */
-  function setSyncBadge(estado) {
-    var b = document.getElementById('syncBadge');
-    b.className = 'sync-badge'+(estado==='salvando'?' salvando':estado==='erro'?' erro':'');
-    b.innerHTML = estado==='salvando'
-      ? '<i class="fa-solid fa-spinner fa-spin"></i> Salvando...'
-      : estado==='erro'
-      ? '<i class="fa-solid fa-triangle-exclamation"></i> Erro ao salvar'
-      : '<i class="fa-solid fa-cloud-check"></i> Sincronizado';
-  }
-
-  /* ===== Salvar ===== */
-  document.getElementById('btnSalvar').addEventListener('click', publicar);
-
-  function coletarDados() {
-    var linhas = document.querySelectorAll('#linhasRepertorio .linha-musica');
-    var blocos = document.querySelectorAll('#linksMusicas [data-idx]');
-    var rep = [];
-    linhas.forEach(function(l, i) {
-      var nome  = l.querySelector('.nomeMusica').value.trim();
-      var tom   = l.querySelector('.tomMusica').value.trim();
-      var seq   = l.querySelector('.seqMusica').value.trim();
-      var bloco = blocos[i];
-      var yt    = bloco ? bloco.querySelector('.linkYt').value.trim()    : '';
-      var cifra = bloco ? bloco.querySelector('.linkCifra').value.trim() : '';
-      if (nome || tom) rep.push({nome:nome,tom:tom,seq:seq,yt:yt,cifra:cifra});
-    });
-    return {
-      mes:          mesSelecionado,
-      semana:       semanaSelecionada,
-      repertorio:   rep,
-      vocal:        coletarMembros('vocal'),
-      instrumental: coletarMembros('instrumental'),
-      multimidia:   coletarMembros('multimidia'),
-      midia:        coletarMembros('midia'),
-      avisos:       coletarAvisos(),
-      atualizadoEm: Date.now()
+  /* guardar valores existentes */
+  var prev={};
+  c.querySelectorAll('[data-idx]').forEach(function(el){
+    var i=el.getAttribute('data-idx');
+    prev[i]={
+      yt:    el.querySelector('.linkYt')   ?el.querySelector('.linkYt').value:'',
+      sp:    el.querySelector('.linkSp')   ?el.querySelector('.linkSp').value:'',
+      cifra: el.querySelector('.linkCifra')?el.querySelector('.linkCifra').value:''
     };
-  }
-    /* ===== Multi-semana ===== */
-  function chaveS(s) {
-    return new Date().getFullYear() + '-' + String(s).padStart(2,'0');
-  }
+  });
+  c.innerHTML='';
 
-  function limparTelaSemana() {
-    document.getElementById('linhasRepertorio').innerHTML = '';
-    document.getElementById('linksMusicas').innerHTML     = '';
-    ['vocal','instrumental','multimidia','midia'].forEach(function(g){
-      document.getElementById('membros-'+g).innerHTML = '';
+  musicas.forEach(function(inp,i){
+    var nome=inp.value.trim()||('Música '+(i+1));
+    var p=prev[i]||{yt:'',sp:'',cifra:''};
+
+    var bloco=document.createElement('div');
+    bloco.className='link-musica-bloco';
+    bloco.setAttribute('data-idx',i);
+    bloco.innerHTML=
+      '<div class="link-musica-nome"><i class="fa-solid fa-music"></i> '+nome+'</div>'+
+
+      /* YouTube */
+      '<div class="link-row">'+
+        '<div class="link-row-icon yt"><i class="fa-brands fa-youtube"></i></div>'+
+        '<input type="url" class="linkYt" value="'+p.yt+'" placeholder="YouTube — cole o link aqui">'+
+        '<button class="btn-buscar yt" onclick="buscarYoutube(getNomePorIdx('+i+'))"><i class="fa-brands fa-youtube"></i> Buscar</button>'+
+      '</div>'+
+
+      /* Spotify */
+      '<div class="link-row">'+
+        '<div class="link-row-icon sp"><i class="fa-brands fa-spotify"></i></div>'+
+        '<input type="url" class="linkSp" value="'+p.sp+'" placeholder="Spotify — cole o link aqui">'+
+        '<button class="btn-buscar sp" onclick="buscarSpotify(getNomePorIdx('+i+'))"><i class="fa-brands fa-spotify"></i> Buscar</button>'+
+      '</div>'+
+
+      /* Cifra */
+      '<div class="link-row">'+
+        '<div class="link-row-icon cifra"><i class="fa-solid fa-music"></i></div>'+
+        '<input type="url" class="linkCifra" value="'+p.cifra+'" placeholder="Cifra — cole o link aqui">'+
+      '</div>';
+
+    c.appendChild(bloco);
+  });
+}
+
+function getNomePorIdx(i){
+  var musicas=document.querySelectorAll('#linhasRepertorio .nomeMusica');
+  return musicas[i]?musicas[i].value.trim():'';
+}
+
+/* ── Escala ── */
+function addMembro(grupo){
+  var c=document.getElementById('membros-'+grupo);
+  var l=document.createElement('div'); l.className='escala-linha';
+  l.innerHTML='<input type="text" placeholder="Nome do membro"><button class="btn-del-membro" onclick="delMembro(this)"><i class="fa-solid fa-xmark"></i></button>';
+  c.appendChild(l); l.querySelector('input').focus();
+}
+function delMembro(btn){
+  var c=btn.closest('.escala-membros');
+  if(c.children.length>1) btn.closest('.escala-linha').remove();
+  else btn.closest('.escala-linha').querySelector('input').value='';
+}
+function coletarMembros(g){
+  var lista=[];
+  document.querySelectorAll('#membros-'+g+' input').forEach(function(inp){ var v=inp.value.trim(); if(v) lista.push(v); });
+  return lista;
+}
+
+/* ── Quadro de Avisos ── */
+function adicionarAviso(dados){
+  var c=document.getElementById('listaAvisos');
+  var l=document.createElement('div'); l.className='aviso-bloco';
+  var tipo=dados&&dados.tipo?dados.tipo:'geral';
+
+  l.innerHTML=
+    '<div class="aviso-bloco-header">'+
+      '<select class="avisoTipo aviso-sel-tipo">'+
+        '<option value="comemorativa"'+(tipo==='comemorativa'?' selected':'')+'>🎉 Data Comemorativa</option>'+
+        '<option value="futura"'+(tipo==='futura'?' selected':'')+'>🎵 Música Futura</option>'+
+        '<option value="playlist"'+(tipo==='playlist'?' selected':'')+'>🎧 Playlist do Dia</option>'+
+        '<option value="geral"'+(tipo==='geral'?' selected':'')+'>📢 Aviso Geral</option>'+
+      '</select>'+
+      '<input type="text" class="avisoTitulo aviso-inp-titulo" placeholder="Título do aviso..." value="'+(dados&&dados.titulo?dados.titulo:'')+'" >'+
+      '<input type="date" class="avisoData aviso-inp-data" value="'+(dados&&dados.data?dados.data:'')+'" >'+
+      '<button class="btn-del-aviso" onclick="this.closest(\'.aviso-bloco\').remove()"><i class="fa-solid fa-xmark"></i></button>'+
+    '</div>'+
+
+    '<textarea class="avisoDescricao" placeholder="Descrição (opcional)...">'+(dados&&dados.descricao?dados.descricao:'')+'</textarea>'+
+
+    /* extra: Música Futura — YouTube */
+    '<div class="aviso-extra campo-futura" style="display:'+(tipo==='futura'?'flex':'none')+';">'+
+      '<div class="aviso-extra-label"><i class="fa-brands fa-youtube" style="color:#ff0000;"></i> Link da música no YouTube</div>'+
+      '<div class="aviso-link-row">'+
+        '<div class="link-row-icon yt"><i class="fa-brands fa-youtube"></i></div>'+
+        '<input type="url" class="avisoYoutube" placeholder="https://youtu.be/..." value="'+(dados&&dados.youtube?dados.youtube:'')+'" >'+
+        '<button class="btn-buscar yt" onclick="buscarYoutubeAviso(this)"><i class="fa-brands fa-youtube"></i> Buscar</button>'+
+      '</div>'+
+    '</div>'+
+
+    /* extra: Playlist do Dia */
+    '<div class="aviso-extra campo-playlist" style="display:'+(tipo==='playlist'?'flex':'none')+';">'+
+      '<div class="aviso-extra-label"><i class="fa-solid fa-list-music" style="color:var(--accent);"></i> Links da Playlist do Dia</div>'+
+      '<div class="aviso-link-row">'+
+        '<div class="link-row-icon yt"><i class="fa-brands fa-youtube"></i></div>'+
+        '<input type="url" class="avisoPlaylistYt" placeholder="Playlist no YouTube..." value="'+(dados&&dados.playlistYt?dados.playlistYt:'')+'" >'+
+        '<button class="btn-buscar yt" onclick="window.open(\'https://www.youtube.com/\',\'_blank\')"><i class="fa-brands fa-youtube"></i> Abrir</button>'+
+      '</div>'+
+      '<div class="aviso-link-row">'+
+        '<div class="link-row-icon sp"><i class="fa-brands fa-spotify"></i></div>'+
+        '<input type="url" class="avisoPlaylistSp" placeholder="Playlist no Spotify..." value="'+(dados&&dados.playlistSp?dados.playlistSp:'')+'" >'+
+        '<button class="btn-buscar sp" onclick="window.open(\'https://open.spotify.com/\',\'_blank\')"><i class="fa-brands fa-spotify"></i> Abrir</button>'+
+      '</div>'+
+    '</div>';
+
+  c.appendChild(l);
+
+  /* toggle extras ao trocar tipo */
+  l.querySelector('.avisoTipo').addEventListener('change',function(){
+    l.querySelector('.campo-futura').style.display  = this.value==='futura'   ? 'flex':'none';
+    l.querySelector('.campo-playlist').style.display= this.value==='playlist' ? 'flex':'none';
+    if(this.value!=='futura')   l.querySelector('.avisoYoutube').value='';
+    if(this.value!=='playlist'){ l.querySelector('.avisoPlaylistYt').value=''; l.querySelector('.avisoPlaylistSp').value=''; }
+  });
+}
+
+function buscarYoutubeAviso(btn){
+  /* tenta pegar o título do aviso mais próximo */
+  var titulo=btn.closest('.aviso-bloco').querySelector('.avisoTitulo').value.trim();
+  var q=encodeURIComponent(titulo||'música gospel');
+  window.open('https://www.youtube.com/results?search_query='+q,'_blank');
+}
+
+function coletarAvisos(){
+  var lista=[];
+  document.querySelectorAll('#listaAvisos .aviso-bloco').forEach(function(l){
+    var titulo=l.querySelector('.avisoTitulo').value.trim();
+    if(!titulo) return;
+    var tipo=l.querySelector('.avisoTipo').value;
+    var obj={
+      tipo:      tipo,
+      titulo:    titulo,
+      descricao: l.querySelector('.avisoDescricao').value.trim(),
+      data:      l.querySelector('.avisoData').value,
+      youtube:   l.querySelector('.avisoYoutube')    ? l.querySelector('.avisoYoutube').value.trim()    : '',
+      playlistYt:l.querySelector('.avisoPlaylistYt') ? l.querySelector('.avisoPlaylistYt').value.trim() : '',
+      playlistSp:l.querySelector('.avisoPlaylistSp') ? l.querySelector('.avisoPlaylistSp').value.trim() : ''
+    };
+    lista.push(obj);
+  });
+  return lista;
+}
+
+/* ── Sync badge ── */
+function setSyncBadge(estado){
+  var b=document.getElementById('syncBadge');
+  b.className='sync-badge'+(estado==='salvando'?' salvando':estado==='erro'?' erro':'');
+  b.innerHTML=estado==='salvando'?'<i class="fa-solid fa-spinner fa-spin"></i> Salvando...':estado==='erro'?'<i class="fa-solid fa-triangle-exclamation"></i> Erro ao salvar':'<i class="fa-solid fa-cloud-check"></i> Sincronizado';
+}
+
+/* ── Coleta de dados ── */
+function coletarDados(){
+  var linhas=document.querySelectorAll('#linhasRepertorio .linha-musica');
+  var blocos=document.querySelectorAll('#linksMusicas [data-idx]');
+  var rep=[];
+  linhas.forEach(function(l,i){
+    var nome=l.querySelector('.nomeMusica').value.trim();
+    var tom=l.querySelector('.tomMusica').value.trim();
+    var seq=l.querySelector('.seqMusica').value.trim();
+    var bloco=blocos[i];
+    var yt   =bloco?bloco.querySelector('.linkYt').value.trim():'';
+    var sp   =bloco?bloco.querySelector('.linkSp').value.trim():'';
+    var cifra=bloco?bloco.querySelector('.linkCifra').value.trim():'';
+    if(nome||tom) rep.push({nome:nome,tom:tom,seq:seq,yt:yt,sp:sp,cifra:cifra});
+  });
+  return{
+    mes:mesSelecionado,semana:semanaSelecionada,
+    repertorio:rep,
+    vocal:coletarMembros('vocal'),instrumental:coletarMembros('instrumental'),
+    multimidia:coletarMembros('multimidia'),midia:coletarMembros('midia'),
+    avisos:coletarAvisos(),atualizadoEm:Date.now()
+  };
+}
+
+/* ── Multi-semana ── */
+function chaveS(s){ return new Date().getFullYear()+'-'+String(s).padStart(2,'0'); }
+
+function limparTelaSemana(){
+  document.getElementById('linhasRepertorio').innerHTML='';
+  document.getElementById('linksMusicas').innerHTML='';
+  ['vocal','instrumental','multimidia','midia'].forEach(function(g){ document.getElementById('membros-'+g).innerHTML=''; });
+  document.getElementById('listaAvisos').innerHTML='';
+}
+
+function salvarSemanaAtual(){ if(!semanaSelecionada) return; programacoesPorSemana[chaveS(semanaSelecionada)]=coletarDados(); }
+
+function carregarSemanaLocal(s){
+  var dados=programacoesPorSemana[chaveS(s)];
+  limparTelaSemana();
+  if(!dados){ adicionarLinha(null); return; }
+
+  (dados.repertorio||[]).forEach(function(m){ adicionarLinha(m); });
+  atualizarLinks();
+  setTimeout(function(){
+    var blocos=document.querySelectorAll('#linksMusicas [data-idx]');
+    (dados.repertorio||[]).forEach(function(m,i){
+      if(blocos[i]){
+        if(m.yt)    blocos[i].querySelector('.linkYt').value=m.yt;
+        if(m.sp)    blocos[i].querySelector('.linkSp').value=m.sp;
+        if(m.cifra) blocos[i].querySelector('.linkCifra').value=m.cifra;
+      }
     });
-    document.getElementById('listaAvisos').innerHTML = '';
-  }
+  },100);
 
-  function salvarSemanaAtual() {
-    if (!semanaSelecionada) return;
-    programacoesPorSemana[chaveS(semanaSelecionada)] = coletarDados();
-  }
-
-  function carregarSemanaLocal(s) {
-    var dados = programacoesPorSemana[chaveS(s)];
-    limparTelaSemana();
-    if (!dados) { adicionarLinha(null); return; }
-
-    (dados.repertorio || []).forEach(function(m){ adicionarLinha(m); });
-    atualizarLinks();
-    setTimeout(function(){
-      var blocos = document.querySelectorAll('#linksMusicas [data-idx]');
-      (dados.repertorio || []).forEach(function(m,i){
-        if (blocos[i]){
-          if (m.yt)    blocos[i].querySelector('.linkYt').value    = m.yt;
-          if (m.cifra) blocos[i].querySelector('.linkCifra').value = m.cifra;
-        }
-      });
-    }, 100);
-
-    ['vocal','instrumental','multimidia','midia'].forEach(function(g){
-      var c = document.getElementById('membros-'+g); c.innerHTML = '';
-      var list = dados[g] || ['']; if (!list.length) list = [''];
-      list.forEach(function(n){
-        var l = document.createElement('div'); l.className='escala-linha';
-        l.innerHTML = '<input type="text" value="'+n+'" placeholder="Nome do membro">' +
-          '<button class="btn-del-membro" onclick="delMembro(this)"><i class="fa-solid fa-xmark"></i></button>';
-        c.appendChild(l);
-      });
+  ['vocal','instrumental','multimidia','midia'].forEach(function(g){
+    var c=document.getElementById('membros-'+g); c.innerHTML='';
+    var list=dados[g]||['']; if(!list.length) list=[''];
+    list.forEach(function(n){
+      var l=document.createElement('div'); l.className='escala-linha';
+      l.innerHTML='<input type="text" value="'+n+'" placeholder="Nome do membro"><button class="btn-del-membro" onclick="delMembro(this)"><i class="fa-solid fa-xmark"></i></button>';
+      c.appendChild(l);
     });
+  });
 
-    document.getElementById('listaAvisos').innerHTML = '';
-    (dados.avisos || []).forEach(function(av){ adicionarAviso(av); });
-  }
+  document.getElementById('listaAvisos').innerHTML='';
+  (dados.avisos||[]).forEach(function(av){ adicionarAviso(av); });
+}
 
-    function publicar() {
-    if (!ministerioId) return;
-    salvarSemanaAtual(); // garante que semana atual está no mapa
-    var btn = document.getElementById('btnSalvar');
-    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Publicando...';
-    btn.disabled  = true;
-    setSyncBadge('salvando');
-    var dadosAtual = programacoesPorSemana[chaveS(semanaSelecionada)] || coletarDados();
-    col.doc(ministerioId).update({
-      programacoes: programacoesPorSemana,
-      programacao:  dadosAtual          // mantém compatibilidade com front antigo
-    })
-    .then(function(){
-      setSyncBadge('ok');
-      btn.innerHTML = '<i class="fa-solid fa-check"></i> Publicado com sucesso!';
-      setTimeout(function(){ btn.innerHTML='<i class="fa-solid fa-cloud-arrow-up"></i> Salvar & Publicar'; btn.disabled=false; }, 2500);
-    })
-    .catch(function(err){
-      setSyncBadge('erro');
-      btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> Salvar & Publicar';
-      btn.disabled  = false;
-      alert('Erro ao salvar: ' + err.message);
-    });
-  }
+/* ── Publicar ── */
+document.getElementById('btnSalvar').addEventListener('click',publicar);
+function publicar(){
+  if(!ministerioId) return;
+  salvarSemanaAtual();
+  var btn=document.getElementById('btnSalvar');
+  btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Publicando...'; btn.disabled=true;
+  setSyncBadge('salvando');
+  var dadosAtual=programacoesPorSemana[chaveS(semanaSelecionada)]||coletarDados();
+  col.doc(ministerioId).update({programacoes:programacoesPorSemana,programacao:dadosAtual})
+  .then(function(){
+    setSyncBadge('ok');
+    btn.innerHTML='<i class="fa-solid fa-check"></i> Publicado com sucesso!';
+    setTimeout(function(){ btn.innerHTML='<i class="fa-solid fa-cloud-arrow-up"></i> Salvar & Publicar'; btn.disabled=false; },2500);
+  }).catch(function(err){
+    setSyncBadge('erro');
+    btn.innerHTML='<i class="fa-solid fa-cloud-arrow-up"></i> Salvar & Publicar'; btn.disabled=false;
+    alert('Erro ao salvar: '+err.message);
+  });
+}
 
-
-  /* ===== Init ===== */
-  if (sessaoValida()) {
-    var r = JSON.parse(localStorage.getItem(CHAVE_LOGIN));
-    col.doc(r.id).get().then(function(doc) {
-      if (!doc.exists) { logout(); return; }
-      var u = doc.data();
-      if (!u.ativo || Date.now() > u.expiracao) { logout(); return; }
-      abrirGerenciador(r.id, u);
-    }).catch(function(){ logout(); });
-  }
-   document.getElementById('btnEntrar').addEventListener('click', efetuarLogin);
-   document.getElementById('campoSenha').addEventListener('keydown', function(e){ if(e.key==='Enter') efetuarLogin(); });
-
-  // Inicializar com 1 linha vazia se não houver dados
+/* ── Init ── */
+if(sessaoValida()){
+  var r=JSON.parse(localStorage.getItem(CHAVE_LOGIN));
+  col.doc(r.id).get().then(function(doc){
+    if(!doc.exists){ logout(); return; }
+    var u=doc.data();
+    if(!u.ativo||Date.now()>u.expiracao){ logout(); return; }
+    abrirGerenciador(r.id,u);
+  }).catch(function(){ logout(); });
+}
 </script>
 </body>
 </html>
-<!-- deploy trigger -->
