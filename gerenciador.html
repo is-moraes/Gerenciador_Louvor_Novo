@@ -213,6 +213,200 @@
   .btn-salvar:disabled { opacity:.6; cursor:not-allowed; }
   .avisos-hint { font-size:.76rem; color:var(--fg2); margin-top:.4rem; display:flex; align-items:flex-start; gap:.35rem; line-height:1.5; }
 
+
+  /* ── Spotify Card ── */
+  .sp-card {
+    background:linear-gradient(135deg,rgba(29,185,84,.08),rgba(29,185,84,.03));
+    border:1.5px solid rgba(29,185,84,.25); border-radius:var(--radius); padding:1.4rem;
+    margin-bottom:1.4rem; box-shadow:var(--shadow); animation:fadeUp .35s ease;
+  }
+  .sp-card-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; padding-bottom:.75rem; border-bottom:1.5px solid rgba(29,185,84,.15); flex-wrap:wrap; gap:.5rem; }
+  .sp-card-header h2 { font-size:.98rem; font-weight:700; color:#1db954; display:flex; align-items:center; gap:.5rem; }
+  .sp-status-row { display:flex; align-items:center; gap:.7rem; flex-wrap:wrap; margin-bottom:1rem; }
+  .sp-status-chip {
+    display:inline-flex; align-items:center; gap:.4rem;
+    padding:.28rem .8rem; border-radius:20px; font-size:.75rem; font-weight:700;
+    border:1.5px solid;
+  }
+  .sp-status-chip.nao-config { background:rgba(239,68,68,.08); border-color:rgba(239,68,68,.25); color:#ef4444; }
+  .sp-status-chip.conectado  { background:rgba(29,185,84,.1);  border-color:rgba(29,185,84,.35);  color:#1db954; }
+  .sp-status-chip.aguardando { background:rgba(245,158,11,.1); border-color:rgba(245,158,11,.3);  color:#f59e0b; }
+  .sp-desc { font-size:.83rem; color:var(--fg2); line-height:1.55; margin-bottom:1rem; }
+  .sp-btn-row { display:flex; gap:.6rem; flex-wrap:wrap; }
+  .btn-sp {
+    display:inline-flex; align-items:center; gap:.4rem;
+    padding:.6rem 1.2rem; border-radius:var(--radius-sm);
+    font-family:var(--font); font-size:.88rem; font-weight:600;
+    cursor:pointer; border:none; transition:opacity .2s, transform .15s;
+  }
+  .btn-sp:hover { opacity:.88; transform:translateY(-1px); }
+  .btn-sp:active { transform:scale(.96); }
+  .btn-sp:disabled { opacity:.5; cursor:not-allowed; transform:none; }
+  .btn-sp.primary { background:#1db954; color:#fff; }
+  .btn-sp.outline { background:transparent; border:1.5px solid rgba(29,185,84,.4); color:#1db954; }
+  .btn-sp.danger  { background:transparent; border:1.5px solid rgba(239,68,68,.35); color:#ef4444; }
+  .sp-playlist-result {
+    display:flex; align-items:center; gap:.75rem; margin-top:.85rem;
+    padding:.75rem 1rem; background:rgba(29,185,84,.06);
+    border:1.5px solid rgba(29,185,84,.2); border-radius:var(--radius-sm);
+  }
+  .sp-playlist-result img { width:48px; height:48px; border-radius:8px; object-fit:cover; flex-shrink:0; }
+  .sp-playlist-result-info { flex:1; min-width:0; }
+  .sp-playlist-result-name { font-size:.9rem; font-weight:700; color:var(--fg); margin-bottom:.15rem; }
+  .sp-playlist-result-link { font-size:.78rem; color:#1db954; text-decoration:none; display:inline-flex; align-items:center; gap:.3rem; }
+  .sp-playlist-result-link:hover { opacity:.75; }
+  .sp-log { margin-top:.75rem; font-size:.76rem; color:var(--fg2); background:var(--bg); border:1px solid var(--border); border-radius:var(--radius-sm); padding:.6rem .9rem; max-height:100px; overflow-y:auto; display:none; }
+  .sp-log p { margin:.1rem 0; }
+  .sp-log p.ok   { color:var(--success); }
+  .sp-log p.warn { color:#f59e0b; }
+  .sp-log p.err  { color:var(--danger); }
+
+  /* ── Modal de configuração Spotify ── */
+  .modal-overlay {
+    position:fixed; inset:0; background:rgba(0,0,0,.55);
+    display:flex; align-items:center; justify-content:center;
+    z-index:1000; padding:1rem; backdrop-filter:blur(4px);
+    animation:fadeIn .2s ease;
+  }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+  .modal-box {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:var(--radius); box-shadow:var(--shadow-lg);
+    width:100%; max-width:540px; max-height:90vh;
+    overflow-y:auto; padding:2rem; animation:fadeUp .25s ease;
+  }
+  .modal-box h3 { font-size:1.1rem; font-weight:700; color:var(--fg); margin-bottom:.3rem; display:flex; align-items:center; gap:.5rem; }
+  .modal-box .modal-sub { font-size:.83rem; color:var(--fg2); margin-bottom:1.4rem; line-height:1.55; }
+  .step-list { list-style:none; display:flex; flex-direction:column; gap:1rem; margin-bottom:1.4rem; }
+  .step-item { display:flex; gap:.85rem; align-items:flex-start; }
+  .step-num {
+    width:26px; height:26px; border-radius:50%; flex-shrink:0;
+    background:#1db954; color:#fff; font-size:.75rem; font-weight:700;
+    display:flex; align-items:center; justify-content:center; margin-top:.05rem;
+  }
+  .step-text { font-size:.83rem; color:var(--fg2); line-height:1.6; flex:1; }
+  .step-text strong { color:var(--fg); }
+  .step-text a { color:#1db954; text-decoration:none; font-weight:600; }
+  .step-text a:hover { text-decoration:underline; }
+  .step-text code { background:var(--bg); border:1px solid var(--border); border-radius:4px; padding:.1rem .4rem; font-size:.8rem; color:var(--accent); font-family:monospace; }
+  .modal-field { margin-bottom:.85rem; }
+  .modal-field label { display:block; font-size:.72rem; font-weight:700; color:var(--fg2); text-transform:uppercase; letter-spacing:.05em; margin-bottom:.35rem; }
+  .modal-field input {
+    width:100%; padding:.6rem .85rem; background:var(--bg);
+    border:1.5px solid var(--border); border-radius:var(--radius-sm);
+    color:var(--fg); font-family:var(--font); font-size:.88rem; outline:none; transition:border-color .2s;
+  }
+  .modal-field input:focus { border-color:#1db954; }
+  .modal-btns { display:flex; gap:.6rem; justify-content:flex-end; flex-wrap:wrap; margin-top:1.2rem; }
+  .btn-modal-cancel { padding:.6rem 1.2rem; background:transparent; border:1.5px solid var(--border); color:var(--fg2); border-radius:var(--radius-sm); font-family:var(--font); font-size:.88rem; font-weight:600; cursor:pointer; }
+  .btn-modal-cancel:hover { border-color:var(--accent); color:var(--accent); }
+  .btn-modal-save { padding:.6rem 1.4rem; background:#1db954; color:#fff; border:none; border-radius:var(--radius-sm); font-family:var(--font); font-size:.88rem; font-weight:600; cursor:pointer; transition:opacity .2s; }
+  .btn-modal-save:hover { opacity:.88; }
+
+  /* ── Seletor de Semana redesenhado ── */
+  .semana-card-tabs { display:flex; gap:0; border-bottom:1.5px solid var(--border); margin-bottom:1.1rem; }
+  .semana-tab {
+    padding:.55rem 1.1rem; font-size:.83rem; font-weight:600; cursor:pointer;
+    border-bottom:2.5px solid transparent; margin-bottom:-1.5px;
+    color:var(--fg2); transition:color .2s, border-color .2s;
+    display:flex; align-items:center; gap:.4rem; user-select:none;
+  }
+  .semana-tab:hover { color:var(--accent); }
+  .semana-tab.ativa { color:var(--accent); border-bottom-color:var(--accent); }
+  .semana-tab i { font-size:.85rem; }
+
+  .tab-painel { display:none; }
+  .tab-painel.ativo { display:block; }
+
+  /* Grade de meses — 4 colunas */
+  .meses-grid {
+    display:grid; grid-template-columns:repeat(4,1fr); gap:.45rem; margin-bottom:.85rem;
+  }
+  .mes-btn {
+    padding:.5rem .4rem; border-radius:10px; font-size:.8rem; font-weight:600;
+    cursor:pointer; border:1.5px solid var(--border); color:var(--fg2);
+    background:var(--bg); transition:all .22s; text-align:center;
+    display:flex; flex-direction:column; align-items:center; gap:.2rem;
+    user-select:none; position:relative;
+  }
+  .mes-btn:hover { border-color:var(--accent); color:var(--accent); background:rgba(70,197,229,.05); }
+  .mes-btn.ativo {
+    background:var(--grad); color:#fff; border-color:transparent;
+    box-shadow:0 2px 12px rgba(70,197,229,.25);
+  }
+  .mes-btn .mes-dot {
+    width:5px; height:5px; border-radius:50%; background:#fff;
+    display:none; position:absolute; bottom:5px;
+  }
+  .mes-btn.tem-dados .mes-dot { display:block; }
+  .mes-btn.ativo .mes-dot { background:rgba(255,255,255,.7); }
+
+  /* Semanas — animação accordion */
+  .semanas-wrap {
+    overflow:hidden;
+    max-height:0;
+    transition:max-height .35s cubic-bezier(.4,0,.2,1);
+  }
+  .semanas-wrap.aberto { max-height:200px; }
+  .semanas-inner { display:flex; gap:.4rem; flex-wrap:wrap; padding:.1rem 0 .3rem; }
+
+  .sem-btn {
+    padding:.38rem .85rem; border-radius:20px; font-size:.78rem; font-weight:600;
+    cursor:pointer; border:1.5px solid var(--border); color:var(--fg2);
+    background:var(--bg); transition:all .2s; white-space:nowrap; user-select:none;
+    display:flex; align-items:center; gap:.35rem;
+  }
+  .sem-btn:hover { border-color:var(--accent); color:var(--accent); }
+  .sem-btn.ativa { background:var(--grad); color:#fff; border-color:transparent; box-shadow:0 2px 10px rgba(70,197,229,.22); }
+  .sem-btn.tem-dados::after { content:'●'; font-size:.45rem; vertical-align:middle; opacity:.6; }
+  .sem-btn.ativa.tem-dados::after { opacity:.9; }
+
+  /* Indicador de contexto atual */
+  .semana-ctx {
+    display:flex; align-items:center; gap:.55rem; margin-bottom:.85rem;
+    font-size:.8rem; color:var(--fg2); flex-wrap:wrap;
+  }
+  .semana-ctx-chip {
+    display:inline-flex; align-items:center; gap:.35rem;
+    padding:.22rem .7rem; border-radius:20px;
+    background:var(--bg); border:1.5px solid var(--border);
+    font-size:.75rem; font-weight:700; color:var(--fg);
+  }
+  .semana-ctx-chip.atual { background:rgba(70,197,229,.1); border-color:rgba(70,197,229,.3); color:var(--accent); }
+  .semana-ctx-chip.avulso { background:rgba(245,158,11,.1); border-color:rgba(245,158,11,.3); color:#f59e0b; }
+
+  /* ── Cultos Avulsos ── */
+  .avulsos-lista { display:flex; flex-direction:column; gap:.6rem; }
+  .avulso-item {
+    display:flex; align-items:center; gap:.7rem;
+    padding:.7rem .9rem; background:var(--bg);
+    border:1.5px solid var(--border); border-radius:var(--radius-sm);
+    cursor:pointer; transition:border-color .2s, background .2s;
+    user-select:none;
+  }
+  .avulso-item:hover { border-color:var(--accent); background:rgba(70,197,229,.03); }
+  .avulso-item.ativo { border-color:var(--accent); background:rgba(70,197,229,.07); }
+  .avulso-icon {
+    width:34px; height:34px; border-radius:10px; flex-shrink:0;
+    background:linear-gradient(135deg,#f59e0b,#d97706);
+    color:#fff; display:flex; align-items:center; justify-content:center; font-size:.85rem;
+  }
+  .avulso-info { flex:1; min-width:0; }
+  .avulso-nome { font-size:.88rem; font-weight:700; color:var(--fg); margin-bottom:.1rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .avulso-meta { font-size:.72rem; color:var(--fg2); display:flex; align-items:center; gap:.4rem; }
+  .avulso-del {
+    width:28px; height:28px; background:transparent;
+    border:1.5px solid rgba(239,68,68,.3); color:var(--danger);
+    border-radius:7px; cursor:pointer; font-size:.75rem;
+    display:flex; align-items:center; justify-content:center; transition:all .2s; flex-shrink:0;
+  }
+  .avulso-del:hover { background:var(--danger); color:#fff; border-color:var(--danger); }
+  .avulso-empty { text-align:center; padding:1.8rem 1rem; color:var(--fg2); font-size:.85rem; }
+  .avulso-empty i { font-size:1.5rem; display:block; margin-bottom:.5rem; opacity:.4; }
+
+  /* modal novo avulso */
+  .modal-avulso-icon { width:48px; height:48px; border-radius:14px; background:linear-gradient(135deg,#f59e0b,#d97706); display:flex; align-items:center; justify-content:center; margin:0 auto 1rem; }
+  .modal-avulso-icon i { font-size:1.4rem; color:#fff; }
   .oculto { display:none !important; }
 
   @media(max-width:640px){
@@ -291,10 +485,40 @@
 
   <!-- Semana / Mês -->
   <div class="card">
-    <div class="card-header"><h2><i class="fa-solid fa-calendar-week"></i> Semana do Culto</h2></div>
-    <div class="badge-hoje" id="badgeHoje"></div>
-    <div class="tags-scroll" id="tagsMes"></div>
-    <div class="tags-scroll" id="tagsSemana"></div>
+    <div class="card-header">
+      <h2><i class="fa-solid fa-calendar-week"></i> Semana do Culto</h2>
+      <div class="badge-hoje" id="badgeHoje"></div>
+    </div>
+
+    <!-- Contexto atual -->
+    <div class="semana-ctx" id="semanaCtx"></div>
+
+    <!-- Abas -->
+    <div class="semana-card-tabs">
+      <div class="semana-tab ativa" data-tab="domingos" onclick="trocarTabSemana('domingos')">
+        <i class="fa-solid fa-church"></i> Domingos
+      </div>
+      <div class="semana-tab" data-tab="avulsos" onclick="trocarTabSemana('avulsos')">
+        <i class="fa-solid fa-star"></i> Cultos Avulsos
+        <span id="badgeAvulsos" style="display:none;background:var(--accent);color:#fff;border-radius:20px;padding:.05rem .45rem;font-size:.65rem;"></span>
+      </div>
+    </div>
+
+    <!-- Painel Domingos -->
+    <div class="tab-painel ativo" id="painelDomingos">
+      <div class="meses-grid" id="mesesGrid"></div>
+      <div class="semanas-wrap" id="semanasWrap">
+        <div class="semanas-inner" id="semanasInner"></div>
+      </div>
+    </div>
+
+    <!-- Painel Avulsos -->
+    <div class="tab-painel" id="painelAvulsos">
+      <div class="avulsos-lista" id="avulsosLista"></div>
+      <button class="btn-add" style="margin-top:.8rem;" onclick="abrirModalNovoAvulso()">
+        <i class="fa-solid fa-plus"></i> Novo Culto Avulso
+      </button>
+    </div>
   </div>
 
   <!-- Repertório -->
@@ -347,6 +571,41 @@
         <button class="btn-add-membro" onclick="addMembro('midia')"><i class="fa-solid fa-plus"></i> Adicionar</button>
       </div>
     </div>
+  </div>
+
+
+  <!-- Spotify Playlist -->
+  <div class="sp-card" id="spotifyCard">
+    <div class="sp-card-header">
+      <h2><i class="fa-brands fa-spotify"></i> Gerar Playlist no Spotify</h2>
+      <button class="btn-sp outline" onclick="abrirModalSpConfig()"><i class="fa-solid fa-gear"></i> Configurar</button>
+    </div>
+    <div class="sp-status-row">
+      <div class="sp-status-chip nao-config" id="spStatusChip"><i class="fa-solid fa-circle-xmark"></i> <span id="spStatusTxt">Não configurado</span></div>
+      <span id="spUserInfo" style="font-size:.78rem;color:var(--fg2);display:none;"></span>
+    </div>
+    <p class="sp-desc">Com um clique, o sistema busca cada música do repertório no Spotify e cria uma playlist nomeada com a semana — pronta para compartilhar.</p>
+    <div class="sp-btn-row">
+      <button class="btn-sp primary" id="btnGerarPlaylist" onclick="gerarPlaylistSpotify()" disabled>
+        <i class="fa-brands fa-spotify"></i> Gerar Playlist da Semana
+      </button>
+      <button class="btn-sp outline" id="btnSpLogin" onclick="loginSpotify()" style="display:none;">
+        <i class="fa-solid fa-arrow-right-to-bracket"></i> Conectar conta
+      </button>
+      <button class="btn-sp danger" id="btnSpLogout" onclick="logoutSpotify()" style="display:none;">
+        <i class="fa-solid fa-right-from-bracket"></i> Desconectar
+      </button>
+    </div>
+    <div id="spPlaylistResult" style="display:none;" class="sp-playlist-result">
+      <img id="spPlaylistImg" src="" alt="capa">
+      <div class="sp-playlist-result-info">
+        <div class="sp-playlist-result-name" id="spPlaylistName"></div>
+        <a class="sp-playlist-result-link" id="spPlaylistLink" href="#" target="_blank">
+          <i class="fa-brands fa-spotify"></i> Abrir no Spotify
+        </a>
+      </div>
+    </div>
+    <div class="sp-log" id="spLog"></div>
   </div>
 
   <!-- Quadro de Avisos -->
@@ -461,7 +720,10 @@ function carregarDados(){
     if(p.mes!==undefined) mesSelecionado=p.mes;
     if(p.semana!==undefined) semanaSelecionada=p.semana;
     if(!semanaSelecionada) semanaSelecionada=semanaISO(new Date());
-    carregarSemanaLocal(semanaSelecionada); renderizarMeses();
+    /* carregar avulsos */
+    if(data.avulsos) avulsosPorId=data.avulsos;
+    renderizarAvulsos();
+    carregarSemanaLocal(semanaSelecionada); renderizarMeses(); atualizarCtx();
   });
 }
 
@@ -474,48 +736,241 @@ function copiarUrlFront(){
   }).catch(function(){ alert('URL: '+url); });
 }
 
-/* ── Semanas ── */
-function renderizarMeses(){
-  var c=document.getElementById('tagsMes'); c.innerHTML='';
-  var ano=new Date().getFullYear();
-  for(var m=0;m<12;m++){
-    var nome=new Date(ano,m,1).toLocaleString('pt-BR',{month:'short'});
-    var tag=document.createElement('div');
-    tag.className='tag-mes'+(m===mesSelecionado?' ativa':'');
-    tag.textContent=nome; tag.setAttribute('data-m',m);
-    tag.addEventListener('click',function(){ mesSelecionado=parseInt(this.getAttribute('data-m')); renderizarMeses(); renderizarSemanas(); });
-    c.appendChild(tag);
-  }
-  renderizarSemanas();
-}
+/* ── Helpers de data ── */
 function diasNoMes(a,m){ return new Date(a,m+1,0).getDate(); }
 function semanaISO(d){ var t=new Date(d.valueOf()); var dia=(d.getDay()+6)%7; t.setDate(t.getDate()-dia+3); var j4=new Date(t.getFullYear(),0,4); return 1+Math.ceil(((t-j4)/86400000)/7); }
 function inicioSemanaISO(ano,sem){ var j4=new Date(ano,0,4); var d4=(j4.getDay()+6)%7; var d=new Date(j4); d.setDate(j4.getDate()-d4+(sem-1)*7); return d; }
-function renderizarSemanas(){
-  var c=document.getElementById('tagsSemana'); c.innerHTML='';
+
+function mostrarHoje(){
+  document.getElementById('badgeHoje').innerHTML='<i class="fa-solid fa-circle-dot"></i> Hoje: '+new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+}
+
+/* ── Contexto ── */
+function atualizarCtx(){
+  var el=document.getElementById('semanaCtx'); if(!el) return;
+  if(modoAvulso && avulsoAtualId){
+    var av=avulsosPorId[avulsoAtualId];
+    if(!av){ el.innerHTML=''; return; }
+    var dataFmt=av.data?new Date(av.data+'T12:00').toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'short'}):'';
+    el.innerHTML=
+      '<span class="semana-ctx-chip avulso"><i class="fa-solid fa-star"></i> '+av.nome+'</span>'+
+      (dataFmt?'<span style="font-size:.75rem;color:var(--fg2);">'+dataFmt+'</span>':'');
+  } else if(!modoAvulso && semanaSelecionada){
+    var ano=new Date().getFullYear();
+    var ini=inicioSemanaISO(ano,semanaSelecionada);
+    var dom=new Date(ini); dom.setDate(dom.getDate()+6);
+    var domFmt=dom.toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'short'});
+    el.innerHTML='<span class="semana-ctx-chip atual"><i class="fa-solid fa-calendar-check"></i> Semana '+semanaSelecionada+' — '+domFmt+'</span>';
+  } else {
+    el.innerHTML='';
+  }
+}
+
+/* ── Grade de meses ── */
+function renderizarMeses(){
+  var grid=document.getElementById('mesesGrid'); if(!grid) return;
+  grid.innerHTML='';
+  var ano=new Date().getFullYear();
+  var MESES_NOMES=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  for(var m=0;m<12;m++){
+    (function(mes){
+      var btn=document.createElement('div');
+      btn.className='mes-btn'+(mes===mesSelecionado?' ativo':'');
+      /* marcar se tem dados nesse mês */
+      var s1=semanaISO(new Date(ano,mes,1));
+      var s2=semanaISO(new Date(ano,mes,diasNoMes(ano,mes)));
+      var temDados=false;
+      for(var s=s1;s<=s2;s++){ if(programacoesPorSemana[chaveS(s)]){ temDados=true; break; } }
+      if(temDados) btn.classList.add('tem-dados');
+      btn.innerHTML='<span>'+MESES_NOMES[mes]+'</span><div class="mes-dot"></div>';
+      btn.addEventListener('click',function(){
+        if(mes===mesSelecionado){
+          /* toggle accordion */
+          var wrap=document.getElementById('semanasWrap');
+          wrap.classList.toggle('aberto');
+          return;
+        }
+        mesSelecionado=mes;
+        renderizarMeses();
+        renderizarSemanas(true);
+      });
+      grid.appendChild(btn);
+    })(m);
+  }
+  /* abrir accordion do mês ativo */
+  renderizarSemanas(false);
+  setTimeout(function(){
+    var wrap=document.getElementById('semanasWrap');
+    if(wrap) wrap.classList.add('aberto');
+  },40);
+}
+
+/* ── Semanas (accordion) ── */
+function renderizarSemanas(abrirAuto){
+  var inner=document.getElementById('semanasInner'); if(!inner) return;
+  inner.innerHTML='';
   var ano=new Date().getFullYear();
   var s1=semanaISO(new Date(ano,mesSelecionado,1));
   var s2=semanaISO(new Date(ano,mesSelecionado,diasNoMes(ano,mesSelecionado)));
   for(var s=s1;s<=s2;s++){
-    var ini=inicioSemanaISO(ano,s);
-    var tag=document.createElement('div');
-    tag.className='tag-semana'+(s===semanaSelecionada?' ativa':'');
-    var domingo=new Date(ini); domingo.setDate(domingo.getDate()+6);
-    tag.textContent='Sem. '+s+' ('+domingo.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})+')';
-    tag.setAttribute('data-s',s);
-    tag.addEventListener('click',function(){
-      var nova=parseInt(this.getAttribute('data-s'));
-      if(nova===semanaSelecionada) return;
-      salvarSemanaAtual(); semanaSelecionada=nova;
-      document.querySelectorAll('.tag-semana').forEach(function(t){ t.classList.remove('ativa'); });
-      this.classList.add('ativa'); carregarSemanaLocal(semanaSelecionada);
-    });
-    c.appendChild(tag);
+    (function(sem){
+      var ini=inicioSemanaISO(ano,sem);
+      var dom=new Date(ini); dom.setDate(dom.getDate()+6);
+      var btn=document.createElement('div');
+      btn.className='sem-btn'+(sem===semanaSelecionada&&!modoAvulso?' ativa':'');
+      if(programacoesPorSemana[chaveS(sem)]) btn.classList.add('tem-dados');
+      btn.innerHTML='<i class="fa-solid fa-church" style="font-size:.7rem;opacity:.6;"></i> Sem. '+sem+
+        ' <span style="opacity:.65;">('+dom.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})+')</span>';
+      btn.addEventListener('click',function(){
+        if(sem===semanaSelecionada && !modoAvulso) return;
+        salvarAtual();
+        modoAvulso=false; avulsoAtualId=null;
+        semanaSelecionada=sem;
+        renderizarSemanas(false);
+        carregarSemanaLocal(sem);
+        atualizarCtx();
+        /* scroll suave até o repertório */
+        setTimeout(function(){ document.querySelector('.card:nth-child(3)').scrollIntoView({behavior:'smooth',block:'start'}); },120);
+      });
+      inner.appendChild(btn);
+    })(s);
+  }
+  if(abrirAuto){
+    var wrap=document.getElementById('semanasWrap');
+    if(wrap){ wrap.classList.remove('aberto'); setTimeout(function(){ wrap.classList.add('aberto'); },20); }
   }
 }
-function mostrarHoje(){
-  document.getElementById('badgeHoje').innerHTML='<i class="fa-solid fa-circle-dot"></i> Hoje: '+new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+
+/* ── Abas (Domingos / Avulsos) ── */
+function trocarTabSemana(tab){
+  document.querySelectorAll('.semana-tab').forEach(function(t){ t.classList.toggle('ativa', t.getAttribute('data-tab')===tab); });
+  document.getElementById('painelDomingos').classList.toggle('ativo', tab==='domingos');
+  document.getElementById('painelAvulsos').classList.toggle('ativo',  tab==='avulsos');
 }
+
+/* ══════════════════════════════════════════════
+   CULTOS AVULSOS
+══════════════════════════════════════════════ */
+var avulsosPorId = {};   /* id -> {nome, data, programacao} */
+var avulsoAtualId = null;
+var modoAvulso = false;
+
+function chaveAvulso(id){ return 'avulso_'+id; }
+
+function renderizarAvulsos(){
+  var lista=document.getElementById('avulsosLista'); if(!lista) return;
+  var ids=Object.keys(avulsosPorId);
+  /* badge */
+  var badge=document.getElementById('badgeAvulsos');
+  if(ids.length){ badge.style.display=''; badge.textContent=ids.length; }
+  else badge.style.display='none';
+
+  if(!ids.length){
+    lista.innerHTML='<div class="avulso-empty"><i class="fa-solid fa-star"></i>Nenhum culto avulso ainda.<br><span style="font-size:.78rem;">Clique em "+ Novo Culto Avulso" para criar.</span></div>';
+    return;
+  }
+  lista.innerHTML='';
+  /* ordenar por data */
+  ids.sort(function(a,b){
+    var da=avulsosPorId[a].data||''; var db=avulsosPorId[b].data||'';
+    return da<db?-1:da>db?1:0;
+  });
+  ids.forEach(function(id){
+    var av=avulsosPorId[id];
+    var dataFmt=av.data?new Date(av.data+'T12:00').toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'short',year:'numeric'}):'Sem data';
+    var item=document.createElement('div');
+    item.className='avulso-item'+(id===avulsoAtualId&&modoAvulso?' ativo':'');
+    item.innerHTML=
+      '<div class="avulso-icon"><i class="fa-solid fa-star"></i></div>'+
+      '<div class="avulso-info">'+
+        '<div class="avulso-nome">'+av.nome+'</div>'+
+        '<div class="avulso-meta"><i class="fa-regular fa-calendar"></i> '+dataFmt+'</div>'+
+      '</div>'+
+      '<button class="avulso-del" onclick="deletarAvulso(''+id+'',event)" title="Remover"><i class="fa-solid fa-xmark"></i></button>';
+    item.addEventListener('click',function(){ selecionarAvulso(id); });
+    lista.appendChild(item);
+  });
+}
+
+function selecionarAvulso(id){
+  salvarAtual();
+  modoAvulso=true; avulsoAtualId=id;
+  semanaSelecionada=0;
+  /* destacar item */
+  document.querySelectorAll('.avulso-item').forEach(function(el){ el.classList.remove('ativo'); });
+  event && event.currentTarget && event.currentTarget.classList.add('ativo');
+  renderizarAvulsos();
+  carregarAvulsoLocal(id);
+  atualizarCtx();
+  /* ir para o repertório */
+  setTimeout(function(){ document.querySelector('.card:nth-child(3)').scrollIntoView({behavior:'smooth',block:'start'}); },120);
+}
+
+function carregarAvulsoLocal(id){
+  var dados=avulsosPorId[id]&&avulsosPorId[id].programacao;
+  limparTelaSemana();
+  if(!dados){ adicionarLinha(null); return; }
+  (dados.repertorio||[]).forEach(function(m){ adicionarLinha(m); });
+  atualizarLinks();
+  setTimeout(function(){
+    var blocos=document.querySelectorAll('#linksMusicas [data-idx]');
+    (dados.repertorio||[]).forEach(function(m,i){
+      if(blocos[i]){
+        if(m.yt)    blocos[i].querySelector('.linkYt').value=m.yt;
+        if(m.sp)    blocos[i].querySelector('.linkSp').value=m.sp;
+        if(m.cifra) blocos[i].querySelector('.linkCifra').value=m.cifra;
+      }
+    });
+  },100);
+  ['vocal','instrumental','multimidia','midia'].forEach(function(g){
+    var cont=document.getElementById('membros-'+g); cont.innerHTML='';
+    var list=dados[g]||['']; if(!list.length) list=[''];
+    list.forEach(function(n){
+      var l=document.createElement('div'); l.className='escala-linha';
+      l.innerHTML='<input type="text" value="'+n+'" placeholder="Nome do membro"><button class="btn-del-membro" onclick="delMembro(this)"><i class="fa-solid fa-xmark"></i></button>';
+      cont.appendChild(l);
+    });
+  });
+  document.getElementById('listaAvisos').innerHTML='';
+  (dados.avisos||[]).forEach(function(av){ adicionarAviso(av); });
+}
+
+function salvarAvulsoAtual(){
+  if(!modoAvulso||!avulsoAtualId) return;
+  if(!avulsosPorId[avulsoAtualId]) return;
+  avulsosPorId[avulsoAtualId].programacao=coletarDados();
+}
+
+function deletarAvulso(id, e){
+  if(e){ e.stopPropagation(); }
+  var av=avulsosPorId[id]; if(!av) return;
+  if(!confirm('Remover "'+av.nome+'"? Os dados serão perdidos ao salvar.')) return;
+  delete avulsosPorId[id];
+  if(avulsoAtualId===id){ modoAvulso=false; avulsoAtualId=null; limparTelaSemana(); adicionarLinha(null); atualizarCtx(); }
+  renderizarAvulsos();
+}
+
+/* ── Modal novo avulso ── */
+function abrirModalNovoAvulso(){
+  document.getElementById('avulsoNome').value='';
+  document.getElementById('avulsoData').value=new Date().toISOString().slice(0,10);
+  document.getElementById('modalNovoAvulso').classList.remove('oculto');
+  setTimeout(function(){ document.getElementById('avulsoNome').focus(); },100);
+}
+function fecharModalNovoAvulso(){ document.getElementById('modalNovoAvulso').classList.add('oculto'); }
+function criarNovoAvulso(){
+  var nome=document.getElementById('avulsoNome').value.trim();
+  var data=document.getElementById('avulsoData').value;
+  if(!nome){ alert('Digite um nome para o culto.'); return; }
+  var id='avulso_'+Date.now();
+  avulsosPorId[id]={nome:nome,data:data,programacao:null};
+  fecharModalNovoAvulso();
+  renderizarAvulsos();
+  selecionarAvulso(id);
+  trocarTabSemana('domingos'); /* volta para domingos para ver o formulário */
+}
+document.getElementById('modalNovoAvulso').addEventListener('click',function(e){ if(e.target===this) fecharModalNovoAvulso(); });
+document.getElementById('avulsoNome').addEventListener('keydown',function(e){ if(e.key==='Enter') criarNovoAvulso(); });
 
 /* ── Repertório ── */
 function adicionarLinha(dados){
@@ -741,6 +1196,7 @@ function limparTelaSemana(){
 }
 
 function salvarSemanaAtual(){ if(!semanaSelecionada) return; programacoesPorSemana[chaveS(semanaSelecionada)]=coletarDados(); }
+function salvarAtual(){ if(modoAvulso) salvarAvulsoAtual(); else salvarSemanaAtual(); }
 
 function carregarSemanaLocal(s){
   var dados=programacoesPorSemana[chaveS(s)];
@@ -778,12 +1234,17 @@ function carregarSemanaLocal(s){
 document.getElementById('btnSalvar').addEventListener('click',publicar);
 function publicar(){
   if(!ministerioId) return;
-  salvarSemanaAtual();
+  salvarAtual();
+  /* empacotar avulsos sem a ref de programacao inline */
+  var avulsosPayload={};
+  Object.keys(avulsosPorId).forEach(function(id){
+    avulsosPayload[id]=avulsosPorId[id];
+  });
   var btn=document.getElementById('btnSalvar');
   btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Publicando...'; btn.disabled=true;
   setSyncBadge('salvando');
   var dadosAtual=programacoesPorSemana[chaveS(semanaSelecionada)]||coletarDados();
-  col.doc(ministerioId).update({programacoes:programacoesPorSemana,programacao:dadosAtual})
+  col.doc(ministerioId).update({programacoes:programacoesPorSemana,programacao:dadosAtual,avulsos:avulsosPayload})
   .then(function(){
     setSyncBadge('ok');
     btn.innerHTML='<i class="fa-solid fa-check"></i> Publicado com sucesso!';
@@ -795,6 +1256,246 @@ function publicar(){
   });
 }
 
+
+
+/* ══════════════════════════════════════════════
+   SPOTIFY INTEGRATION
+   OAuth PKCE flow — sem backend necessário
+══════════════════════════════════════════════ */
+var SP = {
+  CHAVE_CLIENT : 'spClientId',
+  CHAVE_TOKEN  : 'spAccessToken',
+  CHAVE_EXPIRY : 'spTokenExpiry',
+  CHAVE_VERIFIER:'spPkceVerifier',
+  SCOPES       : 'playlist-modify-public playlist-modify-private ugc-image-upload',
+  clientId     : null,
+  token        : null,
+
+  redirectUri: function(){
+    return window.location.origin + window.location.pathname;
+  },
+
+  init: function(){
+    this.clientId = localStorage.getItem(this.CHAVE_CLIENT);
+    this.token    = localStorage.getItem(this.CHAVE_TOKEN);
+    var expiry    = parseInt(localStorage.getItem(this.CHAVE_EXPIRY)||'0');
+    if(this.token && Date.now() > expiry){ this.token=null; localStorage.removeItem(this.CHAVE_TOKEN); }
+    this.atualizarUI();
+    // Verificar callback OAuth
+    var params = new URLSearchParams(window.location.search);
+    if(params.get('code')) this.handleCallback(params.get('code'), params.get('state'));
+  },
+
+  atualizarUI: function(){
+    var chip   = document.getElementById('spStatusChip');
+    var txt    = document.getElementById('spStatusTxt');
+    var btnGen = document.getElementById('btnGerarPlaylist');
+    var btnLog = document.getElementById('btnSpLogin');
+    var btnOut = document.getElementById('btnSpLogout');
+    var info   = document.getElementById('spUserInfo');
+    if(!this.clientId){
+      chip.className='sp-status-chip nao-config'; txt.textContent='Não configurado';
+      btnGen.disabled=true; btnLog.style.display='none'; btnOut.style.display='none'; info.style.display='none';
+    } else if(!this.token){
+      chip.className='sp-status-chip aguardando'; txt.textContent='Aguardando login';
+      btnGen.disabled=true; btnLog.style.display=''; btnOut.style.display='none'; info.style.display='none';
+    } else {
+      chip.className='sp-status-chip conectado'; txt.textContent='Conectado';
+      btnGen.disabled=false; btnLog.style.display='none'; btnOut.style.display='';
+      // buscar nome do usuário
+      SP.apiGet('https://api.spotify.com/v1/me').then(function(u){
+        info.textContent = u.display_name ? '👤 '+u.display_name : '';
+        info.style.display='';
+      }).catch(function(){});
+    }
+  },
+
+  /* ── PKCE helpers ── */
+  generateVerifier: function(){
+    var arr=new Uint8Array(32); crypto.getRandomValues(arr);
+    return btoa(String.fromCharCode.apply(null,arr)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+  },
+  generateChallenge: async function(verifier){
+    var data=new TextEncoder().encode(verifier);
+    var hash=await crypto.subtle.digest('SHA-256',data);
+    return btoa(String.fromCharCode.apply(null,new Uint8Array(hash))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+  },
+
+  /* ── Login ── */
+  login: async function(){
+    var verifier=this.generateVerifier();
+    localStorage.setItem(this.CHAVE_VERIFIER, verifier);
+    var challenge=await this.generateChallenge(verifier);
+    var state=Math.random().toString(36).slice(2);
+    localStorage.setItem('spOAuthState', state);
+    var url='https://accounts.spotify.com/authorize?'+
+      'response_type=code'+
+      '&client_id='+encodeURIComponent(this.clientId)+
+      '&scope='+encodeURIComponent(this.SCOPES)+
+      '&redirect_uri='+encodeURIComponent(this.redirectUri())+
+      '&state='+state+
+      '&code_challenge_method=S256'+
+      '&code_challenge='+challenge;
+    window.location.href=url;
+  },
+
+  /* ── Callback ── */
+  handleCallback: async function(code, state){
+    if(state!==localStorage.getItem('spOAuthState')){ spLog('Estado OAuth inválido.','err'); return; }
+    var verifier=localStorage.getItem(this.CHAVE_VERIFIER);
+    var clientId=localStorage.getItem(this.CHAVE_CLIENT);
+    if(!verifier||!clientId) return;
+    try{
+      var res=await fetch('https://accounts.spotify.com/api/token',{
+        method:'POST',
+        headers:{'Content-Type':'application/x-www-form-urlencoded'},
+        body:new URLSearchParams({
+          grant_type:'authorization_code',
+          code:code,
+          redirect_uri:this.redirectUri(),
+          client_id:clientId,
+          code_verifier:verifier
+        })
+      });
+      var data=await res.json();
+      if(data.access_token){
+        localStorage.setItem(this.CHAVE_TOKEN,  data.access_token);
+        localStorage.setItem(this.CHAVE_EXPIRY, Date.now()+(data.expires_in*1000));
+        this.token=data.access_token;
+        // limpar URL
+        window.history.replaceState({},'',window.location.pathname);
+        spLog('Conectado com sucesso!','ok');
+      } else {
+        spLog('Erro ao obter token: '+(data.error_description||JSON.stringify(data)),'err');
+      }
+    } catch(e){ spLog('Erro na autenticação: '+e.message,'err'); }
+    this.atualizarUI();
+  },
+
+  logout: function(){
+    localStorage.removeItem(this.CHAVE_TOKEN); localStorage.removeItem(this.CHAVE_EXPIRY);
+    this.token=null; this.atualizarUI();
+    document.getElementById('spPlaylistResult').style.display='none';
+    spLog('Desconectado.','warn');
+  },
+
+  /* ── API helpers ── */
+  apiGet: function(url){
+    return fetch(url,{headers:{Authorization:'Bearer '+this.token}}).then(function(r){ return r.json(); });
+  },
+  apiPost: function(url,body){
+    return fetch(url,{method:'POST',headers:{Authorization:'Bearer '+this.token,'Content-Type':'application/json'},body:JSON.stringify(body)}).then(function(r){ return r.json(); });
+  },
+  apiPut: function(url,body){
+    return fetch(url,{method:'PUT',headers:{Authorization:'Bearer '+this.token,'Content-Type':'application/json'},body:JSON.stringify(body)}).then(function(r){ return r.ok; });
+  },
+
+  /* ── Buscar faixa ── */
+  buscarTrack: async function(nome){
+    var q=encodeURIComponent(nome);
+    var res=await this.apiGet('https://api.spotify.com/v1/search?q='+q+'&type=track&limit=1&market=BR');
+    if(res.tracks&&res.tracks.items&&res.tracks.items.length>0) return res.tracks.items[0].uri;
+    return null;
+  },
+
+  /* ── Gerar playlist ── */
+  gerarPlaylist: async function(){
+    var btnGen=document.getElementById('btnGerarPlaylist');
+    btnGen.disabled=true; btnGen.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Gerando...';
+    document.getElementById('spPlaylistResult').style.display='none';
+    document.getElementById('spLog').style.display='block';
+    document.getElementById('spLog').innerHTML='';
+
+    try{
+      // 1. pegar músicas
+      var nomes=[];
+      document.querySelectorAll('#linhasRepertorio .nomeMusica').forEach(function(inp){ var n=inp.value.trim(); if(n) nomes.push(n); });
+      if(!nomes.length){ spLog('Nenhuma música no repertório!','err'); return; }
+
+      // 2. usuário
+      spLog('Obtendo dados do usuário...','ok');
+      var me=await this.apiGet('https://api.spotify.com/v1/me');
+
+      // 3. criar playlist
+      var nome='Culto – Sem. '+semanaSelecionada+'/'+new Date().getFullYear();
+      spLog('Criando playlist "'+nome+'"...','ok');
+      var playlist=await this.apiPost('https://api.spotify.com/v1/users/'+me.id+'/playlists',{
+        name:nome,
+        description:'Repertório gerado automaticamente pelo Ministério de Louvor',
+        public:false
+      });
+      var playlistId=playlist.id;
+
+      // 4. buscar tracks
+      var uris=[];
+      for(var i=0;i<nomes.length;i++){
+        spLog('Buscando: '+nomes[i]+'...','');
+        var uri=await this.buscarTrack(nomes[i]);
+        if(uri){ uris.push(uri); spLog('✓ '+nomes[i],'ok'); }
+        else    { spLog('⚠ Não encontrada: '+nomes[i],'warn'); }
+      }
+
+      // 5. adicionar tracks
+      if(uris.length){
+        await this.apiPost('https://api.spotify.com/v1/playlists/'+playlistId+'/tracks',{uris:uris});
+      }
+
+      // 6. resultado
+      var url='https://open.spotify.com/playlist/'+playlistId;
+      spLog('Playlist criada com '+uris.length+' músicas!','ok');
+      document.getElementById('spPlaylistName').textContent=nome+' ('+uris.length+' faixas)';
+      document.getElementById('spPlaylistLink').href=url;
+      var img=playlist.images&&playlist.images[0]?playlist.images[0].url:'https://misc.scdn.co/liked-songs/liked-songs-640.png';
+      document.getElementById('spPlaylistImg').src=img;
+      document.getElementById('spPlaylistResult').style.display='flex';
+
+      // 7. preencher campo no aviso de playlist (se existir)
+      var camposSp=document.querySelectorAll('#listaAvisos .avisoPlaylistSp');
+      camposSp.forEach(function(el){ el.value=url; });
+      if(camposSp.length) spLog('Link preenchido no Quadro de Avisos!','ok');
+
+    } catch(e){
+      if(e&&e.status===401){ this.token=null; localStorage.removeItem(this.CHAVE_TOKEN); this.atualizarUI(); spLog('Token expirado. Reconecte.','err'); }
+      else spLog('Erro: '+(e.message||JSON.stringify(e)),'err');
+    } finally {
+      btnGen.disabled=false; btnGen.innerHTML='<i class="fa-brands fa-spotify"></i> Gerar Playlist da Semana';
+    }
+  }
+};
+
+function spLog(msg,tipo){
+  var el=document.getElementById('spLog');
+  el.style.display='block';
+  var p=document.createElement('p'); p.className=tipo||''; p.textContent=msg; el.appendChild(p);
+  el.scrollTop=el.scrollHeight;
+}
+
+/* ── Wrappers chamados pelo HTML ── */
+function loginSpotify()   { SP.login(); }
+function logoutSpotify()  { SP.logout(); }
+function gerarPlaylistSpotify() { SP.gerarPlaylist(); }
+
+/* ── Modal config ── */
+function abrirModalSpConfig(){
+  var uri=SP.redirectUri();
+  document.getElementById('modalRedirectUri').textContent=uri;
+  document.getElementById('inputSpClientId').value=SP.clientId||'';
+  document.getElementById('modalSpConfig').classList.remove('oculto');
+}
+function fecharModalSpConfig(){ document.getElementById('modalSpConfig').classList.add('oculto'); }
+function salvarSpConfig(){
+  var id=document.getElementById('inputSpClientId').value.trim();
+  if(!id){ alert('Cole o Client ID do Spotify.'); return; }
+  localStorage.setItem(SP.CHAVE_CLIENT, id);
+  SP.clientId=id;
+  fecharModalSpConfig();
+  SP.atualizarUI();
+  loginSpotify();
+}
+
+/* fechar modal clicando fora */
+document.getElementById('modalSpConfig').addEventListener('click',function(e){ if(e.target===this) fecharModalSpConfig(); });
+
 /* ── Init ── */
 if(sessaoValida()){
   var r=JSON.parse(localStorage.getItem(CHAVE_LOGIN));
@@ -805,6 +1506,63 @@ if(sessaoValida()){
     abrirGerenciador(r.id,u);
   }).catch(function(){ logout(); });
 }
+SP.init();
 </script>
+
+
+<!-- Modal Novo Culto Avulso -->
+<div class="modal-overlay oculto" id="modalNovoAvulso">
+  <div class="modal-box" style="max-width:420px;">
+    <div class="modal-avulso-icon"><i class="fa-solid fa-star"></i></div>
+    <h3 style="justify-content:center;margin-bottom:.2rem;">Novo Culto Avulso</h3>
+    <p class="modal-sub" style="text-align:center;">Para retiros, conferências, cultos de quinta, etc.</p>
+    <div class="modal-field">
+      <label>Nome do culto</label>
+      <input type="text" id="avulsoNome" placeholder="Ex: Retiro de Jovens, Culto de Quinta...">
+    </div>
+    <div class="modal-field">
+      <label>Data</label>
+      <input type="date" id="avulsoData">
+    </div>
+    <div class="modal-btns">
+      <button class="btn-modal-cancel" onclick="fecharModalNovoAvulso()">Cancelar</button>
+      <button class="btn-modal-save" style="background:linear-gradient(135deg,#f59e0b,#d97706);" onclick="criarNovoAvulso()">
+        <i class="fa-solid fa-plus"></i> Criar
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Configuração Spotify -->
+<div class="modal-overlay oculto" id="modalSpConfig">
+  <div class="modal-box">
+    <h3><i class="fa-brands fa-spotify" style="color:#1db954;"></i> Configurar Spotify</h3>
+    <p class="modal-sub">Siga os passos abaixo para conectar sua conta pessoal. Feito uma vez, fica salvo no navegador.</p>
+    <ol class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-text">Acesse <a href="https://developer.spotify.com/dashboard" target="_blank">developer.spotify.com/dashboard</a> e faça login com sua conta Spotify pessoal.</div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-text">Clique em <strong>"Create app"</strong>. Preencha: Nome: <code>Ministério de Louvor</code>, Descrição: qualquer texto, Redirect URI: <code id="modalRedirectUri" style="word-break:break-all;"></code> — clique em <strong>Add</strong>. Marque <strong>"Web API"</strong> e salve.</div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-text">Abra o app criado → <strong>Settings</strong> → copie o <strong>Client ID</strong> e cole abaixo.</div>
+      </li>
+    </ol>
+    <div class="modal-field">
+      <label>Client ID do Spotify</label>
+      <input type="text" id="inputSpClientId" placeholder="Ex: a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4">
+    </div>
+    <p style="font-size:.75rem;color:var(--fg2);margin-top:-.3rem;margin-bottom:.5rem;"><i class="fa-solid fa-lock" style="color:var(--accent);"></i> O Client ID fica salvo apenas neste navegador, nunca enviado a servidores externos.</p>
+    <div class="modal-btns">
+      <button class="btn-modal-cancel" onclick="fecharModalSpConfig()">Cancelar</button>
+      <button class="btn-modal-save" onclick="salvarSpConfig()"><i class="fa-solid fa-check"></i> Salvar e Conectar</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
