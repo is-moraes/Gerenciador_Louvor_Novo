@@ -334,8 +334,8 @@ main{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:1.2rem .9
 }
 .rep-item:active{transform:translateX(4px) scale(.99)}
 .rep-item:hover{
-  border-color:rgba(176,110,243,.28);
-  background:rgba(176,110,243,.05);
+  border-color:var(--glass-border-lit);
+  background:var(--neon-a-soft);
   transform:translateX(5px);
 }
 .rep-item:hover::before{opacity:1}
@@ -343,7 +343,7 @@ main{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:1.2rem .9
 .rep-num{
   width:36px;height:36px;min-width:36px;border-radius:50%;
   background:linear-gradient(135deg,var(--neon-a-soft),var(--neon-b-soft));
-  border:1px solid rgba(176,110,243,.25);
+  border:1px solid var(--glass-border-lit);
   color:var(--neon-a);
   font-family:var(--fd);font-size:.82rem;font-weight:700;
   display:flex;align-items:center;justify-content:center;
@@ -394,7 +394,7 @@ main{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:1.2rem .9
 .lnk-yt:hover{box-shadow:0 0 12px rgba(255,50,50,.3);transform:translateY(-2px)}
 .lnk-ci{
   background:var(--neon-a-soft);color:var(--neon-a);
-  border-color:rgba(176,110,243,.25);
+  border-color:var(--glass-border-lit);
 }
 .lnk-ci:hover{box-shadow:0 0 12px var(--neon-a-glow);transform:translateY(-2px)}
 .lnk-sp{
@@ -434,7 +434,7 @@ main{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:1.2rem .9
   border-radius:var(--r-sm);padding:.8rem .85rem;
   transition:border-color .22s;
 }
-.esc-card:hover{border-color:rgba(79,195,247,.25)}
+.esc-card:hover{border-color:var(--glass-border-lit)}
 .esc-role{
   font-family:var(--fd);font-size:.68rem;font-weight:700;
   color:var(--neon-b);text-transform:uppercase;letter-spacing:.1em;
@@ -445,7 +445,7 @@ main{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:1.2rem .9
 .esc-av{
   width:26px;height:26px;border-radius:8px;flex-shrink:0;
   background:linear-gradient(135deg,rgba(176,110,243,.2),rgba(79,195,247,.2));
-  border:1px solid rgba(176,110,243,.25);
+  border:1px solid var(--glass-border-lit);
   color:var(--neon-a);font-family:var(--fd);font-size:.62rem;font-weight:700;
   display:flex;align-items:center;justify-content:center;
 }
@@ -467,7 +467,7 @@ main{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:1.2rem .9
   display:flex;align-items:center;justify-content:center;font-size:.95rem;
 }
 .av-icon.comemorativa{background:rgba(255,215,64,.08);border:1px solid rgba(255,215,64,.22);color:#ffd740}
-.av-icon.futura      {background:var(--neon-a-soft);border:1px solid rgba(176,110,243,.22);color:var(--neon-a)}
+.av-icon.futura      {background:var(--neon-a-soft);border:1px solid var(--glass-border-lit);color:var(--neon-a)}
 .av-icon.playlist    {background:rgba(29,185,84,.1);border:1px solid rgba(29,185,84,.22);color:#1db954}
 .av-icon.geral       {background:rgba(105,255,71,.08);border:1px solid rgba(105,255,71,.22);color:#69ff47}
 .av-body{flex:1;min-width:0}
@@ -477,7 +477,7 @@ main{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:1.2rem .9
   text-transform:uppercase;letter-spacing:.07em;
 }
 .av-pill.comemorativa{background:rgba(255,215,64,.1);color:#ffd740;border:1px solid rgba(255,215,64,.2)}
-.av-pill.futura      {background:var(--neon-a-soft);color:var(--neon-a);border:1px solid rgba(176,110,243,.2)}
+.av-pill.futura      {background:var(--neon-a-soft);color:var(--neon-a);border:1px solid var(--glass-border-lit)}
 .av-pill.playlist    {background:rgba(29,185,84,.1);color:#1db954;border:1px solid rgba(29,185,84,.2)}
 .av-pill.geral       {background:rgba(105,255,71,.08);color:#69ff47;border:1px solid rgba(105,255,71,.18)}
 .av-desc{font-size:.83rem;color:var(--t2);line-height:1.55}
@@ -497,7 +497,7 @@ main{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:1.2rem .9
   background:var(--glass);border:1px solid var(--glass-border);
   display:flex;align-items:center;justify-content:center;
   font-size:1.7rem;color:var(--t3);
-  box-shadow:0 0 30px rgba(176,110,243,.06) inset;
+  box-shadow:0 0 30px var(--neon-a-soft) inset;
 }
 .empty h3{font-family:var(--fd);font-size:1rem;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.08em}
 .empty p{font-size:.83rem;color:var(--t3);max-width:260px;line-height:1.55}
@@ -569,7 +569,7 @@ footer i{color:var(--neon-a)}
 
 </style>
 </head>
-<body data-theme="aurora">
+<body data-theme="default">
 
 <div class="bg-fx" aria-hidden="true">
   <div class="bg-orb3"></div>
@@ -588,11 +588,12 @@ footer i{color:var(--neon-a)}
     </div>
   </div>
   <div class="hd-themes" role="group" aria-label="Temas de cor">
-    <button class="th-btn on" data-t="aurora"  title="Aurora"></button>
-    <button class="th-btn"    data-t="blood"   title="Blood"></button>
-    <button class="th-btn"    data-t="cyber"   title="Cyber"></button>
-    <button class="th-btn"    data-t="gold"    title="Gold"></button>
-    <button class="th-btn"    data-t="ice"     title="Ice"></button>
+    <button class="th-btn on" data-t="default"  title="Obsidian+Laranja"></button>
+    <button class="th-btn"    data-t="charcoal" title="Chumbo"></button>
+    <button class="th-btn"    data-t="obsidian" title="Preto+Azul"></button>
+    <button class="th-btn"    data-t="clean"    title="Branco"></button>
+    <button class="th-btn"    data-t="slate"    title="Ardósia"></button>
+    <button class="th-btn"    data-t="ember"    title="Carvão"></button>
   </div>
 </header>
 
