@@ -624,6 +624,62 @@
   <button class="btn-salvar" id="btnSalvar"><i class="fa-solid fa-cloud-arrow-up"></i> Salvar &amp; Publicar</button>
 </div>
 
+
+<!-- Modal Novo Culto Avulso -->
+<div class="modal-overlay oculto" id="modalNovoAvulso">
+  <div class="modal-box" style="max-width:420px;">
+    <div class="modal-avulso-icon"><i class="fa-solid fa-star"></i></div>
+    <h3 style="justify-content:center;margin-bottom:.2rem;">Novo Culto Avulso</h3>
+    <p class="modal-sub" style="text-align:center;">Para retiros, conferências, cultos de quinta, etc.</p>
+    <div class="modal-field">
+      <label>Nome do culto</label>
+      <input type="text" id="avulsoNome" placeholder="Ex: Retiro de Jovens, Culto de Quinta...">
+    </div>
+    <div class="modal-field">
+      <label>Data</label>
+      <input type="date" id="avulsoData">
+    </div>
+    <div class="modal-btns">
+      <button class="btn-modal-cancel" onclick="fecharModalNovoAvulso()">Cancelar</button>
+      <button class="btn-modal-save" style="background:linear-gradient(135deg,#f59e0b,#d97706);" onclick="criarNovoAvulso()">
+        <i class="fa-solid fa-plus"></i> Criar
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal Configuração Spotify -->
+<div class="modal-overlay oculto" id="modalSpConfig">
+  <div class="modal-box">
+    <h3><i class="fa-brands fa-spotify" style="color:#1db954;"></i> Configurar Spotify</h3>
+    <p class="modal-sub">Siga os passos abaixo para conectar sua conta pessoal. Feito uma vez, fica salvo no navegador.</p>
+    <ol class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-text">Acesse <a href="https://developer.spotify.com/dashboard" target="_blank">developer.spotify.com/dashboard</a> e faça login com sua conta Spotify pessoal.</div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-text">Clique em <strong>"Create app"</strong>. Preencha: Nome: <code>Ministério de Louvor</code>, Descrição: qualquer texto, Redirect URI: <code id="modalRedirectUri" style="word-break:break-all;"></code> — clique em <strong>Add</strong>. Marque <strong>"Web API"</strong> e salve.</div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-text">Abra o app criado → <strong>Settings</strong> → copie o <strong>Client ID</strong> e cole abaixo.</div>
+      </li>
+    </ol>
+    <div class="modal-field">
+      <label>Client ID do Spotify</label>
+      <input type="text" id="inputSpClientId" placeholder="Ex: a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4">
+    </div>
+    <p style="font-size:.75rem;color:var(--fg2);margin-top:-.3rem;margin-bottom:.5rem;"><i class="fa-solid fa-lock" style="color:var(--accent);"></i> O Client ID fica salvo apenas neste navegador, nunca enviado a servidores externos.</p>
+    <div class="modal-btns">
+      <button class="btn-modal-cancel" onclick="fecharModalSpConfig()">Cancelar</button>
+      <button class="btn-modal-save" onclick="salvarSpConfig()"><i class="fa-solid fa-check"></i> Salvar e Conectar</button>
+    </div>
+  </div>
+</div>
+
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 <script>
@@ -969,8 +1025,6 @@ function criarNovoAvulso(){
   selecionarAvulso(id);
   trocarTabSemana('domingos'); /* volta para domingos para ver o formulário */
 }
-document.getElementById('modalNovoAvulso').addEventListener('click',function(e){ if(e.target===this) fecharModalNovoAvulso(); });
-document.getElementById('avulsoNome').addEventListener('keydown',function(e){ if(e.key==='Enter') criarNovoAvulso(); });
 
 /* ── Repertório ── */
 function adicionarLinha(dados){
@@ -1493,76 +1547,31 @@ function salvarSpConfig(){
   loginSpotify();
 }
 
-/* fechar modal clicando fora */
-document.getElementById('modalSpConfig').addEventListener('click',function(e){ if(e.target===this) fecharModalSpConfig(); });
 
 /* ── Init ── */
-if(sessaoValida()){
-  var r=JSON.parse(localStorage.getItem(CHAVE_LOGIN));
-  col.doc(r.id).get().then(function(doc){
-    if(!doc.exists){ logout(); return; }
-    var u=doc.data();
-    if(!u.ativo||Date.now()>u.expiracao){ logout(); return; }
-    abrirGerenciador(r.id,u);
-  }).catch(function(){ logout(); });
-}
-SP.init();
+document.addEventListener('DOMContentLoaded', function(){
+  /* listeners de modal que precisam do DOM */
+  var mNA = document.getElementById('modalNovoAvulso');
+  var mSP = document.getElementById('modalSpConfig');
+  if(mNA) mNA.addEventListener('click',function(e){ if(e.target===this) fecharModalNovoAvulso(); });
+  if(mSP) mSP.addEventListener('click',function(e){ if(e.target===this) fecharModalSpConfig(); });
+  var aN = document.getElementById('avulsoNome');
+  if(aN) aN.addEventListener('keydown',function(e){ if(e.key==='Enter') criarNovoAvulso(); });
+
+  SP.init();
+
+  if(sessaoValida()){
+    var r=JSON.parse(localStorage.getItem(CHAVE_LOGIN));
+    col.doc(r.id).get().then(function(doc){
+      if(!doc.exists){ logout(); return; }
+      var u=doc.data();
+      if(!u.ativo||Date.now()>u.expiracao){ logout(); return; }
+      abrirGerenciador(r.id,u);
+    }).catch(function(){ logout(); });
+  }
+});
 </script>
 
-
-<!-- Modal Novo Culto Avulso -->
-<div class="modal-overlay oculto" id="modalNovoAvulso">
-  <div class="modal-box" style="max-width:420px;">
-    <div class="modal-avulso-icon"><i class="fa-solid fa-star"></i></div>
-    <h3 style="justify-content:center;margin-bottom:.2rem;">Novo Culto Avulso</h3>
-    <p class="modal-sub" style="text-align:center;">Para retiros, conferências, cultos de quinta, etc.</p>
-    <div class="modal-field">
-      <label>Nome do culto</label>
-      <input type="text" id="avulsoNome" placeholder="Ex: Retiro de Jovens, Culto de Quinta...">
-    </div>
-    <div class="modal-field">
-      <label>Data</label>
-      <input type="date" id="avulsoData">
-    </div>
-    <div class="modal-btns">
-      <button class="btn-modal-cancel" onclick="fecharModalNovoAvulso()">Cancelar</button>
-      <button class="btn-modal-save" style="background:linear-gradient(135deg,#f59e0b,#d97706);" onclick="criarNovoAvulso()">
-        <i class="fa-solid fa-plus"></i> Criar
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- Modal Configuração Spotify -->
-<div class="modal-overlay oculto" id="modalSpConfig">
-  <div class="modal-box">
-    <h3><i class="fa-brands fa-spotify" style="color:#1db954;"></i> Configurar Spotify</h3>
-    <p class="modal-sub">Siga os passos abaixo para conectar sua conta pessoal. Feito uma vez, fica salvo no navegador.</p>
-    <ol class="step-list">
-      <li class="step-item">
-        <div class="step-num">1</div>
-        <div class="step-text">Acesse <a href="https://developer.spotify.com/dashboard" target="_blank">developer.spotify.com/dashboard</a> e faça login com sua conta Spotify pessoal.</div>
-      </li>
-      <li class="step-item">
-        <div class="step-num">2</div>
-        <div class="step-text">Clique em <strong>"Create app"</strong>. Preencha: Nome: <code>Ministério de Louvor</code>, Descrição: qualquer texto, Redirect URI: <code id="modalRedirectUri" style="word-break:break-all;"></code> — clique em <strong>Add</strong>. Marque <strong>"Web API"</strong> e salve.</div>
-      </li>
-      <li class="step-item">
-        <div class="step-num">3</div>
-        <div class="step-text">Abra o app criado → <strong>Settings</strong> → copie o <strong>Client ID</strong> e cole abaixo.</div>
-      </li>
-    </ol>
-    <div class="modal-field">
-      <label>Client ID do Spotify</label>
-      <input type="text" id="inputSpClientId" placeholder="Ex: a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4">
-    </div>
-    <p style="font-size:.75rem;color:var(--fg2);margin-top:-.3rem;margin-bottom:.5rem;"><i class="fa-solid fa-lock" style="color:var(--accent);"></i> O Client ID fica salvo apenas neste navegador, nunca enviado a servidores externos.</p>
-    <div class="modal-btns">
-      <button class="btn-modal-cancel" onclick="fecharModalSpConfig()">Cancelar</button>
-      <button class="btn-modal-save" onclick="salvarSpConfig()"><i class="fa-solid fa-check"></i> Salvar e Conectar</button>
-    </div>
-  </div>
-</div>
 
 </body>
 </html>
