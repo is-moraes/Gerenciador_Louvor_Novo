@@ -499,6 +499,48 @@ footer i{color:var(--neon-a)}
   .hd-date{display:none}
   .th-btn{width:19px;height:19px}
 }
+/* ══ MODO AVULSO ══ */
+.avulso-hero{
+  position:relative;overflow:hidden;
+  border-radius:22px;padding:1.6rem 1.4rem 1.4rem;margin-bottom:1rem;
+  background:linear-gradient(135deg,rgba(245,158,11,.18),rgba(217,119,6,.1));
+  border:1px solid rgba(245,158,11,.35);
+}
+.avulso-hero::after{
+  content:'';position:absolute;top:0;left:10%;right:10%;height:1px;
+  background:linear-gradient(90deg,transparent,#f59e0b,#fbbf24,transparent);
+  opacity:.7;
+}
+.avulso-badge-tipo{
+  display:inline-flex;align-items:center;gap:.4rem;
+  padding:.25rem .8rem;border-radius:20px;
+  background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.35);
+  font-size:.7rem;font-weight:600;color:#f59e0b;
+  letter-spacing:.08em;text-transform:uppercase;margin-bottom:.9rem;
+}
+.avulso-hero-title{
+  font-family:var(--fd);
+  font-size:clamp(1.7rem,7vw,2.4rem);font-weight:700;line-height:1.05;
+  letter-spacing:.02em;text-transform:uppercase;
+  background:linear-gradient(120deg,#fff 20%,#f59e0b 70%,#fbbf24 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:.8rem;
+}
+.avulso-date-chip{
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.4rem .9rem;border-radius:10px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(245,158,11,.25);
+  font-size:.8rem;font-weight:400;color:var(--t2);
+}
+.avulso-date-chip i{color:#f59e0b;}
+.avulso-isolado-info{
+  display:flex;align-items:center;gap:.5rem;
+  padding:.5rem .85rem;border-radius:10px;
+  background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.18);
+  font-size:.75rem;color:var(--t2);margin-top:.8rem;
+}
+.avulso-isolado-info i{color:#f59e0b;flex-shrink:0;}
+
 </style>
 </head>
 <body data-theme="aurora">
@@ -724,8 +766,147 @@ function render(d){
   document.getElementById('conteudo').innerHTML=h;
 }
 
+
+/* ══ MODO AVULSO ══ */
+function renderErroAvulso(msg){
+  document.getElementById('conteudo').innerHTML=
+    '<div class="empty su">'+
+      '<div class="empty-ico"><i class="fa-solid fa-star-slash"></i></div>'+
+      '<h3>Culto não encontrado</h3>'+
+      '<p>'+msg+'</p>'+
+    '</div>';
+  document.getElementById('headerDate').textContent='—';
+}
+
+function renderAvulso(av){
+  var d = av.programacao;
+  var hdr = document.getElementById('headerDate');
+
+  /* data formatada */
+  var dataFmt = av.data
+    ? new Date(av.data+'T12:00').toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})
+    : '';
+  if(hdr) hdr.textContent = av.nome + (dataFmt ? ' · ' + dataFmt : '');
+
+  var h = '';
+
+  /* HERO do avulso */
+  h +=
+    '<div class="avulso-hero su su1">'+
+      '<div class="avulso-badge-tipo"><i class="fa-solid fa-star"></i> Culto Especial</div>'+
+      '<div class="avulso-hero-title">'+av.nome+'</div>'+
+      (dataFmt?'<div class="avulso-date-chip"><i class="fa-regular fa-calendar-check"></i> '+dataFmt+'</div>':'')+
+      '<div class="avulso-isolado-info">'+
+        '<i class="fa-solid fa-lock"></i>'+
+        '<span>Programação exclusiva deste culto</span>'+
+      '</div>'+
+    '</div>';
+
+  if(!d){
+    h += '<div class="empty su"><div class="empty-ico"><i class="fa-solid fa-music"></i></div>'+
+         '<h3>Sem programação</h3><p>O líder ainda não publicou o repertório deste culto.</p></div>';
+    document.getElementById('conteudo').innerHTML = h;
+    return;
+  }
+
+  /* REPERTÓRIO */
+  h += '<div class="sc su su2">'+
+    '<div class="sc-head"><div class="sc-head-icon"><i class="fa-solid fa-list-music"></i></div><span class="sc-head-label">Repertório</span></div>'+
+    '<div class="sc-body">';
+  if(!d.repertorio||!d.repertorio.length){
+    h += '<p style="color:var(--t3);font-style:italic;font-size:.85rem">Nenhuma música cadastrada.</p>';
+  } else {
+    h += '<div class="rep-list">';
+    d.repertorio.forEach(function(m,i){
+      var tags='';
+      if(m.tom) tags+='<span class="tag-tom">'+m.tom+'</span>';
+      if(m.seq) tags+='<span class="tag-seq">'+m.seq+'</span>';
+      var lnks='';
+      if(m.yt)   lnks+='<a class="lnk lnk-yt"  href="'+m.yt+'"    target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i> YouTube</a>';
+      if(m.sp)   lnks+='<a class="lnk lnk-sp"  href="'+m.sp+'"    target="_blank" rel="noopener"><i class="fa-brands fa-spotify"></i> Spotify</a>';
+      if(m.cifra)lnks+='<a class="lnk lnk-ci"  href="'+m.cifra+'" target="_blank" rel="noopener"><i class="fa-solid fa-music"></i> Cifra</a>';
+      h +=
+        '<div class="rep-item">'+
+          '<span class="rep-num">'+(i+1)+'</span>'+
+          '<div class="rep-content">'+
+            '<div class="rep-top">'+
+              '<span class="rep-nome">'+(m.nome||'—')+'</span>'+
+              (tags?'<div class="rep-tags">'+tags+'</div>':'')+
+            '</div>'+
+            (lnks?'<div class="rep-links">'+lnks+'</div>':'')+
+          '</div>'+
+        '</div>';
+    });
+    h += '</div>';
+  }
+  h += '</div></div>';
+
+  /* ESCALA */
+  h += '<div class="sc su su3">'+
+    '<div class="sc-head"><div class="sc-head-icon"><i class="fa-solid fa-users"></i></div><span class="sc-head-label">Escala de Serviço</span></div>'+
+    '<div class="sc-body"><div class="esc-grid">';
+  [
+    {key:'vocal',       icon:'fa-microphone',label:'Vocal'},
+    {key:'instrumental',icon:'fa-guitar',    label:'Instrumental'},
+    {key:'multimidia',  icon:'fa-display',   label:'Multimídia'},
+    {key:'midia',       icon:'fa-video',     label:'Mídia / Som'}
+  ].forEach(function(p){
+    var mbrs=d[p.key]||[];
+    var cnt=!mbrs.length?'<div class="esc-vazio">Não definido</div>':
+      mbrs.map(function(n){
+        return '<div class="esc-membro"><div class="esc-av">'+initials(n)+'</div><span class="esc-nome">'+n+'</span></div>';
+      }).join('');
+    h+='<div class="esc-card"><div class="esc-role"><i class="fa-solid '+p.icon+'"></i> '+p.label+'</div>'+cnt+'</div>';
+  });
+  h += '</div></div></div>';
+
+  /* AVISOS */
+  var avisos = d.avisos||[];
+  if(avisos.length){
+    var TIPOS={
+      comemorativa:{label:'Data Comemorativa',icon:'fa-star'},
+      futura:{label:'Música Futura',icon:'fa-music'},
+      playlist:{label:'Playlist do Dia',icon:'fa-list-music'},
+      geral:{label:'Aviso Geral',icon:'fa-bullhorn'}
+    };
+    h += '<div class="sc su su4">'+
+      '<div class="sc-head"><div class="sc-head-icon"><i class="fa-solid fa-chalkboard"></i></div><span class="sc-head-label">Quadro de Avisos</span></div>'+
+      '<div class="sc-body"><div class="avisos-list">';
+    avisos.forEach(function(av){
+      var tipo=av.tipo||'geral';
+      var inf=TIPOS[tipo]||TIPOS.geral;
+      var playlistBtns='';
+      if(av.tipo==='playlist'&&(av.playlistYt||av.playlistSp)){
+        playlistBtns='<div class="av-playlist">'+
+          '<div class="av-playlist-label"><i class="fa-solid fa-list-music"></i> Ouvir a Playlist</div>'+
+          '<div class="av-playlist-btns">'+
+            (av.playlistYt?'<a class="av-pl-btn yt" href="'+av.playlistYt+'" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i> YouTube</a>':'')+
+            (av.playlistSp?'<a class="av-pl-btn sp" href="'+av.playlistSp+'" target="_blank" rel="noopener"><i class="fa-brands fa-spotify"></i> Spotify</a>':'')+
+          '</div></div>';
+      }
+      h +=
+        '<div class="av-item">'+
+          '<div class="av-icon '+tipo+'"><i class="fa-solid '+inf.icon+'"></i></div>'+
+          '<div class="av-body">'+
+            '<div class="av-titulo">'+(av.titulo||'—')+'<span class="av-pill '+tipo+'">'+inf.label+'</span></div>'+
+            (av.descricao?'<div class="av-desc">'+av.descricao+'</div>':'')+
+            (av.data?'<div class="av-date"><i class="fa-regular fa-calendar"></i> '+fmtAv(av.data)+'</div>':'')+
+            (av.tipo==='futura'&&av.youtube?'<a class="av-yt" href="'+av.youtube+'" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i> Assistir no YouTube</a>':'')+
+            playlistBtns+
+          '</div>'+
+        '</div>';
+    });
+    h += '</div></div></div>';
+  }
+
+  document.getElementById('conteudo').innerHTML = h;
+}
+
 (function(){
-  var id=new URLSearchParams(window.location.search).get('id');
+  var params = new URLSearchParams(window.location.search);
+  var id       = params.get('id');
+  var avulsoId = params.get('avulso');
+
   if(!id){
     document.getElementById('conteudo').innerHTML=
       '<div class="empty su">'+
@@ -736,6 +917,21 @@ function render(d){
     document.getElementById('headerDate').textContent='—';
     return;
   }
+
+  /* ── MODO AVULSO: link isolado ── */
+  if(avulsoId){
+    col.doc(id).get().then(function(doc){
+      if(!doc.exists){ renderErroAvulso('Ministério não encontrado.'); return; }
+      var data = doc.data();
+      var avulsos = data.avulsos || {};
+      var av = avulsos[avulsoId];
+      if(!av){ renderErroAvulso('Culto não encontrado ou removido.'); return; }
+      renderAvulso(av);
+    }).catch(function(err){ renderErroAvulso(err.message); });
+    return;
+  }
+
+  /* ── MODO NORMAL: semanas do domingo ── */
   col.doc(id).onSnapshot(function(doc){
     if(!doc.exists){
       document.getElementById('conteudo').innerHTML=
