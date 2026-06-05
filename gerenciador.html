@@ -716,9 +716,7 @@ aplicarTema(localStorage.getItem(CHAVE_TEMA)||'light');
 function sessaoValida(){ var r=JSON.parse(localStorage.getItem(CHAVE_LOGIN)||'null'); return r&&(Date.now()-r.ts)<VALIDADE_SESS; }
 
 /* ── Login ── */
-document.getElementById('btnEntrar').addEventListener('click',efetuarLogin);
-document.getElementById('campoSenha').addEventListener('keydown',function(e){ if(e.key==='Enter') efetuarLogin(); });
-document.getElementById('campoEmail').addEventListener('keydown',function(e){ if(e.key==='Enter') document.getElementById('campoSenha').focus(); });
+/* listeners movidos para DOMContentLoaded */
 
 function efetuarLogin(){
   var email=document.getElementById('campoEmail').value.trim().toLowerCase();
@@ -942,7 +940,7 @@ function renderizarAvulsos(){
         '<div class="avulso-nome">'+av.nome+'</div>'+
         '<div class="avulso-meta"><i class="fa-regular fa-calendar"></i> '+dataFmt+'</div>'+
       '</div>'+
-      '<button class="avulso-del" onclick="deletarAvulso(''+id+'',event)" title="Remover"><i class="fa-solid fa-xmark"></i></button>';
+      '<button class="avulso-del" onclick="deletarAvulso(\'' + id + '\',event)" title="Remover"><i class="fa-solid fa-xmark"></i></button>';
     item.addEventListener('click',function(){ selecionarAvulso(id); });
     lista.appendChild(item);
   });
@@ -1039,7 +1037,7 @@ function adicionarLinha(dados){
   l.querySelector('.nomeMusica').addEventListener('input',atualizarLinks);
 }
 function removerLinha(btn){ btn.closest('.linha-musica').remove(); atualizarLinks(); }
-document.getElementById('btnAdicionarMusica').addEventListener('click',function(){ adicionarLinha(null); atualizarLinks(); });
+/* btnAdicionarMusica listener -> DOMContentLoaded */
 
 /* ── Busca rápida ── */
 function buscarYoutube(nomeMusica){
@@ -1285,7 +1283,7 @@ function carregarSemanaLocal(s){
 }
 
 /* ── Publicar ── */
-document.getElementById('btnSalvar').addEventListener('click',publicar);
+/* btnSalvar listener -> DOMContentLoaded */
 function publicar(){
   if(!ministerioId) return;
   salvarAtual();
@@ -1550,16 +1548,27 @@ function salvarSpConfig(){
 
 /* ── Init ── */
 document.addEventListener('DOMContentLoaded', function(){
-  /* listeners de modal que precisam do DOM */
+  /* ── Login ── */
+  document.getElementById('btnEntrar').addEventListener('click', efetuarLogin);
+  document.getElementById('campoSenha').addEventListener('keydown', function(e){ if(e.key==='Enter') efetuarLogin(); });
+  document.getElementById('campoEmail').addEventListener('keydown', function(e){ if(e.key==='Enter') document.getElementById('campoSenha').focus(); });
+
+  /* ── Repertório / Salvar ── */
+  document.getElementById('btnAdicionarMusica').addEventListener('click', function(){ adicionarLinha(null); atualizarLinks(); });
+  document.getElementById('btnSalvar').addEventListener('click', publicar);
+
+  /* ── Modais ── */
   var mNA = document.getElementById('modalNovoAvulso');
   var mSP = document.getElementById('modalSpConfig');
-  if(mNA) mNA.addEventListener('click',function(e){ if(e.target===this) fecharModalNovoAvulso(); });
-  if(mSP) mSP.addEventListener('click',function(e){ if(e.target===this) fecharModalSpConfig(); });
+  if(mNA) mNA.addEventListener('click', function(e){ if(e.target===this) fecharModalNovoAvulso(); });
+  if(mSP) mSP.addEventListener('click', function(e){ if(e.target===this) fecharModalSpConfig(); });
   var aN = document.getElementById('avulsoNome');
-  if(aN) aN.addEventListener('keydown',function(e){ if(e.key==='Enter') criarNovoAvulso(); });
+  if(aN) aN.addEventListener('keydown', function(e){ if(e.key==='Enter') criarNovoAvulso(); });
 
+  /* ── Spotify ── */
   SP.init();
 
+  /* ── Sessão salva ── */
   if(sessaoValida()){
     var r=JSON.parse(localStorage.getItem(CHAVE_LOGIN));
     col.doc(r.id).get().then(function(doc){
