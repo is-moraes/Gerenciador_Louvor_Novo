@@ -407,6 +407,69 @@
   /* modal novo avulso */
   .modal-avulso-icon { width:48px; height:48px; border-radius:14px; background:linear-gradient(135deg,#f59e0b,#d97706); display:flex; align-items:center; justify-content:center; margin:0 auto 1rem; }
   .modal-avulso-icon i { font-size:1.4rem; color:#fff; }
+
+  /* ── YouTube Card ── */
+  .yt-card {
+    background:linear-gradient(135deg,rgba(255,0,0,.07),rgba(255,0,0,.02));
+    border:1.5px solid rgba(255,0,0,.2); border-radius:var(--radius); padding:1.4rem;
+    margin-bottom:1.4rem; box-shadow:var(--shadow); animation:fadeUp .35s ease;
+  }
+  .yt-card-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; padding-bottom:.75rem; border-bottom:1.5px solid rgba(255,0,0,.12); flex-wrap:wrap; gap:.5rem; }
+  .yt-card-header h2 { font-size:.98rem; font-weight:700; color:#ff0000; display:flex; align-items:center; gap:.5rem; }
+  .yt-status-row { display:flex; align-items:center; gap:.7rem; flex-wrap:wrap; margin-bottom:1rem; }
+  .yt-status-chip {
+    display:inline-flex; align-items:center; gap:.4rem;
+    padding:.28rem .8rem; border-radius:20px; font-size:.75rem; font-weight:700; border:1.5px solid;
+  }
+  .yt-status-chip.nao-config { background:rgba(239,68,68,.08); border-color:rgba(239,68,68,.25); color:#ef4444; }
+  .yt-status-chip.conectado  { background:rgba(255,0,0,.1);    border-color:rgba(255,0,0,.35);   color:#ff0000; }
+  .yt-status-chip.aguardando { background:rgba(245,158,11,.1); border-color:rgba(245,158,11,.3); color:#f59e0b; }
+  .yt-desc { font-size:.83rem; color:var(--fg2); line-height:1.55; margin-bottom:1rem; }
+  .yt-btn-row { display:flex; gap:.6rem; flex-wrap:wrap; }
+  .btn-yt {
+    display:inline-flex; align-items:center; gap:.4rem;
+    padding:.6rem 1.2rem; border-radius:var(--radius-sm);
+    font-family:var(--font); font-size:.88rem; font-weight:600;
+    cursor:pointer; border:none; transition:opacity .2s, transform .15s;
+  }
+  .btn-yt:hover { opacity:.88; transform:translateY(-1px); }
+  .btn-yt:active { transform:scale(.96); }
+  .btn-yt:disabled { opacity:.5; cursor:not-allowed; transform:none; }
+  .btn-yt.primary { background:#ff0000; color:#fff; }
+  .btn-yt.outline { background:transparent; border:1.5px solid rgba(255,0,0,.35); color:#ff0000; }
+  .btn-yt.danger  { background:transparent; border:1.5px solid rgba(239,68,68,.35); color:#ef4444; }
+  .yt-playlist-result {
+    display:flex; align-items:center; gap:.75rem; margin-top:.85rem;
+    padding:.75rem 1rem; background:rgba(255,0,0,.05);
+    border:1.5px solid rgba(255,0,0,.15); border-radius:var(--radius-sm);
+  }
+  .yt-playlist-result img { width:48px; height:48px; border-radius:8px; object-fit:cover; flex-shrink:0; background:#111; }
+  .yt-playlist-result-info { flex:1; min-width:0; }
+  .yt-playlist-result-name { font-size:.9rem; font-weight:700; color:var(--fg); margin-bottom:.15rem; }
+  .yt-playlist-result-link { font-size:.78rem; color:#ff0000; text-decoration:none; display:inline-flex; align-items:center; gap:.3rem; }
+  .yt-playlist-result-link:hover { opacity:.75; }
+  .yt-log { margin-top:.75rem; font-size:.76rem; color:var(--fg2); background:var(--bg); border:1px solid var(--border); border-radius:var(--radius-sm); padding:.6rem .9rem; max-height:100px; overflow-y:auto; display:none; }
+  .yt-log p { margin:.1rem 0; }
+  .yt-log p.ok   { color:var(--success); }
+  .yt-log p.warn { color:#f59e0b; }
+  .yt-log p.err  { color:var(--danger); }
+
+  /* modal YouTube config */
+  .modal-yt-icon { width:48px; height:48px; border-radius:14px; background:#ff0000; display:flex; align-items:center; justify-content:center; margin:0 auto 1rem; }
+  .modal-yt-icon i { font-size:1.4rem; color:#fff; }
+  .step-num-yt { background:#ff0000; }
+
+  /* botão copiar link avulso */
+  .avulso-link-btn {
+    display:inline-flex; align-items:center; gap:.3rem;
+    padding:.3rem .65rem; border-radius:7px; font-size:.72rem; font-weight:600;
+    background:rgba(70,197,229,.1); border:1.5px solid rgba(70,197,229,.25);
+    color:var(--accent); cursor:pointer; transition:all .2s; flex-shrink:0;
+    font-family:var(--font);
+  }
+  .avulso-link-btn:hover { background:rgba(70,197,229,.2); border-color:var(--accent); }
+  .avulso-link-btn.copiado { background:rgba(16,185,129,.1); border-color:rgba(16,185,129,.35); color:var(--success); }
+  .avulso-meta-row { display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; margin-top:.2rem; }
   .oculto { display:none !important; }
 
   @media(max-width:640px){
@@ -608,6 +671,41 @@
     <div class="sp-log" id="spLog"></div>
   </div>
 
+
+  <!-- YouTube Playlist -->
+  <div class="yt-card" id="youtubeCard">
+    <div class="yt-card-header">
+      <h2><i class="fa-brands fa-youtube"></i> Gerar Playlist no YouTube</h2>
+      <button class="btn-yt outline" onclick="abrirModalYtConfig()"><i class="fa-solid fa-gear"></i> Configurar</button>
+    </div>
+    <div class="yt-status-row">
+      <div class="yt-status-chip nao-config" id="ytStatusChip"><i class="fa-solid fa-circle-xmark"></i> <span id="ytStatusTxt">Não configurado</span></div>
+      <span id="ytUserInfo" style="font-size:.78rem;color:var(--fg2);display:none;"></span>
+    </div>
+    <p class="yt-desc">Busca cada música no YouTube e cria uma playlist na sua conta Google com o nome da semana — pronta para compartilhar com os membros.</p>
+    <div class="yt-btn-row">
+      <button class="btn-yt primary" id="btnGerarPlaylistYt" onclick="gerarPlaylistYoutube()" disabled>
+        <i class="fa-brands fa-youtube"></i> Gerar Playlist da Semana
+      </button>
+      <button class="btn-yt outline" id="btnYtLogin" onclick="loginYoutube()" style="display:none;">
+        <i class="fa-solid fa-arrow-right-to-bracket"></i> Conectar conta Google
+      </button>
+      <button class="btn-yt danger" id="btnYtLogout" onclick="logoutYoutube()" style="display:none;">
+        <i class="fa-solid fa-right-from-bracket"></i> Desconectar
+      </button>
+    </div>
+    <div id="ytPlaylistResult" style="display:none;" class="yt-playlist-result">
+      <img id="ytPlaylistImg" src="" alt="thumb">
+      <div class="yt-playlist-result-info">
+        <div class="yt-playlist-result-name" id="ytPlaylistName"></div>
+        <a class="yt-playlist-result-link" id="ytPlaylistLink" href="#" target="_blank">
+          <i class="fa-brands fa-youtube"></i> Abrir no YouTube
+        </a>
+      </div>
+    </div>
+    <div class="yt-log" id="ytLog"></div>
+  </div>
+
   <!-- Quadro de Avisos -->
   <div class="card">
     <div class="card-header">
@@ -648,6 +746,43 @@
   </div>
 </div>
 
+
+
+<!-- Modal Configuração YouTube -->
+<div class="modal-overlay oculto" id="modalYtConfig">
+  <div class="modal-box">
+    <div class="modal-yt-icon"><i class="fa-brands fa-youtube"></i></div>
+    <h3 style="justify-content:center;margin-bottom:.2rem;"><i class="fa-brands fa-youtube" style="color:#ff0000;"></i> Configurar YouTube</h3>
+    <p class="modal-sub" style="text-align:center;">Configure o acesso à sua conta Google para criar playlists automaticamente.</p>
+    <ol class="step-list">
+      <li class="step-item">
+        <div class="step-num step-num-yt">1</div>
+        <div class="step-text">Acesse <a href="https://console.cloud.google.com/" target="_blank">console.cloud.google.com</a>, crie um projeto (ex: <strong>Ministerio Louvor</strong>) e ative a <strong>YouTube Data API v3</strong> em "APIs e Serviços".</div>
+      </li>
+      <li class="step-item">
+        <div class="step-num step-num-yt">2</div>
+        <div class="step-text">Vá em <strong>Credenciais → Criar credencial → ID do cliente OAuth</strong>. Escolha <strong>Aplicativo da Web</strong>. Em "URIs de redirecionamento autorizados" adicione: <code id="ytModalRedirectUri" style="word-break:break-all;"></code> e salve.</div>
+      </li>
+      <li class="step-item">
+        <div class="step-num step-num-yt">3</div>
+        <div class="step-text">Em <strong>Tela de consentimento OAuth</strong> adicione seu e-mail como <strong>usuário de teste</strong>. Isso permite usar o app sem publicá-lo.</div>
+      </li>
+      <li class="step-item">
+        <div class="step-num step-num-yt">4</div>
+        <div class="step-text">Copie o <strong>ID do cliente</strong> (Client ID) gerado e cole abaixo.</div>
+      </li>
+    </ol>
+    <div class="modal-field">
+      <label>Client ID do Google</label>
+      <input type="text" id="inputYtClientId" placeholder="Ex: 123456789-abc...apps.googleusercontent.com">
+    </div>
+    <p style="font-size:.75rem;color:var(--fg2);margin-top:-.3rem;margin-bottom:.5rem;"><i class="fa-solid fa-lock" style="color:var(--accent);"></i> Salvo apenas neste navegador.</p>
+    <div class="modal-btns">
+      <button class="btn-modal-cancel" onclick="fecharModalYtConfig()">Cancelar</button>
+      <button class="btn-modal-save" style="background:#ff0000;" onclick="salvarYtConfig()"><i class="fa-solid fa-check"></i> Salvar e Conectar</button>
+    </div>
+  </div>
+</div>
 
 <!-- Modal Configuração Spotify -->
 <div class="modal-overlay oculto" id="modalSpConfig">
@@ -911,6 +1046,24 @@ var modoAvulso = false;
 
 function chaveAvulso(id){ return 'avulso_'+id; }
 
+
+function urlAvulso(id){
+  var base = window.location.origin + window.location.pathname.replace('gerenciador.html','');
+  return base + 'front.html?id=' + ministerioId + '&avulso=' + encodeURIComponent(id);
+}
+
+function copiarLinkAvulso(id, btn){
+  var url = urlAvulso(id);
+  navigator.clipboard.writeText(url).then(function(){
+    btn.innerHTML='<i class="fa-solid fa-check"></i> Copiado!';
+    btn.classList.add('copiado');
+    setTimeout(function(){
+      btn.innerHTML='<i class="fa-solid fa-link"></i> Link';
+      btn.classList.remove('copiado');
+    }, 2200);
+  }).catch(function(){ alert('Link: ' + url); });
+}
+
 function renderizarAvulsos(){
   var lista=document.getElementById('avulsosLista'); if(!lista) return;
   var ids=Object.keys(avulsosPorId);
@@ -938,7 +1091,12 @@ function renderizarAvulsos(){
       '<div class="avulso-icon"><i class="fa-solid fa-star"></i></div>'+
       '<div class="avulso-info">'+
         '<div class="avulso-nome">'+av.nome+'</div>'+
-        '<div class="avulso-meta"><i class="fa-regular fa-calendar"></i> '+dataFmt+'</div>'+
+        '<div class="avulso-meta-row">'+
+          '<span style="font-size:.72rem;color:var(--fg2);display:flex;align-items:center;gap:.3rem;"><i class="fa-regular fa-calendar"></i> '+dataFmt+'</span>'+
+          '<button class="avulso-link-btn" onclick="copiarLinkAvulso(\'' + id + '\',this);event.stopPropagation();">'+
+            '<i class="fa-solid fa-link"></i> Link'+
+          '</button>'+
+        '</div>'+
       '</div>'+
       '<button class="avulso-del" onclick="deletarAvulso(\'' + id + '\',event)" title="Remover"><i class="fa-solid fa-xmark"></i></button>';
     item.addEventListener('click',function(){ selecionarAvulso(id); });
@@ -1546,6 +1704,220 @@ function salvarSpConfig(){
 }
 
 
+
+
+/* ══════════════════════════════════════════════
+   YOUTUBE INTEGRATION
+   OAuth2 Implicit Grant (token direto no browser)
+══════════════════════════════════════════════ */
+var YT_API = {
+  CHAVE_CLIENT : 'ytClientId',
+  CHAVE_TOKEN  : 'ytAccessToken',
+  CHAVE_EXPIRY : 'ytTokenExpiry',
+  SCOPES       : 'https://www.googleapis.com/auth/youtube',
+  clientId     : null,
+  token        : null,
+
+  redirectUri: function(){
+    return window.location.origin + window.location.pathname;
+  },
+
+  init: function(){
+    this.clientId = localStorage.getItem(this.CHAVE_CLIENT);
+    this.token    = localStorage.getItem(this.CHAVE_TOKEN);
+    var expiry    = parseInt(localStorage.getItem(this.CHAVE_EXPIRY)||'0');
+    if(this.token && Date.now() > expiry){ this.token=null; localStorage.removeItem(this.CHAVE_TOKEN); }
+    this.atualizarUI();
+    /* Verificar token no hash (implicit flow retorna #access_token=...) */
+    var hash = window.location.hash;
+    if(hash && hash.indexOf('access_token') >= 0){
+      var params = new URLSearchParams(hash.replace('#',''));
+      var token  = params.get('access_token');
+      var expiresIn = parseInt(params.get('expires_in')||'3600');
+      var state  = params.get('state');
+      if(token && state === localStorage.getItem('ytOAuthState')){
+        localStorage.setItem(this.CHAVE_TOKEN,  token);
+        localStorage.setItem(this.CHAVE_EXPIRY, Date.now()+(expiresIn*1000));
+        this.token = token;
+        window.history.replaceState({},'',window.location.pathname);
+        ytLog('Conta Google conectada com sucesso!','ok');
+      }
+      this.atualizarUI();
+    }
+  },
+
+  atualizarUI: function(){
+    var chip   = document.getElementById('ytStatusChip');
+    var txt    = document.getElementById('ytStatusTxt');
+    var btnGen = document.getElementById('btnGerarPlaylistYt');
+    var btnLog = document.getElementById('btnYtLogin');
+    var btnOut = document.getElementById('btnYtLogout');
+    var info   = document.getElementById('ytUserInfo');
+    if(!chip) return;
+    if(!this.clientId){
+      chip.className='yt-status-chip nao-config'; txt.textContent='Não configurado';
+      btnGen.disabled=true; btnLog.style.display='none'; btnOut.style.display='none'; info.style.display='none';
+    } else if(!this.token){
+      chip.className='yt-status-chip aguardando'; txt.textContent='Aguardando login';
+      btnGen.disabled=true; btnLog.style.display=''; btnOut.style.display='none'; info.style.display='none';
+    } else {
+      chip.className='yt-status-chip conectado'; txt.textContent='Conectado';
+      btnGen.disabled=false; btnLog.style.display='none'; btnOut.style.display='';
+      /* buscar nome do canal */
+      YT_API.apiGet('https://www.googleapis.com/youtube/v3/channels?part=snippet&mine=true').then(function(res){
+        if(res.items && res.items.length){
+          info.textContent = '📺 ' + res.items[0].snippet.title;
+          info.style.display='';
+        }
+      }).catch(function(){});
+    }
+  },
+
+  login: function(){
+    var state = Math.random().toString(36).slice(2);
+    localStorage.setItem('ytOAuthState', state);
+    var url = 'https://accounts.google.com/o/oauth2/v2/auth?' +
+      'response_type=token' +
+      '&client_id=' + encodeURIComponent(this.clientId) +
+      '&redirect_uri=' + encodeURIComponent(this.redirectUri()) +
+      '&scope=' + encodeURIComponent(this.SCOPES) +
+      '&state=' + state +
+      '&prompt=select_account';
+    window.location.href = url;
+  },
+
+  logout: function(){
+    localStorage.removeItem(this.CHAVE_TOKEN); localStorage.removeItem(this.CHAVE_EXPIRY);
+    this.token = null; this.atualizarUI();
+    document.getElementById('ytPlaylistResult').style.display='none';
+    ytLog('Desconectado.','warn');
+  },
+
+  apiGet: function(url){
+    var token = this.token;
+    return fetch(url, {headers:{Authorization:'Bearer '+token}}).then(function(r){ return r.json(); });
+  },
+  apiPost: function(url, body){
+    var token = this.token;
+    return fetch(url, {
+      method:'POST',
+      headers:{Authorization:'Bearer '+token, 'Content-Type':'application/json'},
+      body: JSON.stringify(body)
+    }).then(function(r){ return r.json(); });
+  },
+
+  /* Buscar vídeo no YouTube */
+  buscarVideo: function(nome){
+    var token = this.token;
+    var q = encodeURIComponent(nome + ' letra oficial');
+    return fetch('https://www.googleapis.com/youtube/v3/search?part=snippet&q='+q+'&type=video&maxResults=1&videoCategoryId=10', {
+      headers:{Authorization:'Bearer '+token}
+    }).then(function(r){ return r.json(); }).then(function(res){
+      if(res.items && res.items.length) return res.items[0].id.videoId;
+      return null;
+    });
+  },
+
+  /* Criar playlist e adicionar vídeos */
+  gerarPlaylist: async function(){
+    var btnGen = document.getElementById('btnGerarPlaylistYt');
+    btnGen.disabled=true; btnGen.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Gerando...';
+    document.getElementById('ytPlaylistResult').style.display='none';
+    document.getElementById('ytLog').style.display='block';
+    document.getElementById('ytLog').innerHTML='';
+
+    try{
+      /* 1. coletar músicas */
+      var nomes=[];
+      document.querySelectorAll('#linhasRepertorio .nomeMusica').forEach(function(inp){
+        var n=inp.value.trim(); if(n) nomes.push(n);
+      });
+      if(!nomes.length){ ytLog('Nenhuma música no repertório!','err'); return; }
+
+      /* 2. criar playlist */
+      var semLabel = modoAvulso && avulsoAtualId
+        ? (avulsosPorId[avulsoAtualId]&&avulsosPorId[avulsoAtualId].nome||'Culto Avulso')
+        : 'Culto – Sem. '+semanaSelecionada+'/'+new Date().getFullYear();
+      ytLog('Criando playlist "'+semLabel+'"...','ok');
+
+      var playlistRes = await this.apiPost(
+        'https://www.googleapis.com/youtube/v3/playlists?part=snippet,status',
+        {
+          snippet:{ title: semLabel, description:'Repertório gerado pelo Ministério de Louvor' },
+          status:{ privacyStatus:'unlisted' }
+        }
+      );
+      if(!playlistRes.id){ ytLog('Erro ao criar playlist: '+(playlistRes.error&&playlistRes.error.message||JSON.stringify(playlistRes)),'err'); return; }
+      var playlistId = playlistRes.id;
+
+      /* 3. buscar e adicionar vídeos */
+      var adicionados = 0;
+      for(var i=0;i<nomes.length;i++){
+        ytLog('Buscando: '+nomes[i]+'...','');
+        var videoId = await this.buscarVideo(nomes[i]);
+        if(!videoId){ ytLog('⚠ Não encontrado: '+nomes[i],'warn'); continue; }
+        await this.apiPost(
+          'https://www.googleapis.com/youtube/v3/playlistItems?part=snippet',
+          { snippet:{ playlistId:playlistId, resourceId:{ kind:'youtube#video', videoId:videoId } } }
+        );
+        ytLog('✓ '+nomes[i],'ok');
+        adicionados++;
+      }
+
+      /* 4. resultado */
+      var url = 'https://www.youtube.com/playlist?list=' + playlistId;
+      ytLog('Playlist criada com '+adicionados+' vídeos!','ok');
+      document.getElementById('ytPlaylistName').textContent = semLabel+' ('+adicionados+' vídeos)';
+      document.getElementById('ytPlaylistLink').href = url;
+      /* thumbnail padrão do YouTube */
+      document.getElementById('ytPlaylistImg').src = 'https://i.ytimg.com/vi/default/mqdefault.jpg';
+      document.getElementById('ytPlaylistResult').style.display='flex';
+
+      /* 5. preencher campo no aviso de playlist */
+      var camposYt = document.querySelectorAll('#listaAvisos .avisoPlaylistYt');
+      camposYt.forEach(function(el){ el.value=url; });
+      if(camposYt.length) ytLog('Link preenchido no Quadro de Avisos!','ok');
+
+    } catch(e){
+      if(e && (e.message||'').indexOf('401') >= 0){
+        this.token=null; localStorage.removeItem(this.CHAVE_TOKEN); this.atualizarUI();
+        ytLog('Token expirado. Reconecte a conta Google.','err');
+      } else {
+        ytLog('Erro: '+(e.message||JSON.stringify(e)),'err');
+      }
+    } finally {
+      btnGen.disabled=false; btnGen.innerHTML='<i class="fa-brands fa-youtube"></i> Gerar Playlist da Semana';
+    }
+  }
+};
+
+function ytLog(msg, tipo){
+  var el = document.getElementById('ytLog');
+  el.style.display='block';
+  var p = document.createElement('p'); p.className=tipo||''; p.textContent=msg; el.appendChild(p);
+  el.scrollTop=el.scrollHeight;
+}
+
+function loginYoutube()         { YT_API.login(); }
+function logoutYoutube()        { YT_API.logout(); }
+function gerarPlaylistYoutube() { YT_API.gerarPlaylist(); }
+
+function abrirModalYtConfig(){
+  document.getElementById('ytModalRedirectUri').textContent = YT_API.redirectUri();
+  document.getElementById('inputYtClientId').value = YT_API.clientId||'';
+  document.getElementById('modalYtConfig').classList.remove('oculto');
+}
+function fecharModalYtConfig(){ document.getElementById('modalYtConfig').classList.add('oculto'); }
+function salvarYtConfig(){
+  var id = document.getElementById('inputYtClientId').value.trim();
+  if(!id){ alert('Cole o Client ID do Google.'); return; }
+  localStorage.setItem(YT_API.CHAVE_CLIENT, id);
+  YT_API.clientId = id;
+  fecharModalYtConfig();
+  YT_API.atualizarUI();
+  loginYoutube();
+}
+
 /* ── Init ── */
 document.addEventListener('DOMContentLoaded', function(){
   /* ── Login ── */
@@ -1567,6 +1939,13 @@ document.addEventListener('DOMContentLoaded', function(){
 
   /* ── Spotify ── */
   SP.init();
+
+  /* ── YouTube ── */
+  YT_API.init();
+
+  /* ── Modal YouTube ── */
+  var mYT = document.getElementById('modalYtConfig');
+  if(mYT) mYT.addEventListener('click', function(e){ if(e.target===this) fecharModalYtConfig(); });
 
   /* ── Sessão salva ── */
   if(sessaoValida()){
