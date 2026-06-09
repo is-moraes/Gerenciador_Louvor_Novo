@@ -18,21 +18,22 @@
   --glass-border:rgba(255,255,255,.08);
   --glass-border-lit:rgba(255,255,255,.16);
 
-  --neon-a:#e8610a;   /* laranja principal */
-  --neon-b:#c8c8c8;   /* cinza claro */
-  --neon-c:#f0900a;   /* âmbar */
+  /* ── FORJA: carvão escuro + laranja brasa + dourado ── */
+  --neon-a:#e85a0a;   /* brasa */
+  --neon-b:#d4a030;   /* dourado */
+  --neon-c:#ff7820;   /* laranja vivo */
 
-  --neon-a-glow:rgba(232,97,10,.5);
-  --neon-b-glow:rgba(200,200,200,.25);
-  --neon-c-glow:rgba(240,144,10,.4);
+  --neon-a-glow:rgba(232,90,10,.52);
+  --neon-b-glow:rgba(212,160,48,.35);
+  --neon-c-glow:rgba(255,120,32,.4);
 
-  --neon-a-soft:rgba(232,97,10,.12);
-  --neon-b-soft:rgba(200,200,200,.07);
-  --neon-c-soft:rgba(240,144,10,.1);
+  --neon-a-soft:rgba(232,90,10,.12);
+  --neon-b-soft:rgba(212,160,48,.09);
+  --neon-c-soft:rgba(255,120,32,.1);
 
-  --t1:#f0ede8;
-  --t2:#909090;
-  --t3:#505050;
+  --t1:#f4ede0;
+  --t2:#8c7860;
+  --t3:#4a3c2e;
 
   --r:18px;
   --r-sm:12px;
@@ -57,21 +58,21 @@ body{
 .bg-fx::before{
   content:'';position:absolute;
   width:520px;height:520px;border-radius:50%;
-  background:radial-gradient(circle,rgba(232,97,10,.13) 0%,transparent 70%);
+  background:radial-gradient(circle,var(--neon-a-soft) 0%,transparent 70%);
   top:-160px;left:-100px;
   animation:driftA 18s ease-in-out infinite;
 }
 .bg-fx::after{
   content:'';position:absolute;
   width:420px;height:420px;border-radius:50%;
-  background:radial-gradient(circle,rgba(80,80,80,.12) 0%,transparent 70%);
+  background:radial-gradient(circle,var(--neon-b-soft) 0%,transparent 70%);
   bottom:-120px;right:-80px;
   animation:driftB 22s ease-in-out infinite;
 }
 .bg-orb3{
   position:absolute;
   width:300px;height:300px;border-radius:50%;
-  background:radial-gradient(circle,rgba(240,144,10,.09) 0%,transparent 70%);
+  background:radial-gradient(circle,var(--neon-c-soft) 0%,transparent 70%);
   top:45%;left:45%;transform:translate(-50%,-50%);
   animation:driftC 26s ease-in-out infinite;
 }
@@ -91,7 +92,7 @@ header{
   position:sticky;top:0;z-index:200;height:var(--hh);
   display:flex;align-items:center;justify-content:space-between;
   padding:0 1.1rem;
-  background:rgba(6,6,14,.72);
+  background:rgba(0,0,0,.6);
   backdrop-filter:blur(28px) saturate(1.6);
   -webkit-backdrop-filter:blur(28px) saturate(1.6);
   border-bottom:1px solid var(--glass-border);
@@ -129,12 +130,12 @@ header::after{
 }
 .hd-live{
   display:inline-flex;align-items:center;gap:.25rem;
-  background:rgba(240,98,146,.12);border:1px solid rgba(240,98,146,.28);
+  background:var(--neon-a-soft);border:1px solid var(--glass-border-lit);
   border-radius:20px;padding:.06rem .38rem;
-  font-size:.58rem;font-weight:700;color:var(--neon-c);
+  font-size:.58rem;font-weight:700;color:var(--neon-a);
   text-transform:uppercase;letter-spacing:.08em;flex-shrink:0;
 }
-.hd-live-dot{width:5px;height:5px;border-radius:50%;background:var(--neon-c);animation:pulse 1.4s ease-in-out infinite}
+.hd-live-dot{width:5px;height:5px;border-radius:50%;background:var(--neon-a);animation:pulse 1.4s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.7)}}
 
 /* temas */
@@ -147,62 +148,70 @@ header::after{
 }
 .th-btn:active{transform:scale(.85)!important}
 .th-btn.on{border-color:#fff;transform:scale(1.3);box-shadow:0 0 8px rgba(255,255,255,.4)}
-.th-btn[data-t="default"]  {background:conic-gradient(from 0deg,#141414,#e8610a,#141414)}
-.th-btn[data-t="charcoal"] {background:conic-gradient(from 0deg,#2a2a2a,#e8610a,#2a2a2a)}
-.th-btn[data-t="obsidian"] {background:conic-gradient(from 0deg,#0d0d0d,#4a7fa5,#0d0d0d)}
-.th-btn[data-t="clean"]    {background:conic-gradient(from 0deg,#f2f2f0,#2c2c2c,#f2f2f0)}
-.th-btn[data-t="slate"]    {background:conic-gradient(from 0deg,#1a2030,#e8610a,#1a2030)}
-.th-btn[data-t="ember"]    {background:conic-gradient(from 0deg,#181410,#f0900a,#181410)}
+.th-btn[data-t="default"]  {background:conic-gradient(from 0deg,#1a0e06,#e85a0a,#d4a030,#1a0e06)}  /* Forja */
+.th-btn[data-t="charcoal"] {background:conic-gradient(from 0deg,#f0f4f2,#0a7a52,#5cbf9a,#f0f4f2)}  /* Névoa */
+.th-btn[data-t="obsidian"] {background:conic-gradient(from 0deg,#050d1a,#00c8f0,#0060a0,#050d1a)}  /* Abismo */
+.th-btn[data-t="clean"]    {background:conic-gradient(from 0deg,#f7f0e4,#8b1a1a,#c89640,#f7f0e4)}  /* Pergaminho */
+.th-btn[data-t="slate"]    {background:conic-gradient(from 0deg,#0e1a10,#7dde3c,#3a8a30,#0e1a10)}  /* Floresta */
+.th-btn[data-t="ember"]    {background:conic-gradient(from 0deg,#100818,#c060ff,#8040d0,#100818)}  /* Violeta */
 
-/* variantes de cor por tema */
+/* ════════════════════════════════════════
+   TEMAS — cada um com identidade própria
+════════════════════════════════════════ */
 
-/* Chumbo quente — fundo chumbo médio, laranja vivo */
+/* ── NÉVOA ── branco gelo + verde menta + prata fria */
 [data-theme="charcoal"]{
-  --bg:#2a2a2a;--bg2:#333333;
-  --neon-a:#e8610a;--neon-b:#d4d4d4;--neon-c:#f0900a;
-  --neon-a-glow:rgba(232,97,10,.5);--neon-b-glow:rgba(212,212,212,.2);--neon-c-glow:rgba(240,144,10,.4);
-  --neon-a-soft:rgba(232,97,10,.12);--neon-b-soft:rgba(212,212,212,.07);
-  --t1:#f0ede8;--t2:#a0a0a0;--t3:#606060;
-  --glass-border:rgba(255,255,255,.1);--glass-border-lit:rgba(255,255,255,.2);
+  --bg:#f0f4f2;--bg2:#ffffff;
+  --glass:rgba(0,0,0,.03);--glass-hover:rgba(0,0,0,.055);
+  --glass-border:rgba(0,0,0,.09);--glass-border-lit:rgba(0,120,80,.22);
+  --neon-a:#0a7a52;--neon-b:#5cbf9a;--neon-c:#3dab7e;
+  --neon-a-glow:rgba(10,122,82,.28);--neon-b-glow:rgba(92,191,154,.2);--neon-c-glow:rgba(61,171,126,.22);
+  --neon-a-soft:rgba(10,122,82,.08);--neon-b-soft:rgba(92,191,154,.06);
+  --t1:#0e2018;--t2:#4a7060;--t3:#9ab8a8;
 }
 
-/* Preto puro — fundo quase preto, azul elefante */
+/* ── ABISMO ── azul meia-noite + ciano elétrico + branco gelo */
 [data-theme="obsidian"]{
-  --bg:#0d0d0d;--bg2:#141414;
-  --neon-a:#4a7fa5;--neon-b:#6fa3c8;--neon-c:#5d9abf;
-  --neon-a-glow:rgba(74,127,165,.5);--neon-b-glow:rgba(111,163,200,.35);--neon-c-glow:rgba(93,154,191,.4);
-  --neon-a-soft:rgba(74,127,165,.12);--neon-b-soft:rgba(111,163,200,.08);
-  --t1:#e8eef2;--t2:#808080;--t3:#484848;
+  --bg:#050d1a;--bg2:#091526;
+  --glass:rgba(255,255,255,.035);--glass-hover:rgba(255,255,255,.065);
+  --glass-border:rgba(0,180,255,.12);--glass-border-lit:rgba(0,210,255,.28);
+  --neon-a:#00c8f0;--neon-b:#0080c8;--neon-c:#40d8ff;
+  --neon-a-glow:rgba(0,200,240,.5);--neon-b-glow:rgba(0,128,200,.35);--neon-c-glow:rgba(64,216,255,.4);
+  --neon-a-soft:rgba(0,200,240,.1);--neon-b-soft:rgba(0,128,200,.07);
+  --t1:#d0eeff;--t2:#5090b8;--t3:#244860;
 }
 
-/* Branco chumbo — fundo claro, acento chumbo + laranja */
+/* ── PERGAMINHO ── creme quente + bordô + ouro velho (TEMA CLARO) */
 [data-theme="clean"]{
-  --bg:#f2f2f0;--bg2:#ffffff;
-  --glass:rgba(0,0,0,.03);--glass-hover:rgba(0,0,0,.05);
-  --glass-border:rgba(0,0,0,.1);--glass-border-lit:rgba(0,0,0,.18);
-  --neon-a:#2c2c2c;--neon-b:#888888;--neon-c:#e8610a;
-  --neon-a-glow:rgba(44,44,44,.2);--neon-b-glow:rgba(136,136,136,.15);--neon-c-glow:rgba(232,97,10,.3);
-  --neon-a-soft:rgba(44,44,44,.07);--neon-b-soft:rgba(136,136,136,.05);
-  --t1:#1a1a1a;--t2:#555555;--t3:#999999;
+  --bg:#f7f0e4;--bg2:#fdf8ef;
+  --glass:rgba(120,60,0,.04);--glass-hover:rgba(120,60,0,.07);
+  --glass-border:rgba(160,100,40,.18);--glass-border-lit:rgba(140,30,30,.28);
+  --neon-a:#8b1a1a;--neon-b:#c89640;--neon-c:#b84020;
+  --neon-a-glow:rgba(139,26,26,.25);--neon-b-glow:rgba(200,150,64,.22);--neon-c-glow:rgba(184,64,32,.22);
+  --neon-a-soft:rgba(139,26,26,.08);--neon-b-soft:rgba(200,150,64,.07);
+  --t1:#2a1408;--t2:#7a5030;--t3:#c4a070;
 }
 
-/* Ardósia — cinza azulado escuro, laranja */
+/* ── FLORESTA ── verde musgo escuro + lima + bege natural */
 [data-theme="slate"]{
-  --bg:#1a2030;--bg2:#212840;
-  --neon-a:#e8610a;--neon-b:#8899bb;--neon-c:#f0900a;
-  --neon-a-glow:rgba(232,97,10,.5);--neon-b-glow:rgba(136,153,187,.25);--neon-c-glow:rgba(240,144,10,.4);
-  --neon-a-soft:rgba(232,97,10,.12);--neon-b-soft:rgba(136,153,187,.07);
-  --t1:#dde3ee;--t2:#8090a8;--t3:#485060;
-  --glass-border:rgba(255,255,255,.09);--glass-border-lit:rgba(255,255,255,.17);
+  --bg:#0e1a10;--bg2:#141f16;
+  --glass:rgba(255,255,255,.03);--glass-hover:rgba(255,255,255,.06);
+  --glass-border:rgba(80,180,80,.12);--glass-border-lit:rgba(120,220,80,.25);
+  --neon-a:#7dde3c;--neon-b:#3a8a30;--neon-c:#a0f050;
+  --neon-a-glow:rgba(125,222,60,.45);--neon-b-glow:rgba(58,138,48,.3);--neon-c-glow:rgba(160,240,80,.35);
+  --neon-a-soft:rgba(125,222,60,.1);--neon-b-soft:rgba(58,138,48,.07);
+  --t1:#d8f0c8;--t2:#6a9860;--t3:#385830;
 }
 
-/* Carvão quente — fundo sépia escuro, âmbar */
+/* ── VIOLETA ── roxo profundo + lavanda + rosa pálido */
 [data-theme="ember"]{
-  --bg:#181410;--bg2:#201a14;
-  --neon-a:#f0900a;--neon-b:#c8a87a;--neon-c:#e8610a;
-  --neon-a-glow:rgba(240,144,10,.5);--neon-b-glow:rgba(200,168,122,.25);--neon-c-glow:rgba(232,97,10,.4);
-  --neon-a-soft:rgba(240,144,10,.12);--neon-b-soft:rgba(200,168,122,.07);
-  --t1:#f0e8d8;--t2:#907860;--t3:#504038;
+  --bg:#100818;--bg2:#180d24;
+  --glass:rgba(255,255,255,.04);--glass-hover:rgba(255,255,255,.07);
+  --glass-border:rgba(180,100,255,.14);--glass-border-lit:rgba(200,140,255,.3);
+  --neon-a:#c060ff;--neon-b:#8040d0;--neon-c:#e090ff;
+  --neon-a-glow:rgba(192,96,255,.5);--neon-b-glow:rgba(128,64,208,.35);--neon-c-glow:rgba(224,144,255,.4);
+  --neon-a-soft:rgba(192,96,255,.11);--neon-b-soft:rgba(128,64,208,.07);
+  --t1:#f0e0ff;--t2:#9070b8;--t3:#504060;
 }
 
 /* ══ MAIN ══ */
@@ -673,12 +682,12 @@ footer i{color:var(--neon-a)}
     </div>
   </div>
   <div class="hd-themes" role="group" aria-label="Temas de cor">
-    <button class="th-btn on" data-t="default"  title="Obsidian+Laranja"></button>
-    <button class="th-btn"    data-t="charcoal" title="Chumbo"></button>
-    <button class="th-btn"    data-t="obsidian" title="Preto+Azul"></button>
-    <button class="th-btn"    data-t="clean"    title="Branco"></button>
-    <button class="th-btn"    data-t="slate"    title="Ardósia"></button>
-    <button class="th-btn"    data-t="ember"    title="Carvão"></button>
+    <button class="th-btn on" data-t="default"  title="Forja"></button>
+    <button class="th-btn"    data-t="charcoal" title="Névoa"></button>
+    <button class="th-btn"    data-t="obsidian" title="Abismo"></button>
+    <button class="th-btn"    data-t="clean"    title="Pergaminho"></button>
+    <button class="th-btn"    data-t="slate"    title="Floresta"></button>
+    <button class="th-btn"    data-t="ember"    title="Violeta"></button>
   </div>
 </header>
 
