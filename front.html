@@ -567,6 +567,91 @@ footer i{color:var(--neon-a)}
 }
 .avulso-isolado-info i{color:#f59e0b;flex-shrink:0;}
 
+/* ══ MODAL DE VÍDEO YOUTUBE ══ */
+.yt-modal-overlay{
+  position:fixed;inset:0;z-index:500;
+  background:rgba(0,0,0,.82);
+  display:flex;align-items:center;justify-content:center;
+  padding:1rem;
+  opacity:0;pointer-events:none;
+  transition:opacity .25s ease;
+}
+.yt-modal-overlay.aberto{
+  opacity:1;pointer-events:all;
+}
+.yt-modal-box{
+  background:#111;
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:18px;
+  width:100%;max-width:600px;
+  overflow:hidden;
+  transform:scale(.94) translateY(16px);
+  transition:transform .28s cubic-bezier(.22,1,.36,1);
+  box-shadow:0 24px 80px rgba(0,0,0,.7);
+}
+.yt-modal-overlay.aberto .yt-modal-box{
+  transform:scale(1) translateY(0);
+}
+.yt-modal-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.7rem 1rem;gap:.6rem;
+  background:#1a1a1a;border-bottom:1px solid rgba(255,255,255,.07);
+}
+.yt-modal-titulo{
+  font-family:var(--fd);font-size:.88rem;font-weight:600;
+  color:#f0f0f0;flex:1;min-width:0;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.yt-modal-actions{display:flex;align-items:center;gap:.4rem;flex-shrink:0}
+.yt-modal-btn{
+  width:32px;height:32px;border-radius:8px;border:none;
+  background:rgba(255,255,255,.07);color:#ccc;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  font-size:.85rem;transition:background .18s,color .18s;
+  position:relative;
+}
+.yt-modal-btn:hover{background:rgba(255,255,255,.14);color:#fff}
+.yt-modal-close{background:rgba(255,50,50,.12);color:#ff5555;}
+.yt-modal-close:hover{background:rgba(255,50,50,.28);color:#fff}
+
+/* menu de mais opções */
+.yt-more-menu{
+  position:absolute;top:calc(100% + 6px);right:0;
+  background:#222;border:1px solid rgba(255,255,255,.12);
+  border-radius:10px;min-width:180px;
+  box-shadow:0 8px 32px rgba(0,0,0,.6);
+  z-index:10;overflow:hidden;
+  transform:scale(.92) translateY(-4px);opacity:0;pointer-events:none;
+  transition:transform .18s cubic-bezier(.22,1,.36,1),opacity .18s;
+}
+.yt-more-menu.aberto{
+  transform:scale(1) translateY(0);opacity:1;pointer-events:all;
+}
+.yt-more-item{
+  display:flex;align-items:center;gap:.6rem;
+  padding:.65rem .9rem;font-size:.82rem;font-weight:500;color:#ddd;
+  cursor:pointer;transition:background .15s;text-decoration:none;
+}
+.yt-more-item:hover{background:rgba(255,255,255,.08);color:#fff}
+.yt-more-item i{font-size:.85rem;width:16px;text-align:center;color:#aaa}
+.yt-more-item:hover i{color:#fff}
+
+/* player 16:9 */
+.yt-player-wrap{
+  position:relative;width:100%;padding-top:56.25%;
+  background:#000;
+}
+.yt-player-wrap iframe{
+  position:absolute;inset:0;width:100%;height:100%;border:none;
+}
+/* loading skeleton dentro do player */
+.yt-player-loading{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:.75rem;color:#666;font-size:.8rem;
+}
+.yt-player-loading i{font-size:2rem;color:#ff5555;animation:spin 1s linear infinite}
+
 </style>
 </head>
 <body data-theme="default">
@@ -714,7 +799,7 @@ function render(d){
       if(m.tom)tags+='<span class="tag-tom">'+m.tom+'</span>';
       if(m.seq)tags+='<span class="tag-seq">'+m.seq+'</span>';
       var lnks='';
-      if(m.yt)   lnks+='<a class="lnk lnk-yt" href="'+m.yt+'" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i> YouTube</a>';
+      if(m.yt)   lnks+='<button class="lnk lnk-yt" onclick="abrirYtModal(\''+m.yt+'\',\''+( m.nome||'Música')+'\')"><i class="fa-brands fa-youtube"></i> YouTube</button>';
       if(m.sp)   lnks+='<a class="lnk lnk-sp" href="'+m.sp+'" target="_blank" rel="noopener"><i class="fa-brands fa-spotify"></i> Spotify</a>';
       if(m.cifra)lnks+='<a class="lnk lnk-ci" href="'+m.cifra+'" target="_blank" rel="noopener"><i class="fa-solid fa-music"></i> Cifra</a>';
       h+=
@@ -774,7 +859,7 @@ function render(d){
             '<div class="av-titulo">'+(av.titulo||'—')+'<span class="av-pill '+tipo+'">'+inf.label+'</span></div>'+
             (av.descricao?'<div class="av-desc">'+av.descricao+'</div>':'')+
             (av.data?'<div class="av-date"><i class="fa-regular fa-calendar"></i> '+fmtAv(av.data)+'</div>':'')+
-            (av.tipo==='futura'&&av.youtube?'<a class="av-yt" href="'+av.youtube+'" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i> Assistir no YouTube</a>':'')+
+            (av.tipo==='futura'&&av.youtube?'<button class="av-yt" style="background:none;cursor:pointer;border:none;font-family:inherit;" onclick="abrirYtModal(\''+av.youtube+'\',\''+av.titulo+'\')"><i class="fa-brands fa-youtube"></i> Ver no YouTube</button>':'')+
             (av.tipo==='playlist'&&(av.playlistYt||av.playlistSp)?
               '<div class="av-playlist">'+
                 '<div class="av-playlist-label"><i class="fa-solid fa-list-music"></i> Ouvir a Playlist</div>'+
@@ -849,7 +934,7 @@ function renderAvulso(av){
       if(m.tom) tags+='<span class="tag-tom">'+m.tom+'</span>';
       if(m.seq) tags+='<span class="tag-seq">'+m.seq+'</span>';
       var lnks='';
-      if(m.yt)   lnks+='<a class="lnk lnk-yt"  href="'+m.yt+'"    target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i> YouTube</a>';
+      if(m.yt)   lnks+='<button class="lnk lnk-yt" onclick="abrirYtModal(\''+m.yt+'\',\''+( m.nome||'Música')+'\')"><i class="fa-brands fa-youtube"></i> YouTube</button>';
       if(m.sp)   lnks+='<a class="lnk lnk-sp"  href="'+m.sp+'"    target="_blank" rel="noopener"><i class="fa-brands fa-spotify"></i> Spotify</a>';
       if(m.cifra)lnks+='<a class="lnk lnk-ci"  href="'+m.cifra+'" target="_blank" rel="noopener"><i class="fa-solid fa-music"></i> Cifra</a>';
       h +=
@@ -918,7 +1003,7 @@ function renderAvulso(av){
             '<div class="av-titulo">'+(av.titulo||'—')+'<span class="av-pill '+tipo+'">'+inf.label+'</span></div>'+
             (av.descricao?'<div class="av-desc">'+av.descricao+'</div>':'')+
             (av.data?'<div class="av-date"><i class="fa-regular fa-calendar"></i> '+fmtAv(av.data)+'</div>':'')+
-            (av.tipo==='futura'&&av.youtube?'<a class="av-yt" href="'+av.youtube+'" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i> Assistir no YouTube</a>':'')+
+            (av.tipo==='futura'&&av.youtube?'<button class="av-yt" style="background:none;cursor:pointer;border:none;font-family:inherit;" onclick="abrirYtModal(\''+av.youtube+'\',\''+av.titulo+'\')"><i class="fa-brands fa-youtube"></i> Ver no YouTube</button>':'')+
             playlistBtns+
           '</div>'+
         '</div>';
@@ -989,6 +1074,138 @@ function renderAvulso(av){
       '</div>';
   });
 })();
+
+/* ══ PLAYER YOUTUBE INLINE ══ */
+var _ytLinkAtual = '';
+
+function extrairYtId(url){
+  if(!url) return null;
+  // youtu.be/ID
+  var m = url.match(/youtu\.be\/([^?&]+)/);
+  if(m) return m[1];
+  // youtube.com/watch?v=ID
+  m = url.match(/[?&]v=([^?&]+)/);
+  if(m) return m[1];
+  // youtube.com/embed/ID
+  m = url.match(/embed\/([^?&]+)/);
+  if(m) return m[1];
+  // youtube.com/shorts/ID
+  m = url.match(/shorts\/([^?&]+)/);
+  if(m) return m[1];
+  return null;
+}
+
+function abrirYtModal(url, titulo){
+  var id = extrairYtId(url);
+  if(!id){
+    // fallback: abrir no app direto
+    window.open(url, '_blank');
+    return;
+  }
+  _ytLinkAtual = url;
+  document.getElementById('ytModalTitulo').textContent = titulo || 'Vídeo';
+  document.getElementById('ytOpenApp').href = url;
+
+  // montar iframe
+  var iframe = document.getElementById('ytIframe');
+  var loading = document.querySelector('.yt-player-loading');
+  iframe.style.display = 'none';
+  if(loading) loading.style.display = 'flex';
+  iframe.src = 'https://www.youtube.com/embed/' + id + '?autoplay=1&rel=0';
+  iframe.onload = function(){
+    if(loading) loading.style.display = 'none';
+    iframe.style.display = 'block';
+  };
+
+  document.getElementById('ytModalOverlay').classList.add('aberto');
+  document.body.style.overflow = 'hidden';
+}
+
+function fecharYtModal(e){
+  if(e && e.target !== document.getElementById('ytModalOverlay') && e.type !== 'click') return;
+  if(e && e.currentTarget === document.getElementById('ytModalOverlay') && e.target !== e.currentTarget) return;
+  var iframe = document.getElementById('ytIframe');
+  iframe.src = '';
+  iframe.style.display = 'none';
+  document.getElementById('ytModalOverlay').classList.remove('aberto');
+  document.body.style.overflow = '';
+  fecharYtMore();
+}
+
+function toggleYtMore(e){
+  e.stopPropagation();
+  document.getElementById('ytMoreMenu').classList.toggle('aberto');
+}
+function fecharYtMore(){
+  document.getElementById('ytMoreMenu').classList.remove('aberto');
+}
+function copiarLinkYt(){
+  navigator.clipboard.writeText(_ytLinkAtual).then(function(){
+    var btn = document.querySelector('.yt-more-menu .yt-more-item:last-child');
+    if(btn){ btn.innerHTML = '<i class="fa-solid fa-check" style="color:#1db954;"></i> Copiado!'; }
+    setTimeout(function(){
+      fecharYtMore();
+      if(btn) btn.innerHTML = '<i class="fa-solid fa-link"></i> Copiar link';
+    }, 1600);
+  });
+}
+
+/* fechar menu ao clicar fora */
+document.addEventListener('click', function(e){
+  var menu = document.getElementById('ytMoreMenu');
+  var btn  = document.getElementById('ytMoreBtn');
+  if(menu && !menu.contains(e.target) && e.target !== btn && !btn.contains(e.target)){
+    fecharYtMore();
+  }
+});
+/* fechar modal com Escape */
+document.addEventListener('keydown', function(e){
+  if(e.key === 'Escape') fecharYtModal();
+});
+
 </script>
+
+<!-- Modal Player YouTube -->
+<div class="yt-modal-overlay" id="ytModalOverlay" onclick="fecharYtModal(event)">
+  <div class="yt-modal-box" id="ytModalBox">
+    <div class="yt-modal-header">
+      <span class="yt-modal-titulo" id="ytModalTitulo">Carregando…</span>
+      <div class="yt-modal-actions">
+        <!-- mais opções -->
+        <div style="position:relative;">
+          <button class="yt-modal-btn" id="ytMoreBtn" onclick="toggleYtMore(event)" title="Mais opções">
+            <i class="fa-solid fa-ellipsis-vertical"></i>
+          </button>
+          <div class="yt-more-menu" id="ytMoreMenu">
+            <a class="yt-more-item" id="ytOpenApp" href="#" target="_blank" rel="noopener">
+              <i class="fa-brands fa-youtube" style="color:#ff5555;"></i> Abrir no YouTube
+            </a>
+            <div class="yt-more-item" onclick="copiarLinkYt()">
+              <i class="fa-solid fa-link"></i> Copiar link
+            </div>
+          </div>
+        </div>
+        <!-- fechar -->
+        <button class="yt-modal-btn yt-modal-close" onclick="fecharYtModal()" title="Fechar">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+    </div>
+    <div class="yt-player-wrap">
+      <div class="yt-player-loading">
+        <i class="fa-solid fa-spinner"></i>
+        <span>Carregando vídeo…</span>
+      </div>
+      <iframe
+        id="ytIframe"
+        src=""
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+        style="display:none;">
+      </iframe>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
