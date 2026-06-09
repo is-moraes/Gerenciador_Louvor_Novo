@@ -9,55 +9,50 @@
 <style>
   *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
   :root {
-    /* ── Chumbo / Branco / Laranja (padrão) ── */
-    --bg:#f4f4f2; --surface:#ffffff; --fg:#1c1c1c; --fg2:#6b6b6b;
-    --accent:#e8610a; --accent2:#b84d00;
+    /* ── FORJA: carvão escuro + brasa + dourado (padrão) ── */
+    --bg:#f4f1ec; --surface:#ffffff; --fg:#1a0e06; --fg2:#7a5a3a;
+    --accent:#e85a0a; --accent2:#d4a030;
     --success:#16a34a; --danger:#dc2626;
-    --border:#ddddd8; --radius:14px; --radius-sm:8px;
-    --shadow:0 4px 20px rgba(0,0,0,.08); --shadow-lg:0 8px 36px rgba(0,0,0,.14);
+    --border:#e0d0b8; --radius:14px; --radius-sm:8px;
+    --shadow:0 4px 20px rgba(100,50,0,.12); --shadow-lg:0 8px 36px rgba(100,50,0,.2);
     --font:'Inter',sans-serif;
-    --grad:linear-gradient(135deg,#e8610a,#b84d00);
+    --grad:linear-gradient(135deg,#e85a0a,#d4a030);
     --header-h:60px; --yt:#ff0000; --sp:#1db954;
   }
-  /* ── Chumbo Escuro (fundo cinza chumbo, acento laranja) ── */
+  /* ── NÉVOA: branco gelo + verde menta ── */
   [data-theme="charcoal"] {
-    --bg:#2a2a2a; --surface:#333333; --fg:#f0ede8; --fg2:#a0a0a0;
-    --accent:#e8610a; --accent2:#ff8533;
-    --border:#444444; --shadow:0 4px 20px rgba(0,0,0,.35);
+    --bg:#f0f4f2; --surface:#ffffff; --fg:#0e2018; --fg2:#4a7060;
+    --accent:#0a7a52; --accent2:#3dab7e;
+    --border:#c8e0d4; --shadow:0 4px 20px rgba(0,80,50,.1);
+    --grad:linear-gradient(135deg,#0a7a52,#3dab7e);
   }
-  /* ── Preto Profundo (fundo quase preto, acento azul elefante) ── */
+  /* ── ABISMO: azul meia-noite + ciano ── */
   [data-theme="obsidian"] {
-    --bg:#111111; --surface:#1a1a1a; --fg:#e8e8e8; --fg2:#888888;
-    --accent:#4a7fa5; --accent2:#6fa3c8;
-    --border:#2e2e2e; --shadow:0 4px 20px rgba(0,0,0,.5);
-    --grad:linear-gradient(135deg,#4a7fa5,#6fa3c8);
+    --bg:#050d1a; --surface:#091526; --fg:#d0eeff; --fg2:#5090b8;
+    --accent:#00c8f0; --accent2:#0080c8;
+    --border:#0a2840; --shadow:0 4px 20px rgba(0,0,0,.5);
+    --grad:linear-gradient(135deg,#00c8f0,#0080c8);
   }
-  /* ── Branco Limpo (fundo branco puro, acento chumbo escuro) ── */
+  /* ── PERGAMINHO: creme + bordô + ouro (CLARO) ── */
   [data-theme="clean"] {
-    --bg:#ffffff; --surface:#f8f8f8; --fg:#111111; --fg2:#555555;
-    --accent:#2c2c2c; --accent2:#555555;
-    --border:#e0e0e0; --shadow:0 4px 20px rgba(0,0,0,.07);
-    --grad:linear-gradient(135deg,#2c2c2c,#555555);
+    --bg:#f7f0e4; --surface:#fdf8ef; --fg:#2a1408; --fg2:#7a5030;
+    --accent:#8b1a1a; --accent2:#c89640;
+    --border:#e0c89a; --shadow:0 4px 20px rgba(80,30,0,.1);
+    --grad:linear-gradient(135deg,#8b1a1a,#c89640);
   }
-  /* ── Ardósia (cinza azulado escuro, acento laranja) ── */
+  /* ── FLORESTA: verde musgo + lima ── */
   [data-theme="slate"] {
-    --bg:#1e2533; --surface:#262f40; --fg:#dde3ee; --fg2:#8899bb;
-    --accent:#e8610a; --accent2:#ff7a2a;
-    --border:#333d52; --shadow:0 4px 20px rgba(0,0,0,.4);
+    --bg:#0e1a10; --surface:#141f16; --fg:#d8f0c8; --fg2:#6a9860;
+    --accent:#7dde3c; --accent2:#3a8a30;
+    --border:#1e3820; --shadow:0 4px 20px rgba(0,0,0,.4);
+    --grad:linear-gradient(135deg,#7dde3c,#3a8a30);
   }
-  /* ── Carvão Quente (fundo escuro quente, acento âmbar) ── */
+  /* ── VIOLETA: roxo profundo + lavanda ── */
   [data-theme="ember"] {
-    --bg:#1a1510; --surface:#231d17; --fg:#f0e8d8; --fg2:#907860;
-    --accent:#f0900a; --accent2:#d4750a;
-    --border:#352d22; --shadow:0 4px 20px rgba(0,0,0,.45);
-    --grad:linear-gradient(135deg,#f0900a,#d4750a);
-  }
-  /* ── Névoa (cinza claro suave, acento azul elefante) ── */
-  [data-theme="mist"] {
-    --bg:#eaecf0; --surface:#f8f9fb; --fg:#1e2430; --fg2:#687080;
-    --accent:#4a7fa5; --accent2:#2e5f82;
-    --border:#d4d8e0; --shadow:0 4px 20px rgba(0,0,0,.08);
-    --grad:linear-gradient(135deg,#4a7fa5,#2e5f82);
+    --bg:#100818; --surface:#180d24; --fg:#f0e0ff; --fg2:#9070b8;
+    --accent:#c060ff; --accent2:#8040d0;
+    --border:#2a1040; --shadow:0 4px 20px rgba(0,0,0,.5);
+    --grad:linear-gradient(135deg,#c060ff,#8040d0);
   }
 
   body { font-family:var(--font); background:var(--bg); color:var(--fg); min-height:100vh; transition:background .3s,color .3s; }
@@ -538,13 +533,12 @@
   </div>
   <div class="header-right">
     <div class="theme-bar">
-      <div class="theme-btn" data-t="default"  title="Laranja"></div>
-      <div class="theme-btn" data-t="charcoal" title="Chumbo"></div>
-      <div class="theme-btn" data-t="obsidian" title="Preto/Azul"></div>
-      <div class="theme-btn" data-t="clean"    title="Branco"></div>
-      <div class="theme-btn" data-t="slate"    title="Ardósia"></div>
-      <div class="theme-btn" data-t="ember"    title="Carvão"></div>
-      <div class="theme-btn" data-t="mist"     title="Névoa"></div>
+      <div class="theme-btn" data-t="default"  title="Forja"></div>
+      <div class="theme-btn" data-t="charcoal" title="Névoa"></div>
+      <div class="theme-btn" data-t="obsidian" title="Abismo"></div>
+      <div class="theme-btn" data-t="clean"    title="Pergaminho"></div>
+      <div class="theme-btn" data-t="slate"    title="Floresta"></div>
+      <div class="theme-btn" data-t="ember"    title="Violeta"></div>
     </div>
     <div class="validade-chip oculto" id="validadeChip"><i class="fa-solid fa-clock"></i> <span id="validadeTexto"></span></div>
     <div class="sync-badge oculto" id="syncBadge"><i class="fa-solid fa-cloud-check"></i> Sincronizado</div>
