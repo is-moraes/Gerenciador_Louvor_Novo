@@ -573,6 +573,50 @@
   .btn-wa-mini { width:34px; height:34px; border-radius:8px; background:rgba(37,211,102,.12); border:1.5px solid rgba(37,211,102,.3); color:#25d366; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:.85rem; transition:all .2s; flex-shrink:0; text-decoration:none; }
   .btn-wa-mini:hover { background:#25d366; color:#fff; }
   .btn-wa-mini.disabled { opacity:.4; pointer-events:none; }
+
+  /* ── Card colapsável ── */
+  .card-header.clicavel { cursor:pointer; user-select:none; }
+  .card-collapse-icon { margin-left:auto; color:var(--fg2); transition:transform .3s; font-size:.85rem; }
+  .card.recolhido .card-collapse-icon { transform:rotate(-90deg); }
+  .card-body-collapse { overflow:hidden; transition:max-height .35s cubic-bezier(.4,0,.2,1), opacity .25s, margin .3s; max-height:4000px; opacity:1; }
+  .card.recolhido .card-body-collapse { max-height:0 !important; opacity:0; margin-top:-.75rem; }
+
+  /* ── Música unificada ── */
+  .musica-card {
+    background:var(--bg); border:1.5px solid var(--border); border-radius:var(--radius-sm);
+    margin-bottom:.6rem; overflow:hidden; transition:border-color .2s;
+  }
+  .musica-card:hover { border-color:var(--accent); }
+  .musica-head { display:grid; grid-template-columns:auto 1.6fr .55fr .55fr auto auto; gap:.5rem; align-items:center; padding:.7rem .8rem; }
+  @media(max-width:600px){
+    .musica-head{ grid-template-columns:auto 1fr auto auto; grid-template-rows:auto auto; }
+    .musica-head .m-nome{ grid-column:2/5; }
+    .musica-head .m-tom{ grid-column:2/3; grid-row:2; }
+    .musica-head .m-seq{ grid-column:3/4; grid-row:2; }
+  }
+  .m-num {
+    width:28px;height:28px;border-radius:50%;background:var(--grad);color:#fff;
+    font-size:.78rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .musica-head input {
+    padding:.5rem .7rem; background:var(--surface); border:1.5px solid var(--border);
+    border-radius:var(--radius-sm); color:var(--fg); font-family:var(--font); font-size:.85rem; outline:none; transition:border-color .2s; width:100%;
+  }
+  .musica-head input:focus { border-color:var(--accent); }
+  .btn-links-toggle {
+    width:34px;height:34px;border-radius:8px;border:1.5px solid var(--border);background:transparent;
+    color:var(--fg2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.82rem;transition:all .2s;flex-shrink:0;position:relative;
+  }
+  .btn-links-toggle:hover { border-color:var(--accent); color:var(--accent); }
+  .btn-links-toggle.tem-links { border-color:#25d366; color:#25d366; }
+  .btn-links-toggle .link-count { position:absolute;top:-5px;right:-5px;background:#25d366;color:#fff;font-size:.55rem;font-weight:700;width:14px;height:14px;border-radius:50%;display:flex;align-items:center;justify-content:center; }
+  .musica-links {
+    max-height:0; overflow:hidden; transition:max-height .3s cubic-bezier(.4,0,.2,1), padding .3s;
+    padding:0 .8rem; border-top:1.5px solid transparent;
+  }
+  .musica-card.links-abertos .musica-links { max-height:300px; padding:.8rem; border-top-color:var(--border); }
+  .m-link-row { display:grid; grid-template-columns:auto 1fr auto; gap:.45rem; align-items:center; margin-bottom:.45rem; }
+  .m-link-row:last-child { margin-bottom:0; }
   .oculto { display:none !important; }
 
   @media(max-width:640px){
@@ -688,33 +732,24 @@
   </div>
 
   <!-- Repertório -->
-  <div class="card">
-    <div class="card-header">
+  <div class="card" id="cardRepertorio">
+    <div class="card-header clicavel" onclick="toggleCard('cardRepertorio', event)">
       <h2><i class="fa-solid fa-list-music"></i> Repertório</h2>
-      <button class="btn-add" id="btnAdicionarMusica"><i class="fa-solid fa-plus"></i> Música</button>
+      <button class="btn-add" id="btnAdicionarMusica" onclick="event.stopPropagation()"><i class="fa-solid fa-plus"></i> Música</button>
+      <i class="fa-solid fa-chevron-down card-collapse-icon"></i>
     </div>
-    <div style="display:grid;grid-template-columns:1.6fr .55fr .55fr 34px;gap:.5rem;margin-bottom:.3rem;padding:0 .1rem;">
-      <span style="font-size:.7rem;font-weight:700;color:var(--fg2);text-transform:uppercase;">Nome</span>
-      <span style="font-size:.7rem;font-weight:700;color:var(--fg2);text-transform:uppercase;">Tom</span>
-      <span style="font-size:.7rem;font-weight:700;color:var(--fg2);text-transform:uppercase;">Sequência</span>
-      <span></span>
-    </div>
-    <div id="linhasRepertorio"></div>
-
-    <div class="links-secao" id="linksSecao">
-      <div class="links-secao-titulo">
-        <i class="fa-brands fa-youtube" style="color:#e00;"></i> YouTube &nbsp;·&nbsp;
-        <i class="fa-brands fa-spotify" style="color:#1db954;"></i> Spotify &nbsp;·&nbsp;
-        <i class="fa-solid fa-music" style="color:var(--accent);"></i> Cifras
-        <span style="font-size:.68rem;font-weight:400;color:var(--fg2);">— links por música</span>
-      </div>
-      <div id="linksMusicas"></div>
+    <div class="card-body-collapse">
+      <div id="linhasRepertorio"></div>
     </div>
   </div>
 
   <!-- Escala -->
-  <div class="card">
-    <div class="card-header"><h2><i class="fa-solid fa-users"></i> Escala de Serviço</h2></div>
+  <div class="card" id="cardEscala">
+    <div class="card-header clicavel" onclick="toggleCard('cardEscala', event)">
+      <h2><i class="fa-solid fa-users"></i> Escala de Serviço</h2>
+      <i class="fa-solid fa-chevron-down card-collapse-icon"></i>
+    </div>
+    <div class="card-body-collapse">
     <div class="escala-grid-2">
       <div class="escala-grupo">
         <div class="escala-grupo-label"><i class="fa-solid fa-microphone"></i> Vocal</div>
@@ -737,6 +772,7 @@
         <button class="btn-add-membro" onclick="addMembro('midia')"><i class="fa-solid fa-plus"></i> Adicionar</button>
       </div>
     </div>
+    </div>
   </div>
 
 
@@ -748,17 +784,14 @@
     </div>
     <p class="wa-desc">Cadastre os contatos da equipe e envie um aviso pronto pelo WhatsApp para quem está escalado nesta semana.</p>
 
-    <!-- Agenda de contatos -->
-    <div style="display:grid;grid-template-columns:1fr 1fr 34px;gap:.5rem;margin-bottom:.3rem;padding:0 .1rem;">
-      <span style="font-size:.7rem;font-weight:700;color:var(--fg2);text-transform:uppercase;">Nome</span>
-      <span style="font-size:.7rem;font-weight:700;color:var(--fg2);text-transform:uppercase;">WhatsApp (com DDD)</span>
-      <span></span>
+    <!-- Botão gerenciar contatos -->
+    <div style="display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;margin-bottom:.4rem;">
+      <button class="btn-wa outline" onclick="abrirModalContatos()"><i class="fa-solid fa-address-book"></i> Gerenciar Contatos</button>
+      <span id="contatosResumo" style="font-size:.78rem;color:var(--fg2);"></span>
     </div>
-    <div id="listaContatos"></div>
-    <button class="wa-add-contato" onclick="addContato(null)"><i class="fa-solid fa-plus"></i> Adicionar contato</button>
     <div class="wa-contatos-hint">
       <i class="fa-solid fa-circle-info" style="color:#25d366;flex-shrink:0;margin-top:.1rem;"></i>
-      O nome deve ser igual ao usado na escala para o vínculo automático. Número no formato: 55 + DDD + número (ex: 5531988887777).
+      Cadastre os contatos uma vez. Na escala, selecione os membros pelo nome já cadastrado.
     </div>
 
     <!-- Disparo -->
@@ -932,6 +965,27 @@
   </div>
 </div>
 
+
+<!-- Modal Gerenciar Contatos -->
+<div class="modal-overlay oculto" id="modalContatos">
+  <div class="modal-box" style="max-width:520px;">
+    <h3><i class="fa-brands fa-whatsapp" style="color:#25d366;"></i> Contatos da Equipe</h3>
+    <p class="modal-sub">Cadastre nome e WhatsApp de cada membro. Fica salvo e disponível para seleção na escala.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr 34px;gap:.5rem;margin-bottom:.4rem;padding:0 .1rem;">
+      <span style="font-size:.68rem;font-weight:700;color:var(--fg2);text-transform:uppercase;">Nome</span>
+      <span style="font-size:.68rem;font-weight:700;color:var(--fg2);text-transform:uppercase;">WhatsApp</span>
+      <span></span>
+    </div>
+    <div id="listaContatos" style="max-height:40vh;overflow-y:auto;"></div>
+    <button class="wa-add-contato" onclick="addContato(null)" style="margin-top:.5rem;"><i class="fa-solid fa-plus"></i> Adicionar contato</button>
+    <p style="font-size:.72rem;color:var(--fg2);margin-top:.7rem;line-height:1.5;"><i class="fa-solid fa-circle-info" style="color:#25d366;"></i> Número no formato 55 + DDD + número (ex: 5531988887777). As alterações são salvas ao clicar em "Salvar & Publicar".</p>
+    <div class="modal-btns">
+      <button class="btn-modal-cancel" onclick="fecharModalContatos()">Fechar</button>
+      <button class="btn-modal-save" style="background:#25d366;" onclick="fecharModalContatos()"><i class="fa-solid fa-check"></i> Concluir</button>
+    </div>
+  </div>
+</div>
+
 <!-- Modal Configuração Spotify -->
 <div class="modal-overlay oculto" id="modalSpConfig">
   <div class="modal-box">
@@ -1066,6 +1120,8 @@ function carregarDados(){
       data.contatos.forEach(function(ct){ addContato(ct); });
     }
     if(data.grupoWaLink){ document.getElementById('waGrupoLink').value = data.grupoWaLink; }
+    atualizarResumoContatos();
+    atualizarSelectsEscala();
     carregarSemanaLocal(semanaSelecionada); renderizarMeses(); atualizarCtx();
   });
 }
@@ -1277,25 +1333,10 @@ function carregarAvulsoLocal(id){
   limparTelaSemana();
   if(!dados){ adicionarLinha(null); return; }
   (dados.repertorio||[]).forEach(function(m){ adicionarLinha(m); });
-  atualizarLinks();
-  setTimeout(function(){
-    var blocos=document.querySelectorAll('#linksMusicas [data-idx]');
-    (dados.repertorio||[]).forEach(function(m,i){
-      if(blocos[i]){
-        if(m.yt)    blocos[i].querySelector('.linkYt').value=m.yt;
-        if(m.sp)    blocos[i].querySelector('.linkSp').value=m.sp;
-        if(m.cifra) blocos[i].querySelector('.linkCifra').value=m.cifra;
-      }
-    });
-  },100);
   ['vocal','instrumental','multimidia','midia'].forEach(function(g){
-    var cont=document.getElementById('membros-'+g); cont.innerHTML='';
+    document.getElementById('membros-'+g).innerHTML='';
     var list=dados[g]||['']; if(!list.length) list=[''];
-    list.forEach(function(n){
-      var l=document.createElement('div'); l.className='escala-linha';
-      l.innerHTML='<input type="text" value="'+n+'" placeholder="Nome do membro"><button class="btn-del-membro" onclick="delMembro(this)"><i class="fa-solid fa-xmark"></i></button>';
-      cont.appendChild(l);
-    });
+    list.forEach(function(n){ addMembro(g, n); });
   });
   document.getElementById('listaAvisos').innerHTML='';
   (dados.avisos||[]).forEach(function(av){ adicionarAviso(av); });
@@ -1337,101 +1378,132 @@ function criarNovoAvulso(){
 }
 
 /* ── Repertório ── */
+/* ── Card colapsável ── */
+function toggleCard(cardId, e){
+  if(e && e.target.closest('.btn-add')) return;
+  document.getElementById(cardId).classList.toggle('recolhido');
+}
+
+/* ── Música unificada (nome + tom + seq + links num só bloco) ── */
 function adicionarLinha(dados){
-  var c=document.getElementById('linhasRepertorio');
-  var l=document.createElement('div'); l.className='linha-musica';
-  l.innerHTML=
-    '<input type="text" class="nomeMusica" placeholder="Nome da música" value="'+(dados&&dados.nome?dados.nome:'')+'">' +
-    '<input type="text" class="tomMusica"  placeholder="Ex: G"          value="'+(dados&&dados.tom?dados.tom:'')+'">' +
-    '<input type="text" class="seqMusica"  placeholder="Ex: 3ª"         value="'+(dados&&dados.seq?dados.seq:'')+'">' +
-    '<button class="btn-remover" onclick="removerLinha(this)"><i class="fa-solid fa-xmark"></i></button>';
-  c.appendChild(l);
-  l.querySelector('.nomeMusica').addEventListener('input',atualizarLinks);
-}
-function removerLinha(btn){ btn.closest('.linha-musica').remove(); atualizarLinks(); }
-/* btnAdicionarMusica listener -> DOMContentLoaded */
+  dados = dados || {};
+  var c = document.getElementById('linhasRepertorio');
+  var card = document.createElement('div');
+  card.className = 'musica-card';
 
-/* ── Busca rápida ── */
-function buscarYoutube(nomeMusica){
-  var q=encodeURIComponent((nomeMusica||'').trim()||'música gospel');
-  window.open('https://www.youtube.com/results?search_query='+q,'_blank');
-}
-function buscarSpotify(nomeMusica){
-  var q=encodeURIComponent((nomeMusica||'').trim()||'música gospel');
-  window.open('https://open.spotify.com/search/'+q,'_blank');
-}
+  var yt = dados.yt||'', sp = dados.sp||'', cifra = dados.cifra||'';
+  var nLinks = (yt?1:0)+(sp?1:0)+(cifra?1:0);
 
-function atualizarLinks(){
-  var c=document.getElementById('linksMusicas');
-  var musicas=document.querySelectorAll('#linhasRepertorio .nomeMusica');
-
-  /* guardar valores existentes */
-  var prev={};
-  c.querySelectorAll('[data-idx]').forEach(function(el){
-    var i=el.getAttribute('data-idx');
-    prev[i]={
-      yt:    el.querySelector('.linkYt')   ?el.querySelector('.linkYt').value:'',
-      sp:    el.querySelector('.linkSp')   ?el.querySelector('.linkSp').value:'',
-      cifra: el.querySelector('.linkCifra')?el.querySelector('.linkCifra').value:''
-    };
-  });
-  c.innerHTML='';
-
-  musicas.forEach(function(inp,i){
-    var nome=inp.value.trim()||('Música '+(i+1));
-    var p=prev[i]||{yt:'',sp:'',cifra:''};
-
-    var bloco=document.createElement('div');
-    bloco.className='link-musica-bloco';
-    bloco.setAttribute('data-idx',i);
-    bloco.innerHTML=
-      '<div class="link-musica-nome"><i class="fa-solid fa-music"></i> '+nome+'</div>'+
-
-      /* YouTube */
-      '<div class="link-row">'+
+  card.innerHTML =
+    '<div class="musica-head">'+
+      '<span class="m-num">•</span>'+
+      '<input type="text" class="nomeMusica m-nome" placeholder="Nome da música" value="'+(dados.nome||'')+'">'+
+      '<input type="text" class="tomMusica m-tom"  placeholder="Tom" value="'+(dados.tom||'')+'">'+
+      '<input type="text" class="seqMusica m-seq"  placeholder="Seq." value="'+(dados.seq||'')+'">'+
+      '<button class="btn-links-toggle'+(nLinks?' tem-links':'')+'" onclick="toggleLinks(this)" title="Links (YouTube, Spotify, Cifra)">'+
+        '<i class="fa-solid fa-link"></i>'+
+        (nLinks?'<span class="link-count">'+nLinks+'</span>':'')+
+      '</button>'+
+      '<button class="btn-remover" onclick="removerLinha(this)"><i class="fa-solid fa-xmark"></i></button>'+
+    '</div>'+
+    '<div class="musica-links">'+
+      '<div class="m-link-row">'+
         '<div class="link-row-icon yt"><i class="fa-brands fa-youtube"></i></div>'+
-        '<input type="url" class="linkYt" value="'+p.yt+'" placeholder="YouTube — cole o link aqui">'+
-        '<button class="btn-buscar yt" onclick="buscarYoutube(getNomePorIdx('+i+'))"><i class="fa-brands fa-youtube"></i> Buscar</button>'+
+        '<input type="url" class="linkYt" value="'+yt+'" placeholder="YouTube — cole o link">'+
+        '<button class="btn-buscar yt" onclick="buscarLinkMusica(this,\'yt\')"><i class="fa-brands fa-youtube"></i></button>'+
       '</div>'+
-
-      /* Spotify */
-      '<div class="link-row">'+
+      '<div class="m-link-row">'+
         '<div class="link-row-icon sp"><i class="fa-brands fa-spotify"></i></div>'+
-        '<input type="url" class="linkSp" value="'+p.sp+'" placeholder="Spotify — cole o link aqui">'+
-        '<button class="btn-buscar sp" onclick="buscarSpotify(getNomePorIdx('+i+'))"><i class="fa-brands fa-spotify"></i> Buscar</button>'+
+        '<input type="url" class="linkSp" value="'+sp+'" placeholder="Spotify — cole o link">'+
+        '<button class="btn-buscar sp" onclick="buscarLinkMusica(this,\'sp\')"><i class="fa-brands fa-spotify"></i></button>'+
       '</div>'+
-
-      /* Cifra */
-      '<div class="link-row">'+
+      '<div class="m-link-row">'+
         '<div class="link-row-icon cifra"><i class="fa-solid fa-music"></i></div>'+
-        '<input type="url" class="linkCifra" value="'+p.cifra+'" placeholder="Cifra — cole o link aqui">'+
-      '</div>';
+        '<input type="url" class="linkCifra" value="'+cifra+'" placeholder="Cifra — cole o link">'+
+      '</div>'+
+    '</div>';
+  c.appendChild(card);
 
-    c.appendChild(bloco);
+  /* atualizar contador de links ao digitar */
+  card.querySelectorAll('.linkYt,.linkSp,.linkCifra').forEach(function(inp){
+    inp.addEventListener('input', function(){ atualizarContadorLinks(card); });
   });
 }
+function removerLinha(btn){ btn.closest('.musica-card').remove(); }
+function toggleLinks(btn){ btn.closest('.musica-card').classList.toggle('links-abertos'); }
+function atualizarContadorLinks(card){
+  var yt=card.querySelector('.linkYt').value.trim();
+  var sp=card.querySelector('.linkSp').value.trim();
+  var ci=card.querySelector('.linkCifra').value.trim();
+  var n=(yt?1:0)+(sp?1:0)+(ci?1:0);
+  var btn=card.querySelector('.btn-links-toggle');
+  btn.classList.toggle('tem-links', n>0);
+  var badge=btn.querySelector('.link-count');
+  if(n>0){
+    if(!badge){ badge=document.createElement('span'); badge.className='link-count'; btn.appendChild(badge); }
+    badge.textContent=n;
+  } else if(badge){ badge.remove(); }
+}
 
+/* busca rápida — pega nome da música do próprio card */
+function buscarLinkMusica(btn, tipo){
+  var card=btn.closest('.musica-card');
+  var nome=card.querySelector('.nomeMusica').value.trim()||'música gospel';
+  var q=encodeURIComponent(nome);
+  if(tipo==='yt') window.open('https://www.youtube.com/results?search_query='+q,'_blank');
+  else            window.open('https://open.spotify.com/search/'+q,'_blank');
+}
+/* compat: função antiga usada pelo Spotify/YT generator */
 function getNomePorIdx(i){
   var musicas=document.querySelectorAll('#linhasRepertorio .nomeMusica');
   return musicas[i]?musicas[i].value.trim():'';
 }
+/* atualizarLinks agora é no-op (mantido para compat com chamadas antigas) */
+function atualizarLinks(){}
 
-/* ── Escala ── */
-function addMembro(grupo){
+/* ── Escala com seleção de contatos ── */
+function opcoesContatos(selecionado){
+  var contatos = coletarContatos();
+  var opts = '<option value="">— selecionar —</option>';
+  contatos.forEach(function(ct){
+    var sel = (ct.nome === selecionado) ? ' selected' : '';
+    opts += '<option value="'+ct.nome.replace(/"/g,'&quot;')+'"'+sel+'>'+ct.nome+'</option>';
+  });
+  /* se o valor salvo não está entre os contatos, adiciona como opção avulsa */
+  if(selecionado && contatos.every(function(ct){ return ct.nome !== selecionado; })){
+    opts += '<option value="'+selecionado.replace(/"/g,'&quot;')+'" selected>'+selecionado+' (não cadastrado)</option>';
+  }
+  return opts;
+}
+
+function addMembro(grupo, valorInicial){
   var c=document.getElementById('membros-'+grupo);
   var l=document.createElement('div'); l.className='escala-linha';
-  l.innerHTML='<input type="text" placeholder="Nome do membro"><button class="btn-del-membro" onclick="delMembro(this)"><i class="fa-solid fa-xmark"></i></button>';
-  c.appendChild(l); l.querySelector('input').focus();
+  l.innerHTML=
+    '<select class="membroSelect" style="flex:1;padding:.5rem .75rem;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-sm);color:var(--fg);font-family:var(--font);font-size:.85rem;outline:none;cursor:pointer;">'+
+      opcoesContatos(valorInicial||'')+
+    '</select>'+
+    '<button class="btn-del-membro" onclick="delMembro(this)"><i class="fa-solid fa-xmark"></i></button>';
+  c.appendChild(l);
 }
 function delMembro(btn){
   var c=btn.closest('.escala-membros');
   if(c.children.length>1) btn.closest('.escala-linha').remove();
-  else btn.closest('.escala-linha').querySelector('input').value='';
+  else { var sel=btn.closest('.escala-linha').querySelector('select'); if(sel) sel.value=''; }
 }
 function coletarMembros(g){
   var lista=[];
-  document.querySelectorAll('#membros-'+g+' input').forEach(function(inp){ var v=inp.value.trim(); if(v) lista.push(v); });
+  document.querySelectorAll('#membros-'+g+' select').forEach(function(sel){ var v=sel.value.trim(); if(v) lista.push(v); });
   return lista;
+}
+/* re-renderizar selects quando contatos mudam */
+function atualizarSelectsEscala(){
+  ['vocal','instrumental','multimidia','midia'].forEach(function(g){
+    document.querySelectorAll('#membros-'+g+' .membroSelect').forEach(function(sel){
+      var atual=sel.value;
+      sel.innerHTML=opcoesContatos(atual);
+    });
+  });
 }
 
 /* ── Quadro de Avisos ── */
@@ -1527,17 +1599,15 @@ function setSyncBadge(estado){
 
 /* ── Coleta de dados ── */
 function coletarDados(){
-  var linhas=document.querySelectorAll('#linhasRepertorio .linha-musica');
-  var blocos=document.querySelectorAll('#linksMusicas [data-idx]');
+  var cards=document.querySelectorAll('#linhasRepertorio .musica-card');
   var rep=[];
-  linhas.forEach(function(l,i){
-    var nome=l.querySelector('.nomeMusica').value.trim();
-    var tom=l.querySelector('.tomMusica').value.trim();
-    var seq=l.querySelector('.seqMusica').value.trim();
-    var bloco=blocos[i];
-    var yt   =bloco?bloco.querySelector('.linkYt').value.trim():'';
-    var sp   =bloco?bloco.querySelector('.linkSp').value.trim():'';
-    var cifra=bloco?bloco.querySelector('.linkCifra').value.trim():'';
+  cards.forEach(function(card){
+    var nome =card.querySelector('.nomeMusica').value.trim();
+    var tom  =card.querySelector('.tomMusica').value.trim();
+    var seq  =card.querySelector('.seqMusica').value.trim();
+    var yt   =card.querySelector('.linkYt').value.trim();
+    var sp   =card.querySelector('.linkSp').value.trim();
+    var cifra=card.querySelector('.linkCifra').value.trim();
     if(nome||tom) rep.push({nome:nome,tom:tom,seq:seq,yt:yt,sp:sp,cifra:cifra});
   });
   return{
@@ -1554,7 +1624,6 @@ function chaveS(s){ return new Date().getFullYear()+'-'+String(s).padStart(2,'0'
 
 function limparTelaSemana(){
   document.getElementById('linhasRepertorio').innerHTML='';
-  document.getElementById('linksMusicas').innerHTML='';
   ['vocal','instrumental','multimidia','midia'].forEach(function(g){ document.getElementById('membros-'+g).innerHTML=''; });
   document.getElementById('listaAvisos').innerHTML='';
 }
@@ -1568,26 +1637,11 @@ function carregarSemanaLocal(s){
   if(!dados){ adicionarLinha(null); return; }
 
   (dados.repertorio||[]).forEach(function(m){ adicionarLinha(m); });
-  atualizarLinks();
-  setTimeout(function(){
-    var blocos=document.querySelectorAll('#linksMusicas [data-idx]');
-    (dados.repertorio||[]).forEach(function(m,i){
-      if(blocos[i]){
-        if(m.yt)    blocos[i].querySelector('.linkYt').value=m.yt;
-        if(m.sp)    blocos[i].querySelector('.linkSp').value=m.sp;
-        if(m.cifra) blocos[i].querySelector('.linkCifra').value=m.cifra;
-      }
-    });
-  },100);
 
   ['vocal','instrumental','multimidia','midia'].forEach(function(g){
-    var c=document.getElementById('membros-'+g); c.innerHTML='';
+    document.getElementById('membros-'+g).innerHTML='';
     var list=dados[g]||['']; if(!list.length) list=[''];
-    list.forEach(function(n){
-      var l=document.createElement('div'); l.className='escala-linha';
-      l.innerHTML='<input type="text" value="'+n+'" placeholder="Nome do membro"><button class="btn-del-membro" onclick="delMembro(this)"><i class="fa-solid fa-xmark"></i></button>';
-      c.appendChild(l);
-    });
+    list.forEach(function(n){ addMembro(g, n); });
   });
 
   document.getElementById('listaAvisos').innerHTML='';
@@ -2089,8 +2143,28 @@ function addContato(dados){
   l.innerHTML =
     '<input type="text" class="contatoNome" placeholder="Nome do membro" value="'+(dados&&dados.nome?dados.nome:'')+'">' +
     '<input type="tel"  class="contatoTel"  placeholder="5531988887777"   value="'+(dados&&dados.tel?dados.tel:'')+'">' +
-    '<button class="btn-del-contato" onclick="this.closest(\'.wa-contato-linha\').remove()"><i class="fa-solid fa-xmark"></i></button>';
+    '<button class="btn-del-contato" onclick="removerContato(this)"><i class="fa-solid fa-xmark"></i></button>';
   c.appendChild(l);
+  l.querySelector('.contatoNome').addEventListener('input', function(){ atualizarResumoContatos(); });
+}
+function removerContato(btn){
+  btn.closest('.wa-contato-linha').remove();
+  atualizarResumoContatos();
+  atualizarSelectsEscala();
+}
+function atualizarResumoContatos(){
+  var n = coletarContatos().length;
+  var el = document.getElementById('contatosResumo');
+  if(el) el.textContent = n ? (n + ' contato' + (n>1?'s':'') + ' cadastrado' + (n>1?'s':'')) : 'Nenhum contato ainda';
+}
+function abrirModalContatos(){
+  document.getElementById('modalContatos').classList.remove('oculto');
+  if(!document.querySelectorAll('#listaContatos .wa-contato-linha').length){ addContato(null); }
+}
+function fecharModalContatos(){
+  document.getElementById('modalContatos').classList.add('oculto');
+  atualizarResumoContatos();
+  atualizarSelectsEscala();
 }
 
 function coletarContatos(){
@@ -2127,8 +2201,8 @@ function coletarEscalados(){
   ];
   var escalados = [];
   grupos.forEach(function(g){
-    document.querySelectorAll('#membros-'+g.key+' input').forEach(function(inp){
-      var nome = inp.value.trim();
+    document.querySelectorAll('#membros-'+g.key+' select').forEach(function(sel){
+      var nome = sel.value.trim();
       if(nome) escalados.push({nome:nome, funcao:g.label});
     });
   });
@@ -2236,7 +2310,7 @@ document.addEventListener('DOMContentLoaded', function(){
   document.getElementById('campoEmail').addEventListener('keydown', function(e){ if(e.key==='Enter') document.getElementById('campoSenha').focus(); });
 
   /* ── Repertório / Salvar ── */
-  document.getElementById('btnAdicionarMusica').addEventListener('click', function(){ adicionarLinha(null); atualizarLinks(); });
+  document.getElementById('btnAdicionarMusica').addEventListener('click', function(){ adicionarLinha(null); });
   document.getElementById('btnSalvar').addEventListener('click', publicar);
 
   /* ── Modais ── */
@@ -2256,6 +2330,10 @@ document.addEventListener('DOMContentLoaded', function(){
   /* ── Modal YouTube ── */
   var mYT = document.getElementById('modalYtConfig');
   if(mYT) mYT.addEventListener('click', function(e){ if(e.target===this) fecharModalYtConfig(); });
+
+  /* ── Modal Contatos ── */
+  var mCT = document.getElementById('modalContatos');
+  if(mCT) mCT.addEventListener('click', function(e){ if(e.target===this) fecharModalContatos(); });
 
   /* ── Sessão salva ── */
   if(sessaoValida()){
