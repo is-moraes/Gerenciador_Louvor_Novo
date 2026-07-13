@@ -503,6 +503,76 @@
   .avulso-link-btn:hover { background:rgba(70,197,229,.2); border-color:var(--accent); }
   .avulso-link-btn.copiado { background:rgba(16,185,129,.1); border-color:rgba(16,185,129,.35); color:var(--success); }
   .avulso-meta-row { display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; margin-top:.2rem; }
+
+  /* ── Card WhatsApp / Contatos ── */
+  .wa-card {
+    background:linear-gradient(135deg,rgba(37,211,102,.07),rgba(37,211,102,.02));
+    border:1.5px solid rgba(37,211,102,.22); border-radius:var(--radius); padding:1.4rem;
+    margin-bottom:1.4rem; box-shadow:var(--shadow); animation:fadeUp .35s ease;
+  }
+  .wa-card-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; padding-bottom:.75rem; border-bottom:1.5px solid rgba(37,211,102,.15); flex-wrap:wrap; gap:.5rem; }
+  .wa-card-header h2 { font-size:.98rem; font-weight:700; color:#25d366; display:flex; align-items:center; gap:.5rem; }
+  .wa-desc { font-size:.83rem; color:var(--fg2); line-height:1.55; margin-bottom:1rem; }
+
+  /* agenda de contatos */
+  .wa-contato-linha { display:grid; grid-template-columns:1fr 1fr 34px; gap:.5rem; margin-bottom:.45rem; align-items:center; }
+  @media(max-width:560px){ .wa-contato-linha{grid-template-columns:1fr 1fr;} .wa-contato-linha .btn-del-contato{grid-column:span 2;justify-self:end;} }
+  .wa-contato-linha input {
+    padding:.55rem .75rem; background:var(--surface); border:1.5px solid var(--border);
+    border-radius:var(--radius-sm); color:var(--fg); font-family:var(--font); font-size:.85rem; outline:none; transition:border-color .2s; width:100%;
+  }
+  .wa-contato-linha input:focus { border-color:#25d366; }
+  .btn-del-contato {
+    width:32px; height:32px; background:transparent; border:1.5px solid rgba(239,68,68,.35);
+    color:var(--danger); border-radius:8px; cursor:pointer; font-size:.8rem;
+    display:flex; align-items:center; justify-content:center; transition:all .2s;
+  }
+  .btn-del-contato:hover { background:var(--danger); color:#fff; border-color:var(--danger); }
+  .wa-add-contato {
+    display:inline-flex; align-items:center; gap:.35rem; padding:.35rem .8rem;
+    background:transparent; border:1.5px dashed var(--border); color:var(--fg2);
+    border-radius:var(--radius-sm); font-family:var(--font); font-size:.78rem; cursor:pointer; margin-top:.3rem; transition:all .2s;
+  }
+  .wa-add-contato:hover { border-color:#25d366; color:#25d366; }
+
+  .wa-contatos-hint { font-size:.72rem; color:var(--fg2); margin-top:.4rem; display:flex; align-items:flex-start; gap:.35rem; line-height:1.5; }
+
+  /* seção de disparo */
+  .wa-disparo { margin-top:1.2rem; padding-top:1.1rem; border-top:1.5px solid rgba(37,211,102,.15); }
+  .wa-disparo-titulo { font-size:.8rem; font-weight:700; color:var(--fg); margin-bottom:.7rem; display:flex; align-items:center; gap:.4rem; }
+  .wa-grupo-field { display:grid; grid-template-columns:auto 1fr; gap:.5rem; align-items:center; margin-bottom:.9rem; }
+  .wa-grupo-icon { width:34px; height:34px; border-radius:9px; background:rgba(37,211,102,.12); border:1.5px solid rgba(37,211,102,.25); color:#25d366; display:flex; align-items:center; justify-content:center; font-size:.9rem; flex-shrink:0; }
+  .wa-grupo-field input { padding:.55rem .75rem; background:var(--surface); border:1.5px solid var(--border); border-radius:var(--radius-sm); color:var(--fg); font-family:var(--font); font-size:.82rem; outline:none; width:100%; }
+  .wa-grupo-field input:focus { border-color:#25d366; }
+
+  .wa-btn-row { display:flex; gap:.6rem; flex-wrap:wrap; }
+  .btn-wa {
+    display:inline-flex; align-items:center; gap:.45rem; padding:.65rem 1.2rem;
+    border-radius:var(--radius-sm); font-family:var(--font); font-size:.88rem; font-weight:600;
+    cursor:pointer; border:none; transition:opacity .2s, transform .15s; text-decoration:none;
+  }
+  .btn-wa:hover { opacity:.88; transform:translateY(-1px); }
+  .btn-wa:active { transform:scale(.97); }
+  .btn-wa.primary { background:#25d366; color:#fff; }
+  .btn-wa.outline { background:transparent; border:1.5px solid rgba(37,211,102,.4); color:#25d366; }
+
+  /* preview da mensagem + lista de escalados */
+  .wa-preview {
+    margin-top:1rem; background:var(--bg); border:1.5px solid var(--border);
+    border-radius:var(--radius-sm); padding:.9rem 1rem; display:none;
+  }
+  .wa-preview-label { font-size:.72rem; font-weight:700; color:var(--fg2); text-transform:uppercase; letter-spacing:.05em; margin-bottom:.5rem; }
+  .wa-preview-msg { font-size:.83rem; color:var(--fg); line-height:1.6; white-space:pre-wrap; background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:.7rem .85rem; margin-bottom:.8rem; }
+  .wa-escalados-list { display:flex; flex-direction:column; gap:.4rem; }
+  .wa-escalado-item { display:flex; align-items:center; gap:.6rem; padding:.5rem .7rem; background:var(--surface); border:1.5px solid var(--border); border-radius:8px; }
+  .wa-escalado-info { flex:1; min-width:0; }
+  .wa-escalado-nome { font-size:.85rem; font-weight:600; color:var(--fg); }
+  .wa-escalado-func { font-size:.72rem; color:var(--fg2); }
+  .wa-escalado-tel  { font-size:.72rem; color:#25d366; font-weight:600; }
+  .wa-escalado-semtel { font-size:.72rem; color:var(--danger); font-style:italic; }
+  .btn-wa-mini { width:34px; height:34px; border-radius:8px; background:rgba(37,211,102,.12); border:1.5px solid rgba(37,211,102,.3); color:#25d366; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:.85rem; transition:all .2s; flex-shrink:0; text-decoration:none; }
+  .btn-wa-mini:hover { background:#25d366; color:#fff; }
+  .btn-wa-mini.disabled { opacity:.4; pointer-events:none; }
   .oculto { display:none !important; }
 
   @media(max-width:640px){
@@ -669,6 +739,51 @@
     </div>
   </div>
 
+
+
+  <!-- Avisar Escalados via WhatsApp -->
+  <div class="wa-card" id="whatsappCard">
+    <div class="wa-card-header">
+      <h2><i class="fa-brands fa-whatsapp"></i> Avisar Escalados</h2>
+    </div>
+    <p class="wa-desc">Cadastre os contatos da equipe e envie um aviso pronto pelo WhatsApp para quem está escalado nesta semana.</p>
+
+    <!-- Agenda de contatos -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 34px;gap:.5rem;margin-bottom:.3rem;padding:0 .1rem;">
+      <span style="font-size:.7rem;font-weight:700;color:var(--fg2);text-transform:uppercase;">Nome</span>
+      <span style="font-size:.7rem;font-weight:700;color:var(--fg2);text-transform:uppercase;">WhatsApp (com DDD)</span>
+      <span></span>
+    </div>
+    <div id="listaContatos"></div>
+    <button class="wa-add-contato" onclick="addContato(null)"><i class="fa-solid fa-plus"></i> Adicionar contato</button>
+    <div class="wa-contatos-hint">
+      <i class="fa-solid fa-circle-info" style="color:#25d366;flex-shrink:0;margin-top:.1rem;"></i>
+      O nome deve ser igual ao usado na escala para o vínculo automático. Número no formato: 55 + DDD + número (ex: 5531988887777).
+    </div>
+
+    <!-- Disparo -->
+    <div class="wa-disparo">
+      <div class="wa-disparo-titulo"><i class="fa-solid fa-paper-plane"></i> Enviar avisos da semana</div>
+      <div class="wa-grupo-field">
+        <div class="wa-grupo-icon"><i class="fa-solid fa-users"></i></div>
+        <input type="url" id="waGrupoLink" placeholder="Link do grupo do WhatsApp (opcional) — https://chat.whatsapp.com/...">
+      </div>
+      <div class="wa-btn-row">
+        <button class="btn-wa primary" onclick="prepararAvisos()"><i class="fa-brands fa-whatsapp"></i> Preparar Avisos</button>
+      </div>
+
+      <div class="wa-preview" id="waPreview">
+        <div class="wa-preview-label">Mensagem que será enviada</div>
+        <div class="wa-preview-msg" id="waPreviewMsg"></div>
+        <div class="wa-btn-row" style="margin-bottom:.9rem;">
+          <button class="btn-wa outline" onclick="copiarMsgWa()"><i class="fa-solid fa-copy"></i> Copiar mensagem</button>
+          <button class="btn-wa primary" id="btnAbrirGrupo" onclick="abrirGrupoWa()" style="display:none;"><i class="fa-solid fa-users"></i> Abrir grupo</button>
+        </div>
+        <div class="wa-preview-label">Escalados desta semana</div>
+        <div class="wa-escalados-list" id="waEscaladosList"></div>
+      </div>
+    </div>
+  </div>
 
   <!-- Spotify Playlist -->
   <div class="sp-card" id="spotifyCard">
@@ -945,6 +1060,12 @@ function carregarDados(){
     /* carregar avulsos */
     if(data.avulsos) avulsosPorId=data.avulsos;
     renderizarAvulsos();
+    /* carregar contatos e grupo WhatsApp */
+    document.getElementById('listaContatos').innerHTML='';
+    if(data.contatos && data.contatos.length){
+      data.contatos.forEach(function(ct){ addContato(ct); });
+    }
+    if(data.grupoWaLink){ document.getElementById('waGrupoLink').value = data.grupoWaLink; }
     carregarSemanaLocal(semanaSelecionada); renderizarMeses(); atualizarCtx();
   });
 }
@@ -1483,11 +1604,13 @@ function publicar(){
   Object.keys(avulsosPorId).forEach(function(id){
     avulsosPayload[id]=avulsosPorId[id];
   });
+  var contatosPayload = coletarContatos();
+  var grupoLinkPayload = document.getElementById('waGrupoLink') ? document.getElementById('waGrupoLink').value.trim() : '';
   var btn=document.getElementById('btnSalvar');
   btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Publicando...'; btn.disabled=true;
   setSyncBadge('salvando');
   var dadosAtual=programacoesPorSemana[chaveS(semanaSelecionada)]||coletarDados();
-  col.doc(ministerioId).update({programacoes:programacoesPorSemana,programacao:dadosAtual,avulsos:avulsosPayload})
+  col.doc(ministerioId).update({programacoes:programacoesPorSemana,programacao:dadosAtual,avulsos:avulsosPayload,contatos:contatosPayload,grupoWaLink:grupoLinkPayload})
   .then(function(){
     setSyncBadge('ok');
     btn.innerHTML='<i class="fa-solid fa-check"></i> Publicado com sucesso!';
@@ -1949,6 +2072,160 @@ function salvarYtConfig(){
   fecharModalYtConfig();
   YT_API.atualizarUI();
   loginYoutube();
+}
+
+
+
+/* ══════════════════════════════════════════════
+   AVISAR ESCALADOS VIA WHATSAPP
+══════════════════════════════════════════════ */
+var contatosAgenda = [];   /* [{nome, tel}] */
+var grupoWaLink = '';
+var _msgWaAtual = '';
+
+function addContato(dados){
+  var c = document.getElementById('listaContatos');
+  var l = document.createElement('div'); l.className='wa-contato-linha';
+  l.innerHTML =
+    '<input type="text" class="contatoNome" placeholder="Nome do membro" value="'+(dados&&dados.nome?dados.nome:'')+'">' +
+    '<input type="tel"  class="contatoTel"  placeholder="5531988887777"   value="'+(dados&&dados.tel?dados.tel:'')+'">' +
+    '<button class="btn-del-contato" onclick="this.closest(\'.wa-contato-linha\').remove()"><i class="fa-solid fa-xmark"></i></button>';
+  c.appendChild(l);
+}
+
+function coletarContatos(){
+  var lista = [];
+  document.querySelectorAll('#listaContatos .wa-contato-linha').forEach(function(l){
+    var nome = l.querySelector('.contatoNome').value.trim();
+    var tel  = l.querySelector('.contatoTel').value.trim().replace(/[^0-9]/g,'');
+    if(nome) lista.push({nome:nome, tel:tel});
+  });
+  return lista;
+}
+
+/* normaliza nome para comparação (sem acento, minúsculo) */
+function normNome(s){
+  return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
+}
+
+function acharTelefone(nome){
+  var alvo = normNome(nome);
+  var contatos = coletarContatos();
+  for(var i=0;i<contatos.length;i++){
+    if(normNome(contatos[i].nome) === alvo) return contatos[i].tel;
+  }
+  return null;
+}
+
+/* coleta todos os escalados da semana atual com sua função */
+function coletarEscalados(){
+  var grupos = [
+    {key:'vocal',        label:'Vocal'},
+    {key:'instrumental', label:'Instrumental'},
+    {key:'multimidia',   label:'Multimídia'},
+    {key:'midia',        label:'Mídia / Som'}
+  ];
+  var escalados = [];
+  grupos.forEach(function(g){
+    document.querySelectorAll('#membros-'+g.key+' input').forEach(function(inp){
+      var nome = inp.value.trim();
+      if(nome) escalados.push({nome:nome, funcao:g.label});
+    });
+  });
+  return escalados;
+}
+
+function dataDoCultoTexto(){
+  if(modoAvulso && avulsoAtualId){
+    var av = avulsosPorId[avulsoAtualId];
+    if(av){
+      var dataFmt = av.data ? new Date(av.data+'T12:00').toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long'}) : '';
+      return {titulo:av.nome, data:dataFmt};
+    }
+  }
+  var ano = new Date().getFullYear();
+  var ini = inicioSemanaISO(ano, semanaSelecionada);
+  var dom = new Date(ini); dom.setDate(dom.getDate()+6);
+  var dataFmt = dom.toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long'});
+  return {titulo:'Culto de Domingo', data:dataFmt};
+}
+
+function montarMensagemGeral(escalados, info){
+  var linhas = [];
+  linhas.push('🎵 *Ministério de Louvor* 🎵');
+  linhas.push('');
+  linhas.push('Escala para *' + info.titulo + '*');
+  if(info.data) linhas.push('📅 ' + info.data.charAt(0).toUpperCase() + info.data.slice(1));
+  linhas.push('');
+  linhas.push('*Escalados:*');
+  /* agrupar por função */
+  var porFuncao = {};
+  escalados.forEach(function(e){
+    if(!porFuncao[e.funcao]) porFuncao[e.funcao] = [];
+    porFuncao[e.funcao].push(e.nome);
+  });
+  Object.keys(porFuncao).forEach(function(func){
+    linhas.push('• *' + func + ':* ' + porFuncao[func].join(', '));
+  });
+  linhas.push('');
+  linhas.push('Deus abençoe! 🙏');
+  return linhas.join('\n');
+}
+
+function prepararAvisos(){
+  var escalados = coletarEscalados();
+  if(!escalados.length){ alert('Nenhum membro escalado nesta semana.'); return; }
+
+  var info = dataDoCultoTexto();
+  var msg = montarMensagemGeral(escalados, info);
+  _msgWaAtual = msg;
+
+  /* preview */
+  document.getElementById('waPreviewMsg').textContent = msg;
+  document.getElementById('waPreview').style.display = 'block';
+
+  /* botão grupo */
+  grupoWaLink = document.getElementById('waGrupoLink').value.trim();
+  var btnGrupo = document.getElementById('btnAbrirGrupo');
+  btnGrupo.style.display = grupoWaLink ? '' : 'none';
+
+  /* lista individual */
+  var lista = document.getElementById('waEscaladosList');
+  lista.innerHTML = '';
+  escalados.forEach(function(e){
+    var tel = acharTelefone(e.nome);
+    var msgIndividual = 'Olá, ' + e.nome + '! 🎵\n\nVocê está escalado(a) como *' + e.funcao + '* para *' + info.titulo + '*' + (info.data ? ' (' + info.data + ')' : '') + '.\n\nContamos com você! 🙏';
+    var waUrl = tel ? 'https://wa.me/' + tel + '?text=' + encodeURIComponent(msgIndividual) : '#';
+
+    var item = document.createElement('div');
+    item.className = 'wa-escalado-item';
+    item.innerHTML =
+      '<div class="wa-escalado-info">'+
+        '<div class="wa-escalado-nome">'+e.nome+'</div>'+
+        '<div class="wa-escalado-func">'+e.funcao+
+          (tel ? ' · <span class="wa-escalado-tel">'+tel+'</span>' : ' · <span class="wa-escalado-semtel">sem número cadastrado</span>')+
+        '</div>'+
+      '</div>'+
+      (tel
+        ? '<a class="btn-wa-mini" href="'+waUrl+'" target="_blank" rel="noopener" title="Avisar '+e.nome+'"><i class="fa-brands fa-whatsapp"></i></a>'
+        : '<span class="btn-wa-mini disabled"><i class="fa-brands fa-whatsapp"></i></span>'
+      );
+    lista.appendChild(item);
+  });
+
+  document.getElementById('waPreview').scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function copiarMsgWa(){
+  navigator.clipboard.writeText(_msgWaAtual).then(function(){
+    alert('Mensagem copiada! Cole no grupo do WhatsApp.');
+  }).catch(function(){ alert(_msgWaAtual); });
+}
+
+function abrirGrupoWa(){
+  if(!grupoWaLink) return;
+  copiarMsgWa();
+  window.open(grupoWaLink, '_blank');
 }
 
 /* ── Init ── */
