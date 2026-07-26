@@ -738,8 +738,17 @@
     .theme-btn { width:16px; height:16px; }
     .aviso-bloco-header { flex-direction:column; align-items:stretch; }
     .aviso-sel-tipo,.aviso-inp-titulo,.aviso-inp-data { flex:unset; width:100%; }
+    /* link-row antigo (avisos) mantém empilhado */
     .link-row { grid-template-columns:auto 1fr; }
-    .btn-buscar { grid-column:2; }
+    .link-row .btn-buscar { grid-column:2; }
+    /* m-link-row (repertório): botão vira ícone quadrado ao lado do input */
+    .m-link-row { grid-template-columns:auto 1fr auto; }
+    .m-link-row .btn-buscar {
+      width:38px; height:38px; padding:0; justify-content:center;
+      border-radius:var(--radius-sm);
+    }
+    .m-link-row .btn-buscar span,
+    .m-link-row .btn-buscar .txt { display:none; }
   }
   @media(max-width:400px){
     #validadeChip { grid-column:1/3; justify-self:stretch; justify-content:center; }
