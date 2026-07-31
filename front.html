@@ -739,6 +739,57 @@ footer i{color:var(--neon-a)}
 
 .player-empty{padding:2.5rem 1rem;text-align:center;color:#666;font-size:.85rem}
 
+/* ══ MODAL DE CIFRA ══ */
+.cifra-modal-overlay{
+  position:fixed;inset:0;z-index:550;
+  background:rgba(0,0,0,.85);
+  display:flex;align-items:center;justify-content:center;padding:1rem;
+  opacity:0;pointer-events:none;transition:opacity .25s;
+}
+.cifra-modal-overlay.aberto{opacity:1;pointer-events:all}
+.cifra-modal-box{
+  background:#12100c;border:1px solid rgba(255,255,255,.1);border-radius:18px;
+  width:100%;max-width:640px;height:88vh;max-height:88vh;overflow:hidden;
+  display:flex;flex-direction:column;
+  transform:scale(.94) translateY(16px);transition:transform .28s cubic-bezier(.22,1,.36,1);
+  box-shadow:0 24px 80px rgba(0,0,0,.7);
+}
+.cifra-modal-overlay.aberto .cifra-modal-box{transform:scale(1) translateY(0)}
+.cifra-modal-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.7rem 1rem;gap:.6rem;
+  background:#1c1810;border-bottom:1px solid rgba(255,255,255,.07);
+}
+.cifra-modal-titulo{font-family:var(--fd);font-size:.88rem;font-weight:600;color:#f0ede8;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:.5rem}
+.cifra-modal-titulo i{color:var(--neon-a);flex-shrink:0}
+.cifra-modal-actions{display:flex;align-items:center;gap:.4rem;flex-shrink:0}
+.cifra-modal-btn{width:32px;height:32px;border-radius:8px;border:none;background:rgba(255,255,255,.07);color:#ccc;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.85rem;transition:background .18s,color .18s;text-decoration:none}
+.cifra-modal-btn:hover{background:rgba(255,255,255,.14);color:#fff}
+.cifra-modal-close{background:rgba(255,50,50,.12);color:#ff5555}
+.cifra-modal-close:hover{background:rgba(255,50,50,.28);color:#fff}
+.cifra-frame-wrap{flex:1;position:relative;background:#fff;overflow:hidden}
+.cifra-frame-wrap iframe{width:100%;height:100%;border:none;display:block}
+.cifra-loading{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.7rem;color:#999;font-size:.85rem;background:#12100c}
+.cifra-loading i{font-size:1.8rem;color:var(--neon-a);animation:spin 1s linear infinite}
+/* fallback quando o embed é bloqueado */
+.cifra-fallback{
+  position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;
+  gap:1rem;padding:2rem;text-align:center;background:#12100c;color:var(--t2);
+}
+.cifra-fallback.mostrar{display:flex}
+.cifra-fallback-ico{width:70px;height:70px;border-radius:20px;background:var(--neon-a-soft);border:1px solid var(--glass-border-lit);display:flex;align-items:center;justify-content:center;font-size:1.8rem;color:var(--neon-a)}
+.cifra-fallback h3{font-family:var(--fd);font-size:1.05rem;font-weight:700;color:var(--t1);text-transform:uppercase;letter-spacing:.04em}
+.cifra-fallback p{font-size:.85rem;line-height:1.6;max-width:320px}
+.cifra-fallback-btn{
+  display:inline-flex;align-items:center;gap:.5rem;margin-top:.5rem;
+  padding:.7rem 1.4rem;border-radius:12px;
+  background:linear-gradient(135deg,var(--neon-a),var(--neon-c));color:#fff;
+  font-family:var(--fd);font-size:.85rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;
+  text-decoration:none;border:none;cursor:pointer;transition:transform .18s,box-shadow .2s;
+  box-shadow:0 0 14px var(--neon-a-glow);
+}
+.cifra-fallback-btn:hover{transform:translateY(-2px);box-shadow:0 0 22px var(--neon-a-glow)}
+
 </style>
 </head>
 <body data-theme="default">
@@ -892,7 +943,7 @@ function render(d){
       var lnks='';
       if(m.yt)   lnks+='<button class="lnk lnk-yt" onclick="abrirYtModal(\''+m.yt+'\',\''+( m.nome||'Música')+'\')"><i class="fa-brands fa-youtube"></i> YouTube</button>';
       if(m.sp)   lnks+='<a class="lnk lnk-sp" href="'+m.sp+'" target="_blank" rel="noopener"><i class="fa-brands fa-spotify"></i> Spotify</a>';
-      if(m.cifra)lnks+='<a class="lnk lnk-ci" href="'+m.cifra+'" target="_blank" rel="noopener"><i class="fa-solid fa-music"></i> Cifra</a>';
+      if(m.cifra)lnks+='<button class="lnk lnk-ci" onclick="abrirCifraModal(\''+m.cifra+'\',\''+( m.nome||'Cifra')+'\')"><i class="fa-solid fa-music"></i> Cifra</button>';
       h+=
         '<div class="rep-item">'+
           '<span class="rep-num">'+(i+1)+'</span>'+
@@ -1031,7 +1082,7 @@ function renderAvulso(av){
       var lnks='';
       if(m.yt)   lnks+='<button class="lnk lnk-yt" onclick="abrirYtModal(\''+m.yt+'\',\''+( m.nome||'Música')+'\')"><i class="fa-brands fa-youtube"></i> YouTube</button>';
       if(m.sp)   lnks+='<a class="lnk lnk-sp"  href="'+m.sp+'"    target="_blank" rel="noopener"><i class="fa-brands fa-spotify"></i> Spotify</a>';
-      if(m.cifra)lnks+='<a class="lnk lnk-ci"  href="'+m.cifra+'" target="_blank" rel="noopener"><i class="fa-solid fa-music"></i> Cifra</a>';
+      if(m.cifra)lnks+='<button class="lnk lnk-ci" onclick="abrirCifraModal(\''+m.cifra+'\',\''+( m.nome||'Cifra')+'\')"><i class="fa-solid fa-music"></i> Cifra</button>';
       h +=
         '<div class="rep-item">'+
           '<span class="rep-num">'+(i+1)+'</span>'+
@@ -1170,6 +1221,106 @@ function renderAvulso(av){
   });
 })();
 
+
+
+/* ══ MODAL DE CIFRA (Google Drive / Cifra Club) ══ */
+var _cifraLinkAtual = '';
+
+/* converte link do Google Drive para formato de preview embutível */
+function prepararUrlCifra(url){
+  if(!url) return { embed:null, tipo:'desconhecido' };
+
+  /* Google Drive: .../file/d/ID/view  →  .../file/d/ID/preview */
+  var drive = url.match(/drive\.google\.com\/file\/d\/([^\/]+)/);
+  if(drive){
+    return { embed:'https://drive.google.com/file/d/'+drive[1]+'/preview', tipo:'drive' };
+  }
+  /* Google Docs: .../document/d/ID/...  →  .../document/d/ID/preview */
+  var docs = url.match(/docs\.google\.com\/document\/d\/([^\/]+)/);
+  if(docs){
+    return { embed:'https://docs.google.com/document/d/'+docs[1]+'/preview', tipo:'docs' };
+  }
+  /* Cifra Club e outros: tenta embutir direto (pode ser bloqueado) */
+  if(url.indexOf('cifraclub') >= 0){
+    return { embed:url, tipo:'cifraclub' };
+  }
+  /* qualquer outro link: tenta embutir */
+  return { embed:url, tipo:'outro' };
+}
+
+function abrirCifraModal(url, titulo){
+  if(!url){ return; }
+  _cifraLinkAtual = url;
+  var info = prepararUrlCifra(url);
+
+  document.getElementById('cifraModalTitulo').textContent = titulo || 'Cifra';
+  document.getElementById('cifraOpenExt').href = url;
+  document.getElementById('cifraFallbackBtn').href = url;
+
+  var iframe = document.getElementById('cifraIframe');
+  var loading = document.getElementById('cifraLoading');
+  var fallback = document.getElementById('cifraFallback');
+
+  /* reset */
+  iframe.style.display = 'none';
+  fallback.classList.remove('mostrar');
+  loading.style.display = 'flex';
+
+  document.getElementById('cifraModalOverlay').classList.add('aberto');
+  document.body.style.overflow = 'hidden';
+
+  /* Google Drive/Docs embutem de forma confiável */
+  if(info.tipo === 'drive' || info.tipo === 'docs'){
+    iframe.onload = function(){
+      loading.style.display = 'none';
+      iframe.style.display = 'block';
+    };
+    iframe.src = info.embed;
+    /* timeout de segurança */
+    _cifraTimeout = setTimeout(function(){
+      if(iframe.style.display === 'none'){ mostrarFallbackCifra(); }
+    }, 6000);
+    return;
+  }
+
+  /* Cifra Club e outros: tentar embutir, com fallback rápido */
+  iframe.onload = function(){
+    /* se carregou, mostra */
+    loading.style.display = 'none';
+    iframe.style.display = 'block';
+    clearTimeout(_cifraTimeout);
+  };
+  iframe.src = info.embed;
+  /* muitos sites bloqueiam via X-Frame-Options — o onload não dispara.
+     Após 3.5s sem carregar, mostra o fallback. */
+  _cifraTimeout = setTimeout(function(){
+    if(iframe.style.display === 'none'){ mostrarFallbackCifra(); }
+  }, 3500);
+}
+
+var _cifraTimeout = null;
+function mostrarFallbackCifra(){
+  document.getElementById('cifraLoading').style.display = 'none';
+  document.getElementById('cifraIframe').style.display = 'none';
+  document.getElementById('cifraFallback').classList.add('mostrar');
+}
+
+function fecharCifraModal(e){
+  if(e && e.target !== document.getElementById('cifraModalOverlay')) return;
+  clearTimeout(_cifraTimeout);
+  var iframe = document.getElementById('cifraIframe');
+  iframe.src = '';
+  iframe.style.display = 'none';
+  document.getElementById('cifraModalOverlay').classList.remove('aberto');
+  document.body.style.overflow = '';
+}
+
+/* fechar com Escape */
+document.addEventListener('keydown', function(e){
+  if(e.key === 'Escape' && document.getElementById('cifraModalOverlay').classList.contains('aberto')){
+    fecharCifraModal();
+  }
+});
 
 /* ══ PLAYER SEQUENCIAL (YouTube IFrame API) ══ */
 var _playerLista = [];      /* [{nome, ytId, sp}] */
@@ -1448,6 +1599,33 @@ document.addEventListener('keydown', function(e){
 
 </script>
 
+
+
+<!-- Modal de Cifra -->
+<div class="cifra-modal-overlay" id="cifraModalOverlay" onclick="fecharCifraModal(event)">
+  <div class="cifra-modal-box">
+    <div class="cifra-modal-header">
+      <span class="cifra-modal-titulo"><i class="fa-solid fa-music"></i> <span id="cifraModalTitulo">Cifra</span></span>
+      <div class="cifra-modal-actions">
+        <a class="cifra-modal-btn" id="cifraOpenExt" href="#" target="_blank" rel="noopener" title="Abrir em nova aba"><i class="fa-solid fa-up-right-from-square"></i></a>
+        <button class="cifra-modal-btn cifra-modal-close" onclick="fecharCifraModal()" title="Fechar"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+    </div>
+    <div class="cifra-frame-wrap">
+      <div class="cifra-loading" id="cifraLoading">
+        <i class="fa-solid fa-spinner"></i>
+        <span>Carregando cifra…</span>
+      </div>
+      <div class="cifra-fallback" id="cifraFallback">
+        <div class="cifra-fallback-ico"><i class="fa-solid fa-arrow-up-right-from-square"></i></div>
+        <h3>Abrir a cifra</h3>
+        <p>Este site não permite ser exibido dentro do portal. Toque no botão abaixo para abri-lo em uma nova aba.</p>
+        <a class="cifra-fallback-btn" id="cifraFallbackBtn" href="#" target="_blank" rel="noopener"><i class="fa-solid fa-music"></i> Abrir Cifra</a>
+      </div>
+      <iframe id="cifraIframe" src="" style="display:none;"></iframe>
+    </div>
+  </div>
+</div>
 
 <!-- Player Sequencial -->
 <div class="player-overlay" id="playerOverlay" onclick="fecharPlayer(event)">
