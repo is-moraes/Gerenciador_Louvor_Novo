@@ -790,6 +790,97 @@ footer i{color:var(--neon-a)}
 }
 .cifra-fallback-btn:hover{transform:translateY(-2px);box-shadow:0 0 22px var(--neon-a-glow)}
 
+/* ══ BPM TAG (clicável) ══ */
+.tag-bpm{
+  display:inline-flex;align-items:center;gap:.28rem;
+  padding:.15rem .5rem .15rem .45rem;border-radius:6px;font-size:.68rem;font-weight:700;
+  background:var(--neon-c-soft);border:1px solid var(--glass-border-lit);
+  color:var(--neon-c);white-space:nowrap;cursor:pointer;
+  transition:transform .15s,box-shadow .2s,background .2s;
+  -webkit-tap-highlight-color:transparent;
+}
+.tag-bpm:hover{background:var(--neon-a-soft);color:var(--neon-a);box-shadow:0 0 10px var(--neon-a-glow)}
+.tag-bpm:active{transform:scale(.92)}
+.tag-bpm i{font-size:.6rem}
+
+/* ══ MODAL METRÔNOMO ══ */
+.metro-overlay{
+  position:fixed;inset:0;z-index:560;
+  background:rgba(0,0,0,.85);
+  display:flex;align-items:center;justify-content:center;padding:1rem;
+  opacity:0;pointer-events:none;transition:opacity .25s;
+}
+.metro-overlay.aberto{opacity:1;pointer-events:all}
+.metro-box{
+  background:linear-gradient(160deg,#141414,#1c1810);
+  border:1px solid rgba(255,255,255,.1);border-radius:24px;
+  width:100%;max-width:340px;overflow:hidden;
+  transform:scale(.92) translateY(16px);transition:transform .28s cubic-bezier(.22,1,.36,1);
+  box-shadow:0 24px 80px rgba(0,0,0,.7);
+}
+.metro-overlay.aberto .metro-box{transform:scale(1) translateY(0)}
+.metro-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.9rem 1.1rem;border-bottom:1px solid rgba(255,255,255,.07);
+}
+.metro-header-title{font-family:var(--fd);font-size:.85rem;font-weight:700;color:#f0ede8;text-transform:uppercase;letter-spacing:.06em;display:flex;align-items:center;gap:.5rem}
+.metro-header-title i{color:var(--neon-a)}
+.metro-close{width:30px;height:30px;border-radius:8px;border:none;background:rgba(255,50,50,.12);color:#ff5555;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.8rem;transition:background .18s}
+.metro-close:hover{background:rgba(255,50,50,.28);color:#fff}
+
+.metro-body{padding:1.6rem 1.4rem 1.8rem;display:flex;flex-direction:column;align-items:center;gap:1.2rem}
+.metro-song{font-family:var(--fd);font-size:1rem;font-weight:600;color:var(--t1);text-align:center}
+
+/* visor de BPM */
+.metro-bpm-display{display:flex;align-items:baseline;gap:.4rem}
+.metro-bpm-num{font-family:var(--fd);font-size:3.4rem;font-weight:700;line-height:1;color:#fff;font-variant-numeric:tabular-nums;min-width:2.4ch;text-align:center}
+.metro-bpm-unit{font-family:var(--fd);font-size:.9rem;font-weight:600;color:var(--t2);text-transform:uppercase;letter-spacing:.1em}
+
+/* indicador visual de batida (pulso) */
+.metro-pulse-row{display:flex;gap:.5rem;align-items:center;justify-content:center;height:20px}
+.metro-pulse-dot{width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,.14);transition:none}
+.metro-pulse-dot.on{background:var(--neon-a);box-shadow:0 0 16px var(--neon-a-glow);transform:scale(1.4)}
+.metro-pulse-dot.on.forte{background:var(--neon-c);box-shadow:0 0 20px var(--neon-c-glow)}
+
+/* ajuste de BPM */
+.metro-adjust{display:flex;align-items:center;gap:.9rem}
+.metro-adj-btn{
+  width:46px;height:46px;border-radius:50%;border:1.5px solid var(--glass-border-lit);
+  background:rgba(255,255,255,.05);color:var(--t1);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:1rem;transition:all .16s;
+  -webkit-tap-highlight-color:transparent;
+}
+.metro-adj-btn:hover{border-color:var(--neon-a);color:var(--neon-a);box-shadow:0 0 12px var(--neon-a-glow)}
+.metro-adj-btn:active{transform:scale(.9)}
+.metro-adj-slider{flex:1;min-width:120px}
+.metro-adj-slider input[type=range]{width:100%;accent-color:var(--neon-a);cursor:pointer}
+
+/* botão play grande */
+.metro-play{
+  width:76px;height:76px;border-radius:50%;border:none;cursor:pointer;
+  background:linear-gradient(135deg,var(--neon-a),var(--neon-c));color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:1.7rem;
+  box-shadow:0 0 26px var(--neon-a-glow);transition:transform .16s;
+  -webkit-tap-highlight-color:transparent;
+}
+.metro-play:hover{transform:scale(1.06)}
+.metro-play:active{transform:scale(.94)}
+.metro-play.tocando{background:linear-gradient(135deg,#ff5555,#cc3333);box-shadow:0 0 26px rgba(255,80,80,.5)}
+
+/* compasso / tap tempo */
+.metro-extra{display:flex;gap:.6rem;width:100%}
+.metro-extra-btn{
+  flex:1;padding:.6rem;border-radius:12px;border:1.5px solid var(--glass-border-lit);
+  background:rgba(255,255,255,.04);color:var(--t2);cursor:pointer;
+  font-family:var(--fd);font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;
+  display:flex;flex-direction:column;align-items:center;gap:.25rem;transition:all .16s;
+  -webkit-tap-highlight-color:transparent;
+}
+.metro-extra-btn:hover{border-color:var(--neon-a);color:var(--neon-a)}
+.metro-extra-btn:active{transform:scale(.96)}
+.metro-extra-btn small{font-size:.62rem;opacity:.7;font-weight:600}
+.metro-extra-btn.ativo{border-color:var(--neon-a);color:var(--neon-a);background:var(--neon-a-soft)}
+
 </style>
 </head>
 <body data-theme="default">
@@ -939,7 +1030,7 @@ function render(d){
     d.repertorio.forEach(function(m,i){
       var tags='';
       if(m.tom)tags+='<span class="tag-tom">'+m.tom+'</span>';
-      if(m.seq)tags+='<span class="tag-seq">'+m.seq+'</span>';
+      if(m.seq)tags+='<button class="tag-bpm" onclick="abrirMetronomo(\''+( m.nome||'Música')+'\','+parseInt(m.seq)+')"><i class="fa-solid fa-drum"></i> '+m.seq+' BPM</button>';
       var lnks='';
       if(m.yt)   lnks+='<button class="lnk lnk-yt" onclick="abrirYtModal(\''+m.yt+'\',\''+( m.nome||'Música')+'\')"><i class="fa-brands fa-youtube"></i> YouTube</button>';
       if(m.sp)   lnks+='<a class="lnk lnk-sp" href="'+m.sp+'" target="_blank" rel="noopener"><i class="fa-brands fa-spotify"></i> Spotify</a>';
@@ -1078,7 +1169,7 @@ function renderAvulso(av){
     d.repertorio.forEach(function(m,i){
       var tags='';
       if(m.tom) tags+='<span class="tag-tom">'+m.tom+'</span>';
-      if(m.seq) tags+='<span class="tag-seq">'+m.seq+'</span>';
+      if(m.seq) tags+='<button class="tag-bpm" onclick="abrirMetronomo(\''+( m.nome||'Música')+'\','+parseInt(m.seq)+')"><i class="fa-solid fa-drum"></i> '+m.seq+' BPM</button>';
       var lnks='';
       if(m.yt)   lnks+='<button class="lnk lnk-yt" onclick="abrirYtModal(\''+m.yt+'\',\''+( m.nome||'Música')+'\')"><i class="fa-brands fa-youtube"></i> YouTube</button>';
       if(m.sp)   lnks+='<a class="lnk lnk-sp"  href="'+m.sp+'"    target="_blank" rel="noopener"><i class="fa-brands fa-spotify"></i> Spotify</a>';
@@ -1222,6 +1313,179 @@ function renderAvulso(av){
 })();
 
 
+
+
+/* ══ METRÔNOMO (som de bambu via Web Audio API) ══ */
+var _metroCtx = null;
+var _metroBpm = 120;
+var _metroTocando = false;
+var _metroTimer = null;
+var _metroBeat = 0;
+var _metroCompassoBatidas = 4;   /* 4/4 */
+var _metroTaps = [];
+
+function initMetroCtx(){
+  if(!_metroCtx){
+    _metroCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if(_metroCtx.state === 'suspended'){ _metroCtx.resume(); }
+}
+
+/* som de "bambu" (woodblock/claves) sintetizado:
+   dois osciladores em frequências altas com decaimento rápido + ruído filtrado
+   gera aquele "toc" seco e amadeirado típico de bambu/claves */
+function tocarBambu(forte){
+  initMetroCtx();
+  var ctx = _metroCtx;
+  var now = ctx.currentTime;
+  var freqBase = forte ? 880 : 660;   /* batida forte mais aguda */
+
+  /* corpo tonal do "toc" */
+  var osc = ctx.createOscillator();
+  osc.type = 'triangle';
+  osc.frequency.setValueAtTime(freqBase*2.2, now);
+  osc.frequency.exponentialRampToValueAtTime(freqBase, now+0.008);
+
+  var gain = ctx.createGain();
+  gain.gain.setValueAtTime(0.0001, now);
+  gain.gain.exponentialRampToValueAtTime(forte ? 0.9 : 0.65, now+0.002);
+  gain.gain.exponentialRampToValueAtTime(0.0001, now+0.09);
+
+  /* "click" seco de ataque (ruído curtíssimo filtrado) */
+  var noiseBuf = ctx.createBuffer(1, ctx.sampleRate*0.03, ctx.sampleRate);
+  var data = noiseBuf.getChannelData(0);
+  for(var i=0;i<data.length;i++){ data[i] = (Math.random()*2-1) * Math.pow(1 - i/data.length, 3); }
+  var noise = ctx.createBufferSource();
+  noise.buffer = noiseBuf;
+  var bp = ctx.createBiquadFilter();
+  bp.type = 'bandpass';
+  bp.frequency.value = freqBase*2.5;
+  bp.Q.value = 4;
+  var noiseGain = ctx.createGain();
+  noiseGain.gain.setValueAtTime(forte ? 0.5 : 0.35, now);
+  noiseGain.gain.exponentialRampToValueAtTime(0.0001, now+0.03);
+
+  osc.connect(gain).connect(ctx.destination);
+  noise.connect(bp).connect(noiseGain).connect(ctx.destination);
+
+  osc.start(now); osc.stop(now+0.1);
+  noise.start(now); noise.stop(now+0.03);
+}
+
+function renderPulseDots(){
+  var row = document.getElementById('metroPulseRow');
+  var h = '';
+  for(var i=0;i<_metroCompassoBatidas;i++){
+    h += '<div class="metro-pulse-dot'+(i===0?' forte':'')+'"></div>';
+  }
+  row.innerHTML = h;
+}
+
+function pulseVisual(beat){
+  var dots = document.querySelectorAll('#metroPulseRow .metro-pulse-dot');
+  dots.forEach(function(d,i){ d.classList.toggle('on', i===beat); });
+}
+
+function tickMetro(){
+  var forte = (_metroBeat === 0);
+  tocarBambu(forte);
+  pulseVisual(_metroBeat);
+  _metroBeat = (_metroBeat + 1) % _metroCompassoBatidas;
+}
+
+function iniciarMetro(){
+  if(_metroTocando) return;
+  initMetroCtx();
+  _metroTocando = true;
+  _metroBeat = 0;
+  var btn = document.getElementById('metroPlayBtn');
+  btn.classList.add('tocando');
+  btn.innerHTML = '<i class="fa-solid fa-stop"></i>';
+  tickMetro(); /* primeira batida imediata */
+  var intervalo = 60000 / _metroBpm;
+  _metroTimer = setInterval(tickMetro, intervalo);
+}
+
+function pararMetro(){
+  _metroTocando = false;
+  clearInterval(_metroTimer);
+  _metroTimer = null;
+  var btn = document.getElementById('metroPlayBtn');
+  btn.classList.remove('tocando');
+  btn.innerHTML = '<i class="fa-solid fa-play"></i>';
+  document.querySelectorAll('#metroPulseRow .metro-pulse-dot').forEach(function(d){ d.classList.remove('on'); });
+}
+
+function toggleMetro(){
+  if(_metroTocando) pararMetro();
+  else iniciarMetro();
+}
+
+function setBpm(v){
+  _metroBpm = Math.max(40, Math.min(240, v||120));
+  document.getElementById('metroBpmNum').textContent = _metroBpm;
+  document.getElementById('metroSlider').value = _metroBpm;
+  /* se tocando, reinicia o intervalo com novo tempo */
+  if(_metroTocando){
+    clearInterval(_metroTimer);
+    var intervalo = 60000 / _metroBpm;
+    _metroTimer = setInterval(tickMetro, intervalo);
+  }
+}
+function ajustarBpm(delta){ setBpm(_metroBpm + delta); }
+
+function ciclarCompasso(){
+  var opcoes = [2,3,4,6];
+  var atual = opcoes.indexOf(_metroCompassoBatidas);
+  _metroCompassoBatidas = opcoes[(atual+1) % opcoes.length];
+  document.getElementById('metroCompassoVal').textContent = _metroCompassoBatidas + '/4';
+  _metroBeat = 0;
+  renderPulseDots();
+}
+
+function tapTempo(){
+  var agora = Date.now();
+  _metroTaps.push(agora);
+  /* manter só os últimos 5 taps recentes (janela de 3s) */
+  _metroTaps = _metroTaps.filter(function(t){ return agora - t < 3000; });
+  if(_metroTaps.length >= 2){
+    var difs = [];
+    for(var i=1;i<_metroTaps.length;i++){ difs.push(_metroTaps[i]-_metroTaps[i-1]); }
+    var media = difs.reduce(function(a,b){return a+b;},0)/difs.length;
+    var bpm = Math.round(60000/media);
+    if(bpm>=40 && bpm<=240){ setBpm(bpm); }
+  }
+  document.getElementById('metroTapHint').textContent = _metroTaps.length + ' toques';
+  /* feedback sonoro */
+  tocarBambu(false);
+}
+
+/* abrir o metrônomo para uma música */
+function abrirMetronomo(nome, bpm){
+  var b = parseInt(bpm);
+  if(isNaN(b) || b<40 || b>240) b = 120;
+  document.getElementById('metroSong').textContent = nome || 'Música';
+  _metroTaps = [];
+  document.getElementById('metroTapHint').textContent = 'toque no ritmo';
+  renderPulseDots();
+  setBpm(b);
+  document.getElementById('metroOverlay').classList.add('aberto');
+  document.body.style.overflow = 'hidden';
+}
+
+function fecharMetro(e){
+  if(e && e.target !== document.getElementById('metroOverlay')) return;
+  pararMetro();
+  document.getElementById('metroOverlay').classList.remove('aberto');
+  document.body.style.overflow = '';
+}
+
+/* fechar com Escape */
+document.addEventListener('keydown', function(e){
+  if(e.key === 'Escape' && document.getElementById('metroOverlay').classList.contains('aberto')){
+    fecharMetro();
+  }
+});
 
 /* ══ MODAL DE CIFRA (Google Drive / Cifra Club) ══ */
 var _cifraLinkAtual = '';
@@ -1600,6 +1864,55 @@ document.addEventListener('keydown', function(e){
 </script>
 
 
+
+
+<!-- Modal Metrônomo -->
+<div class="metro-overlay" id="metroOverlay" onclick="fecharMetro(event)">
+  <div class="metro-box">
+    <div class="metro-header">
+      <span class="metro-header-title"><i class="fa-solid fa-drum"></i> Metrônomo</span>
+      <button class="metro-close" onclick="fecharMetro()" title="Fechar"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="metro-body">
+      <div class="metro-song" id="metroSong">—</div>
+
+      <div class="metro-pulse-row" id="metroPulseRow">
+        <div class="metro-pulse-dot forte"></div>
+        <div class="metro-pulse-dot"></div>
+        <div class="metro-pulse-dot"></div>
+        <div class="metro-pulse-dot"></div>
+      </div>
+
+      <div class="metro-bpm-display">
+        <span class="metro-bpm-num" id="metroBpmNum">120</span>
+        <span class="metro-bpm-unit">BPM</span>
+      </div>
+
+      <div class="metro-adjust">
+        <button class="metro-adj-btn" onclick="ajustarBpm(-1)" title="-1"><i class="fa-solid fa-minus"></i></button>
+        <div class="metro-adj-slider">
+          <input type="range" id="metroSlider" min="40" max="240" value="120" oninput="setBpm(parseInt(this.value))">
+        </div>
+        <button class="metro-adj-btn" onclick="ajustarBpm(1)" title="+1"><i class="fa-solid fa-plus"></i></button>
+      </div>
+
+      <button class="metro-play" id="metroPlayBtn" onclick="toggleMetro()">
+        <i class="fa-solid fa-play"></i>
+      </button>
+
+      <div class="metro-extra">
+        <button class="metro-extra-btn" id="metroCompasso" onclick="ciclarCompasso()">
+          <span id="metroCompassoVal">4/4</span>
+          <small>compasso</small>
+        </button>
+        <button class="metro-extra-btn" onclick="tapTempo()">
+          <span><i class="fa-solid fa-hand-pointer"></i> Tap</span>
+          <small id="metroTapHint">toque no ritmo</small>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- Modal de Cifra -->
 <div class="cifra-modal-overlay" id="cifraModalOverlay" onclick="fecharCifraModal(event)">
