@@ -783,6 +783,10 @@
   input, select, textarea { color-scheme:dark; }
   [data-theme="clean"] input, [data-theme="clean"] select, [data-theme="clean"] textarea,
   [data-theme="charcoal"] input, [data-theme="charcoal"] select, [data-theme="charcoal"] textarea { color-scheme:light; }
+
+  /* esconder setas do input number (BPM) */
+  .m-seq::-webkit-outer-spin-button, .m-seq::-webkit-inner-spin-button { -webkit-appearance:none; margin:0; }
+  .m-seq { -moz-appearance:textfield; appearance:textfield; }
   .oculto { display:none !important; }
 
   @media(max-width:640px){
@@ -1632,7 +1636,7 @@ function adicionarLinha(dados){
       '<span class="m-num">•</span>'+
       '<input type="text" class="nomeMusica m-nome" placeholder="Nome da música" value="'+(dados.nome||'')+'">'+
       '<input type="text" class="tomMusica m-tom"  placeholder="Tom" value="'+(dados.tom||'')+'">'+
-      '<input type="text" class="seqMusica m-seq"  placeholder="Seq." value="'+(dados.seq||'')+'">'+
+      '<input type="number" inputmode="numeric" min="30" max="300" class="seqMusica m-seq" placeholder="BPM" title="Batidas por minuto (BPM)" value="'+(dados.seq||'')+'">'+
       '<div class="m-reorder">'+
         '<button onclick="moverMusica(this,-1)" title="Mover para cima"><i class="fa-solid fa-chevron-up"></i></button>'+
         '<button onclick="moverMusica(this,1)" title="Mover para baixo"><i class="fa-solid fa-chevron-down"></i></button>'+
