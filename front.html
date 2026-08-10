@@ -770,12 +770,9 @@ footer i{color:var(--neon-a)}
 .cifra-frame-wrap{flex:1;position:relative;background:#fff;overflow:hidden}
 .cifra-frame-wrap iframe{width:100%;height:100%;border:none;display:block}
 
-.cifra-frame-wrap.fit-largura iframe{
-  width:100%;height:100%;
-}
-/* modo largura: usa transform para caber a página inteira na largura */
-.cifra-frame-wrap.pagina-cheia{ overflow:auto; }
-.cifra-frame-wrap.pagina-cheia iframe{ min-height:100%; }
+/* modo ajustado à tela: iframe ocupa tudo, o rm=minimal remove margens do Docs
+   e o viewport do Docs se ajusta melhor à largura no mobile */
+.cifra-frame-wrap.ajuste-tela iframe{ width:100%; height:100%; }
 .cifra-loading{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.7rem;color:#999;font-size:.85rem;background:#12100c}
 .cifra-loading i{font-size:1.8rem;color:var(--neon-a);animation:spin 1s linear infinite}
 /* fallback quando o embed é bloqueado */
@@ -1497,37 +1494,45 @@ document.addEventListener('keydown', function(e){
 /* ══ MODAL DE CIFRA (Google Drive / Cifra Club) ══ */
 var _cifraLinkAtual = '';
 
-/* converte link do Google Drive para formato de preview embutível */
+/* converte link do Google para formatos embutíveis.
+   Para Google Docs, gera dois modos:
+   - modoPagina: /preview?rm=minimal (layout de folha)
+   - modoPdf:    /export?format=pdf via visualizador (ajusta à tela, zoom) */
 function prepararUrlCifra(url){
   if(!url) return { embed:null, tipo:'desconhecido' };
 
-  /* Google Docs: modo impressão/página (rm=minimal) —
-     mantém o layout de folha, sem quebra de linha "fora do esquadro" */
+  /* Google Docs */
   var docs = url.match(/docs\.google\.com\/document\/d\/([^\/]+)/);
   if(docs){
+    var idDoc = docs[1];
     return {
-      embed:'https://docs.google.com/document/d/'+docs[1]+'/preview?rm=minimal',
-      tipo:'docs'
+      tipo:'docs',
+      docId:idDoc,
+      modoPagina:'https://docs.google.com/document/d/'+idDoc+'/preview',
+      modoPdf:'https://docs.google.com/document/d/'+idDoc+'/preview?rm=minimal',
+      embed:'https://docs.google.com/document/d/'+idDoc+'/preview'
     };
   }
-  /* Google Drive (arquivo): .../file/d/ID/view → .../file/d/ID/preview
-     o preview do Drive já renderiza PDF/imagem em página inteira, sem quebra */
+  /* Google Drive (arquivo) */
   var drive = url.match(/drive\.google\.com\/file\/d\/([^\/]+)/);
   if(drive){
-    return { embed:'https://drive.google.com/file/d/'+drive[1]+'/preview', tipo:'drive' };
+    return { tipo:'drive', embed:'https://drive.google.com/file/d/'+drive[1]+'/preview' };
   }
-  /* Google Drive (link "open?id="): open?id=ID → preview */
+  /* Google Drive (link "open?id=") */
   var driveOpen = url.match(/drive\.google\.com\/open\?id=([^&]+)/);
   if(driveOpen){
-    return { embed:'https://drive.google.com/file/d/'+driveOpen[1]+'/preview', tipo:'drive' };
+    return { tipo:'drive', embed:'https://drive.google.com/file/d/'+driveOpen[1]+'/preview' };
   }
-  /* Cifra Club e outros: tenta embutir direto (pode ser bloqueado) */
+  /* Cifra Club e outros */
   if(url.indexOf('cifraclub') >= 0){
     return { embed:url, tipo:'cifraclub' };
   }
-  /* qualquer outro link: tenta embutir */
   return { embed:url, tipo:'outro' };
 }
+
+/* estado do modo de exibição para docs: 'pagina' ou 'ajustado' */
+var _cifraModo = 'ajustado';
+var _cifraInfoAtual = null;
 
 function abrirCifraModal(url, titulo){
   if(!url){ return; }
@@ -1550,48 +1555,71 @@ function abrirCifraModal(url, titulo){
   document.getElementById('cifraModalOverlay').classList.add('aberto');
   document.body.style.overflow = 'hidden';
 
-  /* mostrar botão de ajuste de largura apenas para Google Docs/Drive */
-  var zoomBtn = document.getElementById('cifraZoomBtn');
-  zoomBtn.style.display = (info.tipo === 'drive' || info.tipo === 'docs') ? '' : 'none';
+  _cifraInfoAtual = info;
+  var modoBtn = document.getElementById('cifraModoBtn');
 
-  /* Google Drive/Docs embutem de forma confiável */
-  if(info.tipo === 'drive' || info.tipo === 'docs'){
-    iframe.onload = function(){
-      loading.style.display = 'none';
-      iframe.style.display = 'block';
-    };
+  /* Google Docs — tem dois modos alternáveis */
+  if(info.tipo === 'docs'){
+    modoBtn.style.display = '';
+    aplicarModoCifra();  /* usa _cifraModo atual */
+    return;
+  }
+
+  /* Google Drive (arquivo) — preview já ajusta bem */
+  modoBtn.style.display = 'none';
+  if(info.tipo === 'drive'){
+    iframe.onload = function(){ loading.style.display='none'; iframe.style.display='block'; };
     iframe.src = info.embed;
-    /* timeout de segurança */
-    _cifraTimeout = setTimeout(function(){
-      if(iframe.style.display === 'none'){ mostrarFallbackCifra(); }
-    }, 6000);
+    _cifraTimeout = setTimeout(function(){ if(iframe.style.display==='none'){ mostrarFallbackCifra(); } }, 6000);
     return;
   }
 
   /* Cifra Club e outros: tentar embutir, com fallback rápido */
   iframe.onload = function(){
-    /* se carregou, mostra */
     loading.style.display = 'none';
     iframe.style.display = 'block';
     clearTimeout(_cifraTimeout);
   };
   iframe.src = info.embed;
-  /* muitos sites bloqueiam via X-Frame-Options — o onload não dispara.
-     Após 3.5s sem carregar, mostra o fallback. */
   _cifraTimeout = setTimeout(function(){
     if(iframe.style.display === 'none'){ mostrarFallbackCifra(); }
   }, 3500);
 }
 
-
-var _cifraFitLargura = false;
-function toggleCifraZoom(){
+/* aplica o modo de exibição escolhido para Google Docs */
+function aplicarModoCifra(){
+  if(!_cifraInfoAtual || _cifraInfoAtual.tipo !== 'docs') return;
+  var iframe = document.getElementById('cifraIframe');
+  var loading = document.getElementById('cifraLoading');
   var wrap = document.querySelector('.cifra-frame-wrap');
-  var btn = document.getElementById('cifraZoomBtn');
-  _cifraFitLargura = !_cifraFitLargura;
-  wrap.classList.toggle('pagina-cheia', _cifraFitLargura);
-  btn.innerHTML = _cifraFitLargura ? '<i class="fa-solid fa-compress"></i>' : '<i class="fa-solid fa-expand"></i>';
-  btn.title = _cifraFitLargura ? 'Ajuste padrão' : 'Ajustar largura';
+  var btn = document.getElementById('cifraModoBtn');
+
+  loading.style.display = 'flex';
+  iframe.style.display = 'none';
+
+  if(_cifraModo === 'pagina'){
+    /* modo página: layout de folha (largura fixa) */
+    wrap.classList.remove('ajuste-tela');
+    iframe.src = _cifraInfoAtual.modoPagina;
+    btn.innerHTML = '<i class="fa-solid fa-mobile-screen"></i>';
+    btn.title = 'Ajustar à tela';
+  } else {
+    /* modo ajustado: sem margens, tenta caber melhor na tela */
+    wrap.classList.add('ajuste-tela');
+    iframe.src = _cifraInfoAtual.modoPdf;
+    btn.innerHTML = '<i class="fa-solid fa-file-lines"></i>';
+    btn.title = 'Modo página';
+  }
+  iframe.onload = function(){ loading.style.display='none'; iframe.style.display='block'; };
+  clearTimeout(_cifraTimeout);
+  _cifraTimeout = setTimeout(function(){ if(iframe.style.display==='none'){ mostrarFallbackCifra(); } }, 6000);
+}
+
+/* alterna entre os dois modos de exibição do Google Docs */
+function toggleCifraModo(){
+  if(_cifraModo !== 'pagina' && _cifraModo !== 'ajustado') _cifraModo = 'ajustado';
+  _cifraModo = (_cifraModo === 'ajustado') ? 'pagina' : 'ajustado';
+  aplicarModoCifra();
 }
 
 var _cifraTimeout = null;
@@ -1609,9 +1637,7 @@ function fecharCifraModal(e){
   iframe.style.display = 'none';
   document.getElementById('cifraModalOverlay').classList.remove('aberto');
   document.body.style.overflow = '';
-  /* reset zoom */
-  _cifraFitLargura = false;
-  document.querySelector('.cifra-frame-wrap').classList.remove('pagina-cheia');
+  _cifraInfoAtual = null;
 }
 
 /* fechar com Escape */
@@ -1955,7 +1981,7 @@ document.addEventListener('keydown', function(e){
     <div class="cifra-modal-header">
       <span class="cifra-modal-titulo"><i class="fa-solid fa-music"></i> <span id="cifraModalTitulo">Cifra</span></span>
       <div class="cifra-modal-actions">
-        <button class="cifra-modal-btn" id="cifraZoomBtn" onclick="toggleCifraZoom()" title="Ajustar largura" style="display:none;"><i class="fa-solid fa-expand"></i></button>
+        <button class="cifra-modal-btn" id="cifraModoBtn" onclick="toggleCifraModo()" title="Alternar modo" style="display:none;"><i class="fa-solid fa-file-lines"></i></button>
         <a class="cifra-modal-btn" id="cifraOpenExt" href="#" target="_blank" rel="noopener" title="Abrir em nova aba"><i class="fa-solid fa-up-right-from-square"></i></a>
         <button class="cifra-modal-btn cifra-modal-close" onclick="fecharCifraModal()" title="Fechar"><i class="fa-solid fa-xmark"></i></button>
       </div>
