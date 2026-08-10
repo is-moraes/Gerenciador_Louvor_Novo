@@ -769,6 +769,13 @@ footer i{color:var(--neon-a)}
 .cifra-modal-close:hover{background:rgba(255,50,50,.28);color:#fff}
 .cifra-frame-wrap{flex:1;position:relative;background:#fff;overflow:hidden}
 .cifra-frame-wrap iframe{width:100%;height:100%;border:none;display:block}
+
+.cifra-frame-wrap.fit-largura iframe{
+  width:100%;height:100%;
+}
+/* modo largura: usa transform para caber a página inteira na largura */
+.cifra-frame-wrap.pagina-cheia{ overflow:auto; }
+.cifra-frame-wrap.pagina-cheia iframe{ min-height:100%; }
 .cifra-loading{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.7rem;color:#999;font-size:.85rem;background:#12100c}
 .cifra-loading i{font-size:1.8rem;color:var(--neon-a);animation:spin 1s linear infinite}
 /* fallback quando o embed é bloqueado */
@@ -1494,15 +1501,25 @@ var _cifraLinkAtual = '';
 function prepararUrlCifra(url){
   if(!url) return { embed:null, tipo:'desconhecido' };
 
-  /* Google Drive: .../file/d/ID/view  →  .../file/d/ID/preview */
+  /* Google Docs: modo impressão/página (rm=minimal) —
+     mantém o layout de folha, sem quebra de linha "fora do esquadro" */
+  var docs = url.match(/docs\.google\.com\/document\/d\/([^\/]+)/);
+  if(docs){
+    return {
+      embed:'https://docs.google.com/document/d/'+docs[1]+'/preview?rm=minimal',
+      tipo:'docs'
+    };
+  }
+  /* Google Drive (arquivo): .../file/d/ID/view → .../file/d/ID/preview
+     o preview do Drive já renderiza PDF/imagem em página inteira, sem quebra */
   var drive = url.match(/drive\.google\.com\/file\/d\/([^\/]+)/);
   if(drive){
     return { embed:'https://drive.google.com/file/d/'+drive[1]+'/preview', tipo:'drive' };
   }
-  /* Google Docs: .../document/d/ID/...  →  .../document/d/ID/preview */
-  var docs = url.match(/docs\.google\.com\/document\/d\/([^\/]+)/);
-  if(docs){
-    return { embed:'https://docs.google.com/document/d/'+docs[1]+'/preview', tipo:'docs' };
+  /* Google Drive (link "open?id="): open?id=ID → preview */
+  var driveOpen = url.match(/drive\.google\.com\/open\?id=([^&]+)/);
+  if(driveOpen){
+    return { embed:'https://drive.google.com/file/d/'+driveOpen[1]+'/preview', tipo:'drive' };
   }
   /* Cifra Club e outros: tenta embutir direto (pode ser bloqueado) */
   if(url.indexOf('cifraclub') >= 0){
@@ -1533,6 +1550,10 @@ function abrirCifraModal(url, titulo){
   document.getElementById('cifraModalOverlay').classList.add('aberto');
   document.body.style.overflow = 'hidden';
 
+  /* mostrar botão de ajuste de largura apenas para Google Docs/Drive */
+  var zoomBtn = document.getElementById('cifraZoomBtn');
+  zoomBtn.style.display = (info.tipo === 'drive' || info.tipo === 'docs') ? '' : 'none';
+
   /* Google Drive/Docs embutem de forma confiável */
   if(info.tipo === 'drive' || info.tipo === 'docs'){
     iframe.onload = function(){
@@ -1562,6 +1583,17 @@ function abrirCifraModal(url, titulo){
   }, 3500);
 }
 
+
+var _cifraFitLargura = false;
+function toggleCifraZoom(){
+  var wrap = document.querySelector('.cifra-frame-wrap');
+  var btn = document.getElementById('cifraZoomBtn');
+  _cifraFitLargura = !_cifraFitLargura;
+  wrap.classList.toggle('pagina-cheia', _cifraFitLargura);
+  btn.innerHTML = _cifraFitLargura ? '<i class="fa-solid fa-compress"></i>' : '<i class="fa-solid fa-expand"></i>';
+  btn.title = _cifraFitLargura ? 'Ajuste padrão' : 'Ajustar largura';
+}
+
 var _cifraTimeout = null;
 function mostrarFallbackCifra(){
   document.getElementById('cifraLoading').style.display = 'none';
@@ -1577,6 +1609,9 @@ function fecharCifraModal(e){
   iframe.style.display = 'none';
   document.getElementById('cifraModalOverlay').classList.remove('aberto');
   document.body.style.overflow = '';
+  /* reset zoom */
+  _cifraFitLargura = false;
+  document.querySelector('.cifra-frame-wrap').classList.remove('pagina-cheia');
 }
 
 /* fechar com Escape */
@@ -1920,6 +1955,7 @@ document.addEventListener('keydown', function(e){
     <div class="cifra-modal-header">
       <span class="cifra-modal-titulo"><i class="fa-solid fa-music"></i> <span id="cifraModalTitulo">Cifra</span></span>
       <div class="cifra-modal-actions">
+        <button class="cifra-modal-btn" id="cifraZoomBtn" onclick="toggleCifraZoom()" title="Ajustar largura" style="display:none;"><i class="fa-solid fa-expand"></i></button>
         <a class="cifra-modal-btn" id="cifraOpenExt" href="#" target="_blank" rel="noopener" title="Abrir em nova aba"><i class="fa-solid fa-up-right-from-square"></i></a>
         <button class="cifra-modal-btn cifra-modal-close" onclick="fecharCifraModal()" title="Fechar"><i class="fa-solid fa-xmark"></i></button>
       </div>
