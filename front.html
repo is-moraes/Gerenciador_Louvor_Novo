@@ -35,6 +35,11 @@
   --t2:#8c7860;
   --t3:#4a3c2e;
 
+  --chip-bg:rgba(255,255,255,.05);
+  --medley:#b57bef;
+  --medley-soft:rgba(181,123,239,.14);
+  --medley-border:rgba(181,123,239,.35);
+
   --r:18px;
   --r-sm:12px;
   --hh:60px;
@@ -139,79 +144,32 @@ header::after{
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.7)}}
 
 /* temas */
-.hd-themes{display:flex;gap:.32rem;align-items:center}
-.th-btn{
-  width:21px;height:21px;border-radius:50%;
-  border:2px solid transparent;cursor:pointer;outline:none;
-  transition:transform .22s cubic-bezier(.34,1.56,.64,1),border-color .2s;
+.theme-toggle-btn{
+  width:36px;height:36px;border-radius:11px;flex-shrink:0;
+  border:1px solid var(--glass-border-lit);background:var(--glass);
+  color:var(--neon-a);cursor:pointer;outline:none;
+  display:flex;align-items:center;justify-content:center;font-size:.95rem;
+  transition:transform .18s,border-color .2s,color .2s;
   -webkit-tap-highlight-color:transparent;
 }
-.th-btn:active{transform:scale(.85)!important}
-.th-btn.on{border-color:#fff;transform:scale(1.3);box-shadow:0 0 8px rgba(255,255,255,.4)}
-.th-btn[data-t="default"]  {background:conic-gradient(from 0deg,#1a0e06,#e85a0a,#d4a030,#1a0e06)}  /* Forja */
-.th-btn[data-t="charcoal"] {background:conic-gradient(from 0deg,#f0f4f2,#0a7a52,#5cbf9a,#f0f4f2)}  /* Névoa */
-.th-btn[data-t="obsidian"] {background:conic-gradient(from 0deg,#050d1a,#00c8f0,#0060a0,#050d1a)}  /* Abismo */
-.th-btn[data-t="clean"]    {background:conic-gradient(from 0deg,#f7f0e4,#8b1a1a,#c89640,#f7f0e4)}  /* Pergaminho */
-.th-btn[data-t="slate"]    {background:conic-gradient(from 0deg,#0e1a10,#7dde3c,#3a8a30,#0e1a10)}  /* Floresta */
-.th-btn[data-t="ember"]    {background:conic-gradient(from 0deg,#100818,#c060ff,#8040d0,#100818)}  /* Violeta */
+.theme-toggle-btn:hover{border-color:var(--neon-a);box-shadow:0 0 12px var(--neon-a-glow)}
+.theme-toggle-btn:active{transform:scale(.9)}
 
 /* ════════════════════════════════════════
-   TEMAS — cada um com identidade própria
+   TEMAS — Escuro (padrão, no :root) e Claro
 ════════════════════════════════════════ */
 
-/* ── NÉVOA ── branco gelo + verde menta + prata fria */
-[data-theme="charcoal"]{
-  --bg:#f0f4f2;--bg2:#ffffff;
-  --glass:rgba(0,0,0,.03);--glass-hover:rgba(0,0,0,.055);
-  --glass-border:rgba(0,0,0,.09);--glass-border-lit:rgba(0,120,80,.22);
-  --neon-a:#0a7a52;--neon-b:#5cbf9a;--neon-c:#3dab7e;
-  --neon-a-glow:rgba(10,122,82,.28);--neon-b-glow:rgba(92,191,154,.2);--neon-c-glow:rgba(61,171,126,.22);
-  --neon-a-soft:rgba(10,122,82,.08);--neon-b-soft:rgba(92,191,154,.06);
-  --t1:#0e2018;--t2:#4a7060;--t3:#9ab8a8;
-}
-
-/* ── ABISMO ── azul meia-noite + ciano elétrico + branco gelo */
-[data-theme="obsidian"]{
-  --bg:#050d1a;--bg2:#091526;
-  --glass:rgba(255,255,255,.035);--glass-hover:rgba(255,255,255,.065);
-  --glass-border:rgba(0,180,255,.12);--glass-border-lit:rgba(0,210,255,.28);
-  --neon-a:#00c8f0;--neon-b:#0080c8;--neon-c:#40d8ff;
-  --neon-a-glow:rgba(0,200,240,.5);--neon-b-glow:rgba(0,128,200,.35);--neon-c-glow:rgba(64,216,255,.4);
-  --neon-a-soft:rgba(0,200,240,.1);--neon-b-soft:rgba(0,128,200,.07);
-  --t1:#d0eeff;--t2:#5090b8;--t3:#244860;
-}
-
-/* ── PERGAMINHO ── creme quente + bordô + ouro velho (TEMA CLARO) */
-[data-theme="clean"]{
-  --bg:#f7f0e4;--bg2:#fdf8ef;
-  --glass:rgba(120,60,0,.04);--glass-hover:rgba(120,60,0,.07);
-  --glass-border:rgba(160,100,40,.18);--glass-border-lit:rgba(140,30,30,.28);
-  --neon-a:#8b1a1a;--neon-b:#c89640;--neon-c:#b84020;
-  --neon-a-glow:rgba(139,26,26,.25);--neon-b-glow:rgba(200,150,64,.22);--neon-c-glow:rgba(184,64,32,.22);
-  --neon-a-soft:rgba(139,26,26,.08);--neon-b-soft:rgba(200,150,64,.07);
-  --t1:#2a1408;--t2:#7a5030;--t3:#c4a070;
-}
-
-/* ── FLORESTA ── verde musgo escuro + lima + bege natural */
-[data-theme="slate"]{
-  --bg:#0e1a10;--bg2:#141f16;
-  --glass:rgba(255,255,255,.03);--glass-hover:rgba(255,255,255,.06);
-  --glass-border:rgba(80,180,80,.12);--glass-border-lit:rgba(120,220,80,.25);
-  --neon-a:#7dde3c;--neon-b:#3a8a30;--neon-c:#a0f050;
-  --neon-a-glow:rgba(125,222,60,.45);--neon-b-glow:rgba(58,138,48,.3);--neon-c-glow:rgba(160,240,80,.35);
-  --neon-a-soft:rgba(125,222,60,.1);--neon-b-soft:rgba(58,138,48,.07);
-  --t1:#d8f0c8;--t2:#6a9860;--t3:#385830;
-}
-
-/* ── VIOLETA ── roxo profundo + lavanda + rosa pálido */
-[data-theme="ember"]{
-  --bg:#100818;--bg2:#180d24;
-  --glass:rgba(255,255,255,.04);--glass-hover:rgba(255,255,255,.07);
-  --glass-border:rgba(180,100,255,.14);--glass-border-lit:rgba(200,140,255,.3);
-  --neon-a:#c060ff;--neon-b:#8040d0;--neon-c:#e090ff;
-  --neon-a-glow:rgba(192,96,255,.5);--neon-b-glow:rgba(128,64,208,.35);--neon-c-glow:rgba(224,144,255,.4);
-  --neon-a-soft:rgba(192,96,255,.11);--neon-b-soft:rgba(128,64,208,.07);
-  --t1:#f0e0ff;--t2:#9070b8;--t3:#504060;
+/* ── CLARO: branco + laranja ── */
+[data-theme="claro"]{
+  --bg:#f2f1ee;--bg2:#ffffff;
+  --glass:#ffffff;--glass-hover:rgba(0,0,0,.03);
+  --glass-border:rgba(0,0,0,.09);--glass-border-lit:rgba(232,97,10,.3);
+  --neon-a:#e8610a;--neon-b:#c94f00;--neon-c:#f0900a;
+  --neon-a-glow:rgba(232,97,10,.25);--neon-b-glow:rgba(201,79,0,.22);--neon-c-glow:rgba(240,144,10,.22);
+  --neon-a-soft:rgba(232,97,10,.1);--neon-b-soft:rgba(201,79,0,.08);--neon-c-soft:rgba(240,144,10,.09);
+  --t1:#1e1a15;--t2:#6a5f52;--t3:#a89a88;
+  --chip-bg:rgba(0,0,0,.04);
+  --medley:#8b3fd4;--medley-soft:rgba(139,63,212,.1);--medley-border:rgba(139,63,212,.3);
 }
 
 /* ══ MAIN ══ */
@@ -323,94 +281,86 @@ main{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:1.2rem .9
 .sc-body{padding:.85rem}
 
 /* ══ REPERTÓRIO ══ */
-.rep-list{display:flex;flex-direction:column;gap:.6rem}
+.rep-list{display:flex;flex-direction:column;gap:.7rem}
 .rep-item{
   display:flex;flex-direction:row;align-items:flex-start;gap:.85rem;
-  padding:1rem 1rem 1rem 1.1rem;
-  background:rgba(255,255,255,.03);
+  padding:.9rem 1rem;
+  background:var(--glass);
   border:1px solid var(--glass-border);
-  border-radius:var(--r-sm);
+  border-radius:16px;
   position:relative;overflow:hidden;
-  transition:border-color .25s,background .25s,transform .25s cubic-bezier(.22,1,.36,1);
+  transition:border-color .25s,background .25s;
   -webkit-tap-highlight-color:transparent;
   cursor:default;
 }
-/* linha neon esquerda */
-.rep-item::before{
-  content:'';position:absolute;left:0;top:12%;bottom:12%;width:2.5px;border-radius:2px;
-  background:linear-gradient(180deg,var(--neon-a),var(--neon-b));
-  opacity:0;transition:opacity .25s;
-}
-.rep-item:active{transform:translateX(4px) scale(.99)}
-.rep-item:hover{
-  border-color:var(--glass-border-lit);
-  background:var(--neon-a-soft);
-  transform:translateX(5px);
-}
-.rep-item:hover::before{opacity:1}
+.rep-item:hover{ border-color:var(--glass-border-lit); }
 
 .rep-num{
-  width:36px;height:36px;min-width:36px;border-radius:50%;
-  background:linear-gradient(135deg,var(--neon-a-soft),var(--neon-b-soft));
+  width:34px;height:34px;min-width:34px;border-radius:50%;
+  background:var(--neon-a-soft);
   border:1px solid var(--glass-border-lit);
   color:var(--neon-a);
-  font-family:var(--fd);font-size:.82rem;font-weight:700;
+  font-family:var(--fd);font-size:.9rem;font-weight:700;
   display:flex;align-items:center;justify-content:center;
   flex-shrink:0;margin-top:.1rem;
 }
-/* conteúdo da música: empilha verticalmente */
-.rep-content{flex:1;min-width:0;display:flex;flex-direction:column;gap:.45rem}
-.rep-top{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
-.rep-nome{font-size:.93rem;font-weight:600;color:var(--t1);line-height:1.25;flex:1;min-width:0}
-.rep-tags{display:flex;gap:.3rem;align-items:center;flex-wrap:wrap;flex-shrink:0}
-
-/* tag tom — neon pill */
-.tag-tom{
-  display:inline-flex;align-items:center;
-  padding:.15rem .55rem;border-radius:6px;font-size:.68rem;font-weight:700;
-  background:linear-gradient(90deg,var(--neon-a),var(--neon-b));
-  color:#fff;letter-spacing:.04em;white-space:nowrap;
-  box-shadow:0 0 8px var(--neon-a-glow);
+/* corpo da música: nome grande + chips + links */
+.rep-content{flex:1;min-width:0;display:flex;flex-direction:column;gap:.6rem}
+.rep-nome{
+  font-family:var(--fh);font-size:1.15rem;font-weight:600;line-height:1.25;color:var(--t1);
+  word-break:break-word;
 }
-.tag-seq{
-  padding:.15rem .55rem;border-radius:6px;font-size:.68rem;font-weight:600;white-space:nowrap;
-  background:rgba(255,255,255,.05);border:1px solid var(--glass-border-lit);
-  color:var(--t2);
-}
-.rep-links{display:flex;gap:.45rem;flex-wrap:wrap}
+/* linha de chips */
+.rep-tags{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center}
 
-/* ── BOTÕES DE LINK — novo estilo ── */
-.lnk{
-  position:relative;overflow:hidden;
+/* chip base */
+.tag-tom,.tag-bpm,.tag-medley{
   display:inline-flex;align-items:center;gap:.3rem;
-  padding:.28rem .7rem;border-radius:8px;
-  font-size:.72rem;font-weight:600;text-decoration:none;
-  border:1px solid transparent;
-  transition:transform .2s cubic-bezier(.22,1,.36,1),box-shadow .2s,opacity .2s;
-  -webkit-tap-highlight-color:transparent;
+  padding:.28rem .6rem;border-radius:8px;font-family:var(--fd);
+  font-size:.8rem;font-weight:700;white-space:nowrap;line-height:1;
 }
-.lnk::after{
-  content:'';position:absolute;inset:0;
-  background:rgba(255,255,255,.07);opacity:0;transition:opacity .15s;
-  pointer-events:none;
+.tag-tom{background:linear-gradient(135deg,var(--neon-a),var(--neon-c));color:#fff;box-shadow:0 2px 8px var(--neon-a-glow)}
+
+/* grade de links — sempre 3 na mesma linha */
+.rep-links{display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem}
+
+/* ── BOTÕES DE LINK ── */
+.lnk{
+  display:inline-flex;align-items:center;justify-content:center;gap:.35rem;
+  padding:.55rem .4rem;border-radius:10px;
+  font-size:.8rem;font-weight:600;text-decoration:none;
+  border:1px solid;cursor:pointer;transition:all .18s;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;
+  -webkit-tap-highlight-color:transparent;font-family:var(--fh);
 }
-.lnk:active{transform:scale(.92)!important;transition:transform .08s}
-.lnk:hover::after{opacity:1}
-.lnk-yt{
-  background:rgba(255,50,50,.08);color:#ff5555;
-  border-color:rgba(255,50,50,.2);
+.lnk i{font-size:.88rem;flex-shrink:0}
+.lnk span{overflow:hidden;text-overflow:ellipsis}
+.lnk:active{transform:scale(.96)}
+@media(max-width:400px){
+  .lnk{padding:.5rem .25rem;font-size:.72rem;gap:.28rem}
+  .lnk i{font-size:.8rem}
 }
-.lnk-yt:hover{box-shadow:0 0 12px rgba(255,50,50,.3);transform:translateY(-2px)}
-.lnk-ci{
-  background:var(--neon-a-soft);color:var(--neon-a);
-  border-color:var(--glass-border-lit);
+@media(max-width:340px){ .lnk{font-size:.66rem} }
+.lnk-yt{background:rgba(255,60,60,.1);color:#ff5555;border-color:rgba(255,60,60,.25)}
+.lnk-yt:hover{background:#ff4444;color:#fff}
+.lnk-sp{background:rgba(29,185,84,.1);color:#1db954;border-color:rgba(29,185,84,.25)}
+.lnk-sp:hover{background:#1db954;color:#fff}
+.lnk-ci{background:var(--neon-a-soft);color:var(--neon-a);border-color:var(--glass-border-lit)}
+.lnk-ci:hover{background:var(--neon-a);color:#fff}
+
+/* ── mini-menu do medley ── */
+.medley-menu{
+  margin-top:.2rem;background:var(--medley-soft);border:1px solid var(--medley-border);
+  border-radius:12px;padding:.7rem;display:none;flex-direction:column;gap:.6rem;
 }
-.lnk-ci:hover{box-shadow:0 0 12px var(--neon-a-glow);transform:translateY(-2px)}
-.lnk-sp{
-  background:rgba(29,185,84,.08);color:#1db954;
-  border-color:rgba(29,185,84,.22);
+.medley-menu.aberto{display:flex}
+.medley-part{display:flex;flex-direction:column;gap:.4rem}
+.medley-part-title{
+  font-family:var(--fd);font-size:.78rem;font-weight:700;color:var(--medley);
+  text-transform:uppercase;letter-spacing:.04em;display:flex;align-items:center;gap:.4rem;
 }
-.lnk-sp:hover{box-shadow:0 0 12px rgba(29,185,84,.4);transform:translateY(-2px)}
+.medley-part-title .pnum{width:18px;height:18px;border-radius:50%;background:var(--medley);color:#fff;font-size:.62rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.medley-part-links{display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem}
 
 /* ══ PLAYLIST AVISO ══ */
 .av-playlist{
@@ -532,7 +482,6 @@ footer i{color:var(--neon-a)}
 }
 @media(max-width:360px){
   .hd-date{display:none}
-  .th-btn{width:19px;height:19px}
 }
 /* ══ MODO AVULSO ══ */
 .avulso-hero{
@@ -794,18 +743,16 @@ footer i{color:var(--neon-a)}
 }
 .cifra-fallback-btn:hover{transform:translateY(-2px);box-shadow:0 0 22px var(--neon-a-glow)}
 
-/* ══ BPM TAG (clicável) ══ */
+/* ══ BPM TAG (clicável) — estilo chip ══ */
 .tag-bpm{
-  display:inline-flex;align-items:center;gap:.28rem;
-  padding:.15rem .5rem .15rem .45rem;border-radius:6px;font-size:.68rem;font-weight:700;
-  background:var(--neon-c-soft);border:1px solid var(--glass-border-lit);
-  color:var(--neon-c);white-space:nowrap;cursor:pointer;
-  transition:transform .15s,box-shadow .2s,background .2s;
+  background:var(--chip-bg,rgba(255,255,255,.05));border:1px solid var(--glass-border-lit);
+  color:var(--t2);cursor:pointer;
+  transition:transform .15s,box-shadow .2s,background .2s,color .2s,border-color .2s;
   -webkit-tap-highlight-color:transparent;
 }
-.tag-bpm:hover{background:var(--neon-a-soft);color:var(--neon-a);box-shadow:0 0 10px var(--neon-a-glow)}
+.tag-bpm:hover{border-color:var(--neon-a);color:var(--neon-a)}
 .tag-bpm:active{transform:scale(.92)}
-.tag-bpm i{font-size:.6rem}
+.tag-bpm i{color:var(--neon-a)}
 
 /* ══ MODAL METRÔNOMO ══ */
 .metro-overlay{
@@ -892,16 +839,18 @@ footer i{color:var(--neon-a)}
 .player-track-medley.ativa .player-track-num{background:linear-gradient(135deg,#a855f7,#c084fc);color:#fff}
 /* badge de medley no repertório */
 .tag-medley{
-  display:inline-flex;align-items:center;gap:.25rem;
-  padding:.15rem .5rem;border-radius:6px;font-size:.66rem;font-weight:700;
-  background:rgba(168,85,247,.12);border:1px solid rgba(168,85,247,.3);
-  color:#c084fc;white-space:nowrap;
+  background:var(--medley-soft);border:1px solid var(--medley-border);
+  color:var(--medley);cursor:pointer;
+  transition:background .18s,color .18s;position:relative;
 }
-.tag-medley i{font-size:.6rem}
+.tag-medley:hover{background:var(--medley);color:#fff}
+.tag-medley:hover i{color:#fff}
+.tag-medley i{color:var(--medley)}
+.tag-medley .fa-chevron-down{font-size:.6rem;transition:transform .2s}
 
 </style>
 </head>
-<body data-theme="default">
+<body>
 
 <div class="bg-fx" aria-hidden="true">
   <div class="bg-orb3"></div>
@@ -919,14 +868,9 @@ footer i{color:var(--neon-a)}
       </div>
     </div>
   </div>
-  <div class="hd-themes" role="group" aria-label="Temas de cor">
-    <button class="th-btn on" data-t="default"  title="Forja"></button>
-    <button class="th-btn"    data-t="charcoal" title="Névoa"></button>
-    <button class="th-btn"    data-t="obsidian" title="Abismo"></button>
-    <button class="th-btn"    data-t="clean"    title="Pergaminho"></button>
-    <button class="th-btn"    data-t="slate"    title="Floresta"></button>
-    <button class="th-btn"    data-t="ember"    title="Violeta"></button>
-  </div>
+  <button class="theme-toggle-btn" id="themeToggle" onclick="alternarTema()" title="Alternar tema" aria-label="Alternar tema claro/escuro">
+    <i class="fa-solid fa-moon"></i>
+  </button>
 </header>
 
 <main id="conteudo">
@@ -951,12 +895,17 @@ var semAtual=0;
 var ano=new Date().getFullYear();
 
 function setTema(t){
-  document.body.setAttribute('data-theme',t);
+  if(t!=='claro' && t!=='escuro') t='escuro';
+  document.body.setAttribute('data-theme', t==='claro'?'claro':'');
   localStorage.setItem(CHAVE,t);
-  document.querySelectorAll('.th-btn').forEach(function(b){b.classList.toggle('on',b.dataset.t===t)});
+  var ico=document.querySelector('#themeToggle i');
+  if(ico) ico.className = t==='claro' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
 }
-document.querySelectorAll('.th-btn').forEach(function(b){b.addEventListener('click',function(){setTema(b.dataset.t)})});
-setTema(localStorage.getItem(CHAVE)||'default');
+function alternarTema(){
+  var atual = localStorage.getItem(CHAVE)||'escuro';
+  setTema(atual==='claro'?'escuro':'claro');
+}
+setTema(localStorage.getItem(CHAVE)||'escuro');
 
 firebase.initializeApp({
   apiKey:"AIzaSyASRX7kZJUmp7jfx_C7buYnLfpz0reby4E",
@@ -1013,6 +962,67 @@ function renderSem(s){
   render(d);
 }
 
+
+/* ══ CONSTRUÇÃO DO CARD DE MÚSICA (layout novo) ══ */
+function escAspas(s){ return String(s||'').replace(/'/g,"\\'").replace(/"/g,'&quot;'); }
+
+function construirSongItem(m, num){
+  var nome = m.nome || '—';
+  var nomeEsc = escAspas(m.nome||'Música');
+
+  /* chips */
+  var chips='';
+  if(m.tom) chips+='<span class="tag-tom">'+m.tom+'</span>';
+  if(m.seq) chips+='<button class="tag-bpm" onclick="abrirMetronomo(\''+nomeEsc+'\','+parseInt(m.seq)+')"><i class="fa-solid fa-drum"></i> '+m.seq+' BPM</button>';
+  var temMedley = m.partes && m.partes.length;
+  if(temMedley) chips+='<button class="tag-medley" onclick="toggleMedleyMenu(this)"><i class="fa-solid fa-layer-group"></i> Medley ('+(m.partes.length+1)+') <i class="fa-solid fa-chevron-down"></i></button>';
+
+  /* links principais (grade de 3) */
+  var lnks='';
+  if(m.yt)   lnks+='<button class="lnk lnk-yt" onclick="abrirYtModal(\''+escAspas(m.yt)+'\',\''+nomeEsc+'\')"><i class="fa-brands fa-youtube"></i> <span>YouTube</span></button>';
+  if(m.sp)   lnks+='<a class="lnk lnk-sp" href="'+m.sp+'" target="_blank" rel="noopener"><i class="fa-brands fa-spotify"></i> <span>Spotify</span></a>';
+  if(m.cifra)lnks+='<button class="lnk lnk-ci" onclick="abrirCifraModal(\''+escAspas(m.cifra)+'\',\''+nomeEsc+'\')"><i class="fa-solid fa-music"></i> <span>Cifra</span></button>';
+
+  /* mini-menu do medley */
+  var medleyMenu='';
+  if(temMedley){
+    medleyMenu+='<div class="medley-menu">';
+    m.partes.forEach(function(p,pi){
+      var pnome=p.nome||('Parte '+(pi+2));
+      var pnomeEsc=escAspas(pnome);
+      var plinks='';
+      if(p.yt)   plinks+='<button class="lnk lnk-yt" onclick="abrirYtModal(\''+escAspas(p.yt)+'\',\''+pnomeEsc+'\')"><i class="fa-brands fa-youtube"></i> <span>YouTube</span></button>';
+      if(p.sp)   plinks+='<a class="lnk lnk-sp" href="'+p.sp+'" target="_blank" rel="noopener"><i class="fa-brands fa-spotify"></i> <span>Spotify</span></a>';
+      if(p.cifra)plinks+='<button class="lnk lnk-ci" onclick="abrirCifraModal(\''+escAspas(p.cifra)+'\',\''+pnomeEsc+'\')"><i class="fa-solid fa-music"></i> <span>Cifra</span></button>';
+      medleyMenu+=
+        '<div class="medley-part">'+
+          '<div class="medley-part-title"><span class="pnum">'+(pi+2)+'</span> '+pnome+'</div>'+
+          (plinks?'<div class="medley-part-links">'+plinks+'</div>':'<div style="font-size:.72rem;color:var(--t3);font-style:italic">Sem links</div>')+
+        '</div>';
+    });
+    medleyMenu+='</div>';
+  }
+
+  return '<div class="rep-item">'+
+    '<span class="rep-num">'+num+'</span>'+
+    '<div class="rep-content">'+
+      '<div class="rep-nome">'+nome+'</div>'+
+      (chips?'<div class="rep-tags">'+chips+'</div>':'')+
+      (lnks?'<div class="rep-links">'+lnks+'</div>':'')+
+      medleyMenu+
+    '</div>'+
+  '</div>';
+}
+
+function toggleMedleyMenu(btn){
+  var content = btn.closest('.rep-content');
+  var menu = content.querySelector('.medley-menu');
+  if(!menu) return;
+  menu.classList.toggle('aberto');
+  var chev = btn.querySelector('.fa-chevron-down');
+  if(chev) chev.style.transform = menu.classList.contains('aberto') ? 'rotate(180deg)' : '';
+}
+
 function render(d){
   var s=d.semana;
   var mesNome=MESES[d.mes]||'';
@@ -1046,33 +1056,7 @@ function render(d){
   } else {
     h+='<div class="rep-list">';
     d.repertorio.forEach(function(m,i){
-      var tags='';
-      if(m.tom)tags+='<span class="tag-tom">'+m.tom+'</span>';
-      if(m.seq)tags+='<button class="tag-bpm" onclick="abrirMetronomo(\''+( m.nome||'Música')+'\','+parseInt(m.seq)+')"><i class="fa-solid fa-drum"></i> '+m.seq+' BPM</button>';
-      if(m.partes&&m.partes.length)tags+='<span class="tag-medley"><i class="fa-solid fa-layer-group"></i> Medley ('+(m.partes.length+1)+')</span>';
-      var lnks='';
-      if(m.yt)   lnks+='<button class="lnk lnk-yt" onclick="abrirYtModal(\''+m.yt+'\',\''+( m.nome||'Música')+'\')"><i class="fa-brands fa-youtube"></i> YouTube</button>';
-      if(m.sp)   lnks+='<a class="lnk lnk-sp" href="'+m.sp+'" target="_blank" rel="noopener"><i class="fa-brands fa-spotify"></i> Spotify</a>';
-      if(m.cifra)lnks+='<button class="lnk lnk-ci" onclick="abrirCifraModal(\''+m.cifra+'\',\''+( m.nome||'Cifra')+'\')"><i class="fa-solid fa-music"></i> Cifra</button>';
-      /* links das partes do medley */
-      if(m.partes&&m.partes.length){
-        m.partes.forEach(function(p,pi){
-          var pnome=(p.nome||('Parte '+(pi+2))).replace(/'/g,'');
-          if(p.yt)   lnks+='<button class="lnk lnk-yt" onclick="abrirYtModal(\''+p.yt+'\',\''+pnome+'\')"><i class="fa-brands fa-youtube"></i> '+pnome+'</button>';
-          if(p.cifra)lnks+='<button class="lnk lnk-ci" onclick="abrirCifraModal(\''+p.cifra+'\',\''+pnome+'\')"><i class="fa-solid fa-music"></i> '+pnome+'</button>';
-        });
-      }
-      h+=
-        '<div class="rep-item">'+
-          '<span class="rep-num">'+(i+1)+'</span>'+
-          '<div class="rep-content">'+
-            '<div class="rep-top">'+
-              '<span class="rep-nome">'+(m.nome||'—')+'</span>'+
-              (tags?'<div class="rep-tags">'+tags+'</div>':'')+
-            '</div>'+
-            (lnks?'<div class="rep-links">'+lnks+'</div>':'')+
-          '</div>'+
-        '</div>';
+      h+=construirSongItem(m, i+1);
     });
     h+='</div>';
   }
@@ -1194,32 +1178,7 @@ function renderAvulso(av){
   } else {
     h += '<div class="rep-list">';
     d.repertorio.forEach(function(m,i){
-      var tags='';
-      if(m.tom) tags+='<span class="tag-tom">'+m.tom+'</span>';
-      if(m.seq) tags+='<button class="tag-bpm" onclick="abrirMetronomo(\''+( m.nome||'Música')+'\','+parseInt(m.seq)+')"><i class="fa-solid fa-drum"></i> '+m.seq+' BPM</button>';
-      if(m.partes&&m.partes.length)tags+='<span class="tag-medley"><i class="fa-solid fa-layer-group"></i> Medley ('+(m.partes.length+1)+')</span>';
-      var lnks='';
-      if(m.yt)   lnks+='<button class="lnk lnk-yt" onclick="abrirYtModal(\''+m.yt+'\',\''+( m.nome||'Música')+'\')"><i class="fa-brands fa-youtube"></i> YouTube</button>';
-      if(m.sp)   lnks+='<a class="lnk lnk-sp"  href="'+m.sp+'"    target="_blank" rel="noopener"><i class="fa-brands fa-spotify"></i> Spotify</a>';
-      if(m.cifra)lnks+='<button class="lnk lnk-ci" onclick="abrirCifraModal(\''+m.cifra+'\',\''+( m.nome||'Cifra')+'\')"><i class="fa-solid fa-music"></i> Cifra</button>';
-      if(m.partes&&m.partes.length){
-        m.partes.forEach(function(p,pi){
-          var pnome=(p.nome||('Parte '+(pi+2))).replace(/'/g,'');
-          if(p.yt)   lnks+='<button class="lnk lnk-yt" onclick="abrirYtModal(\''+p.yt+'\',\''+pnome+'\')"><i class="fa-brands fa-youtube"></i> '+pnome+'</button>';
-          if(p.cifra)lnks+='<button class="lnk lnk-ci" onclick="abrirCifraModal(\''+p.cifra+'\',\''+pnome+'\')"><i class="fa-solid fa-music"></i> '+pnome+'</button>';
-        });
-      }
-      h +=
-        '<div class="rep-item">'+
-          '<span class="rep-num">'+(i+1)+'</span>'+
-          '<div class="rep-content">'+
-            '<div class="rep-top">'+
-              '<span class="rep-nome">'+(m.nome||'—')+'</span>'+
-              (tags?'<div class="rep-tags">'+tags+'</div>':'')+
-            '</div>'+
-            (lnks?'<div class="rep-links">'+lnks+'</div>':'')+
-          '</div>'+
-        '</div>';
+      h += construirSongItem(m, i+1);
     });
     h += '</div>';
   }
