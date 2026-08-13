@@ -885,6 +885,20 @@ footer i{color:var(--neon-a)}
 .metro-extra-btn small{font-size:.62rem;opacity:.7;font-weight:600}
 .metro-extra-btn.ativo{border-color:var(--neon-a);color:var(--neon-a);background:var(--neon-a-soft)}
 
+/* medley: parte indentada no player */
+.player-track-medley{margin-left:1.4rem;position:relative}
+.player-track-medley::before{content:'';position:absolute;left:-.8rem;top:50%;width:.6rem;height:1px;background:var(--glass-border-lit)}
+.player-track-medley .player-track-num{background:rgba(168,85,247,.18);color:#c084fc}
+.player-track-medley.ativa .player-track-num{background:linear-gradient(135deg,#a855f7,#c084fc);color:#fff}
+/* badge de medley no repertório */
+.tag-medley{
+  display:inline-flex;align-items:center;gap:.25rem;
+  padding:.15rem .5rem;border-radius:6px;font-size:.66rem;font-weight:700;
+  background:rgba(168,85,247,.12);border:1px solid rgba(168,85,247,.3);
+  color:#c084fc;white-space:nowrap;
+}
+.tag-medley i{font-size:.6rem}
+
 </style>
 </head>
 <body data-theme="default">
@@ -1021,7 +1035,7 @@ function render(d){
     '</div>';
 
   /* REPERTÓRIO */
-  var temVideoRep = (d.repertorio||[]).some(function(m){ return m.yt; });
+  var temVideoRep = (d.repertorio||[]).some(function(m){ return m.yt || (m.partes&&m.partes.some(function(p){return p.yt;})); });
   h+='<div class="sc su su2">'+
     '<div class="sc-head"><div class="sc-head-icon"><i class="fa-solid fa-list-music"></i></div><span class="sc-head-label">Repertório da Semana</span>'+
       (temVideoRep?'<button class="btn-tocar-tudo" onclick="tocarRepertorio()"><i class="fa-solid fa-play"></i> Tocar Tudo</button>':'')+
@@ -1035,10 +1049,19 @@ function render(d){
       var tags='';
       if(m.tom)tags+='<span class="tag-tom">'+m.tom+'</span>';
       if(m.seq)tags+='<button class="tag-bpm" onclick="abrirMetronomo(\''+( m.nome||'Música')+'\','+parseInt(m.seq)+')"><i class="fa-solid fa-drum"></i> '+m.seq+' BPM</button>';
+      if(m.partes&&m.partes.length)tags+='<span class="tag-medley"><i class="fa-solid fa-layer-group"></i> Medley ('+(m.partes.length+1)+')</span>';
       var lnks='';
       if(m.yt)   lnks+='<button class="lnk lnk-yt" onclick="abrirYtModal(\''+m.yt+'\',\''+( m.nome||'Música')+'\')"><i class="fa-brands fa-youtube"></i> YouTube</button>';
       if(m.sp)   lnks+='<a class="lnk lnk-sp" href="'+m.sp+'" target="_blank" rel="noopener"><i class="fa-brands fa-spotify"></i> Spotify</a>';
       if(m.cifra)lnks+='<button class="lnk lnk-ci" onclick="abrirCifraModal(\''+m.cifra+'\',\''+( m.nome||'Cifra')+'\')"><i class="fa-solid fa-music"></i> Cifra</button>';
+      /* links das partes do medley */
+      if(m.partes&&m.partes.length){
+        m.partes.forEach(function(p,pi){
+          var pnome=(p.nome||('Parte '+(pi+2))).replace(/'/g,'');
+          if(p.yt)   lnks+='<button class="lnk lnk-yt" onclick="abrirYtModal(\''+p.yt+'\',\''+pnome+'\')"><i class="fa-brands fa-youtube"></i> '+pnome+'</button>';
+          if(p.cifra)lnks+='<button class="lnk lnk-ci" onclick="abrirCifraModal(\''+p.cifra+'\',\''+pnome+'\')"><i class="fa-solid fa-music"></i> '+pnome+'</button>';
+        });
+      }
       h+=
         '<div class="rep-item">'+
           '<span class="rep-num">'+(i+1)+'</span>'+
@@ -1160,7 +1183,7 @@ function renderAvulso(av){
   }
 
   /* REPERTÓRIO */
-  var temVideoAv = (d.repertorio||[]).some(function(m){ return m.yt; });
+  var temVideoAv = (d.repertorio||[]).some(function(m){ return m.yt || (m.partes&&m.partes.some(function(p){return p.yt;})); });
   h += '<div class="sc su su2">'+
     '<div class="sc-head"><div class="sc-head-icon"><i class="fa-solid fa-list-music"></i></div><span class="sc-head-label">Repertório</span>'+
       (temVideoAv?'<button class="btn-tocar-tudo" onclick="tocarRepertorio()"><i class="fa-solid fa-play"></i> Tocar Tudo</button>':'')+
@@ -1174,10 +1197,18 @@ function renderAvulso(av){
       var tags='';
       if(m.tom) tags+='<span class="tag-tom">'+m.tom+'</span>';
       if(m.seq) tags+='<button class="tag-bpm" onclick="abrirMetronomo(\''+( m.nome||'Música')+'\','+parseInt(m.seq)+')"><i class="fa-solid fa-drum"></i> '+m.seq+' BPM</button>';
+      if(m.partes&&m.partes.length)tags+='<span class="tag-medley"><i class="fa-solid fa-layer-group"></i> Medley ('+(m.partes.length+1)+')</span>';
       var lnks='';
       if(m.yt)   lnks+='<button class="lnk lnk-yt" onclick="abrirYtModal(\''+m.yt+'\',\''+( m.nome||'Música')+'\')"><i class="fa-brands fa-youtube"></i> YouTube</button>';
       if(m.sp)   lnks+='<a class="lnk lnk-sp"  href="'+m.sp+'"    target="_blank" rel="noopener"><i class="fa-brands fa-spotify"></i> Spotify</a>';
       if(m.cifra)lnks+='<button class="lnk lnk-ci" onclick="abrirCifraModal(\''+m.cifra+'\',\''+( m.nome||'Cifra')+'\')"><i class="fa-solid fa-music"></i> Cifra</button>';
+      if(m.partes&&m.partes.length){
+        m.partes.forEach(function(p,pi){
+          var pnome=(p.nome||('Parte '+(pi+2))).replace(/'/g,'');
+          if(p.yt)   lnks+='<button class="lnk lnk-yt" onclick="abrirYtModal(\''+p.yt+'\',\''+pnome+'\')"><i class="fa-brands fa-youtube"></i> '+pnome+'</button>';
+          if(p.cifra)lnks+='<button class="lnk lnk-ci" onclick="abrirCifraModal(\''+p.cifra+'\',\''+pnome+'\')"><i class="fa-solid fa-music"></i> '+pnome+'</button>';
+        });
+      }
       h +=
         '<div class="rep-item">'+
           '<span class="rep-num">'+(i+1)+'</span>'+
@@ -1667,8 +1698,17 @@ window.onYouTubeIframeAPIReady = function(){ _ytApiPronta = true; };
 function abrirPlayerSequencial(repertorio){
   _playerLista = [];
   (repertorio||[]).forEach(function(m){
+    /* música principal */
     var ytId = m.yt ? extrairYtId(m.yt) : null;
-    _playerLista.push({ nome:m.nome||'Música', ytId:ytId, sp:m.sp||'' });
+    _playerLista.push({ nome:m.nome||'Música', ytId:ytId, sp:m.sp||'', medley:false });
+    /* partes do medley — entram logo após, em sequência */
+    if(m.partes && m.partes.length){
+      m.partes.forEach(function(p, i){
+        var pytId = p.yt ? extrairYtId(p.yt) : null;
+        var pnome = p.nome || ((m.nome||'Música')+' — parte '+(i+2));
+        _playerLista.push({ nome:pnome, ytId:pytId, sp:p.sp||'', medley:true });
+      });
+    }
   });
 
   /* primeiro índice tocável (com vídeo) */
@@ -1799,9 +1839,10 @@ function renderPlayerLista(){
   _playerLista.forEach(function(t, i){
     var ativa = (i === _playerIdx);
     var badge = t.ytId ? '<span class="player-track-badge yt">YouTube</span>' : '<span class="player-track-badge no">sem vídeo</span>';
-    var numConteudo = (ativa && t.ytId) ? '<i class="fa-solid fa-volume-high"></i>' : (i+1);
+    var numConteudo = (ativa && t.ytId) ? '<i class="fa-solid fa-volume-high"></i>' : (t.medley ? '<i class="fa-solid fa-layer-group"></i>' : (i+1));
+    var medleyCls = t.medley ? ' player-track-medley' : '';
     html +=
-      '<div class="player-track'+(ativa?' ativa':'')+'" '+(t.ytId?'onclick="carregarFaixa('+i+')"':'')+'>'+
+      '<div class="player-track'+(ativa?' ativa':'')+medleyCls+'" '+(t.ytId?'onclick="carregarFaixa('+i+')"':'')+'>'+
         '<div class="player-track-num">'+numConteudo+'</div>'+
         '<div class="player-track-info"><div class="player-track-nome">'+t.nome+'</div></div>'+
         badge+
