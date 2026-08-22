@@ -1683,6 +1683,8 @@ function fecharTreino(){
   }
 
   function onMoverDown(e){
+    /* não iniciar arraste se o toque foi num botão de controle (minimizar/fechar) */
+    if(e.target.closest && e.target.closest('.treino-video-controls')) return;
     v=document.getElementById('treinoVideo');
     var p=ptr(e);
     var r=fixarPosicao();
@@ -1738,6 +1740,20 @@ function fecharTreino(){
       resize.addEventListener('mousedown',onResizeDown);
       resize.addEventListener('touchstart',onResizeDown,{passive:false});
     }
+    /* botões de controle: garantir resposta ao toque no mobile e não iniciar arraste */
+    var btnMin = bar ? bar.querySelector('.tvc-btn:not(.tvc-fechar)') : null;
+    var btnFec = bar ? bar.querySelector('.tvc-fechar') : null;
+    function ligarBotao(btn, acao){
+      if(!btn) return;
+      /* desktop: click */
+      btn.addEventListener('click', function(e){ e.stopPropagation(); acao(); });
+      /* mobile: touch (stopPropagation evita iniciar o arraste; preventDefault evita click fantasma duplo) */
+      btn.addEventListener('touchstart', function(e){ e.stopPropagation(); }, {passive:true});
+      btn.addEventListener('touchend', function(e){ e.stopPropagation(); e.preventDefault(); acao(); }, {passive:false});
+    }
+    ligarBotao(btnMin, treinoMinimizarVideo);
+    ligarBotao(btnFec, treinoFecharVideo);
+
     document.addEventListener('mousemove',onMove,{passive:false});
     document.addEventListener('touchmove',onMove,{passive:false});
     document.addEventListener('mouseup',onUp);
@@ -2271,8 +2287,8 @@ document.addEventListener('keydown', function(e){
       <div class="treino-video-bar" id="treinoVideoBar">
         <span class="vb-drag"><i class="fa-solid fa-up-down-left-right"></i> vídeo</span>
         <div class="treino-video-controls">
-          <button class="tvc-btn" onclick="treinoMinimizarVideo()" title="Minimizar"><i class="fa-solid fa-minus"></i></button>
-          <button class="tvc-btn tvc-fechar" onclick="treinoFecharVideo()" title="Fechar vídeo"><i class="fa-solid fa-xmark"></i></button>
+          <button class="tvc-btn" title="Minimizar"><i class="fa-solid fa-minus"></i></button>
+          <button class="tvc-btn tvc-fechar" title="Fechar vídeo"><i class="fa-solid fa-xmark"></i></button>
         </div>
       </div>
       <div id="treinoYtFrame"></div>
