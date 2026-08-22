@@ -891,38 +891,41 @@ footer i{color:var(--neon-a)}
 .treino-cifra-fallback.mostrar{display:flex}
 .treino-cifra-fallback a{display:inline-flex;align-items:center;gap:.5rem;margin-top:.5rem;padding:.7rem 1.4rem;border-radius:12px;background:linear-gradient(135deg,#2563eb,#3b82f6);color:#fff;font-family:var(--fd);font-weight:700;text-decoration:none}
 
-/* vídeo flutuante */
+/* vídeo flutuante — position:fixed (viewport) para o arraste bater com o dedo/cursor */
 .treino-video{
-  position:absolute;bottom:16px;right:12px;z-index:5;
-  width:180px;height:101px;border-radius:12px;overflow:hidden;
+  position:fixed;bottom:16px;right:12px;z-index:710;
+  width:180px;height:127px;border-radius:12px;overflow:hidden;
   background:#000;box-shadow:0 8px 30px rgba(0,0,0,.6);
   border:2px solid rgba(59,130,246,.5);
   touch-action:none;
+  display:flex;flex-direction:column;
 }
-.treino-video iframe{width:100%;height:100%;border:none;display:block;pointer-events:none}
-/* barra de arrastar no topo do vídeo */
+/* o iframe fica ABAIXO da barra e PODE receber cliques (controles do YouTube) */
+.treino-video #treinoYtFrame{flex:1;position:relative}
+.treino-video #treinoYtFrame iframe{width:100%;height:100%;border:none;display:block}
+/* barra de arrastar — agora ocupa espaço próprio no topo (não cobre o vídeo) */
 .treino-video-bar{
-  position:absolute;top:0;left:0;right:0;height:26px;z-index:6;
-  background:linear-gradient(180deg,rgba(0,0,0,.7),transparent);
+  height:24px;flex-shrink:0;z-index:6;
+  background:#1a1a1a;
   display:flex;align-items:center;justify-content:space-between;padding:0 .35rem;
-  cursor:move;
+  cursor:move;touch-action:none;
 }
-.treino-video-bar .vb-drag{color:rgba(255,255,255,.85);font-size:.7rem;display:flex;align-items:center;gap:.3rem;font-family:var(--fd);font-weight:600}
+.treino-video-bar .vb-drag{color:rgba(255,255,255,.85);font-size:.68rem;display:flex;align-items:center;gap:.3rem;font-family:var(--fd);font-weight:600}
 .treino-video-controls{display:flex;gap:.2rem}
-.tvc-btn{width:22px;height:22px;border-radius:6px;border:none;background:rgba(0,0,0,.5);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.62rem;transition:background .15s}
+.tvc-btn{width:20px;height:20px;border-radius:5px;border:none;background:rgba(255,255,255,.12);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.6rem;transition:background .15s}
 .tvc-btn:hover{background:rgba(59,130,246,.8)}
-/* alça de redimensionar (canto inferior esquerdo, já que o vídeo fica à direita) */
+/* alça de redimensionar (canto inferior esquerdo) */
 .treino-video-resize{
-  position:absolute;bottom:0;left:0;width:22px;height:22px;z-index:7;
-  cursor:nwse-resize;display:flex;align-items:flex-end;justify-content:flex-start;
-  padding:2px;touch-action:none;
+  position:absolute;bottom:0;left:0;width:26px;height:26px;z-index:7;
+  cursor:nesw-resize;display:flex;align-items:flex-end;justify-content:flex-start;
+  padding:3px;touch-action:none;
 }
 .treino-video-resize::before{
   content:'';width:0;height:0;
-  border-left:9px solid rgba(59,130,246,.9);
-  border-top:9px solid transparent;
+  border-left:11px solid rgba(59,130,246,.95);
+  border-top:11px solid transparent;
+  filter:drop-shadow(0 0 2px rgba(0,0,0,.5));
 }
-/* barra de controle inferior (play/pause do vídeo) */
 .treino-video.oculto-player{opacity:.25}
 
 </style>
@@ -1604,7 +1607,7 @@ function abrirTreino(ytUrl, cifraUrl, titulo){
   var v = document.getElementById('treinoVideo');
   v.style.left=''; v.style.top='';
   v.style.right='12px'; v.style.bottom='16px';
-  v.style.width='180px'; v.style.height='101px';
+  v.style.width='180px'; v.style.height='127px';
 }
 
 var _treinoCifraTimeout = null;
@@ -1651,67 +1654,86 @@ function fecharTreino(){
   document.body.style.overflow='';
 }
 
-/* ── arrastar o vídeo ── */
+/* ── arrastar e redimensionar o vídeo (position:fixed → coords batem com o dedo) ── */
 (function initTreinoDrag(){
   var v, bar, resize;
-  var arrastando=false, redimensionando=false;
-  var startX, startY, startL, startT, startW, startH;
+  var modo=null; /* 'mover' | 'redimensionar' */
+  var startX, startY, startL, startT, startW;
+  var ALTURA_BARRA=24;
 
-  function ptr(e){ return e.touches ? e.touches[0] : e; }
+  function ptr(e){ return e.touches && e.touches.length ? e.touches[0] : e; }
 
-  function onDown(e){
-    v = document.getElementById('treinoVideo');
-    arrastando=true;
+  function fixarPosicao(){
+    /* converte para left/top absolutos (viewport) e remove right/bottom */
+    var r=v.getBoundingClientRect();
+    v.style.left=r.left+'px';
+    v.style.top=r.top+'px';
+    v.style.right='auto';
+    v.style.bottom='auto';
+    return r;
+  }
+
+  function onMoverDown(e){
+    v=document.getElementById('treinoVideo');
     var p=ptr(e);
-    var rect=v.getBoundingClientRect();
+    var r=fixarPosicao();
+    modo='mover';
     startX=p.clientX; startY=p.clientY;
-    startL=rect.left; startT=rect.top;
-    /* fixar em left/top para poder mover livremente */
-    v.style.left=rect.left+'px'; v.style.top=rect.top+'px';
-    v.style.right='auto'; v.style.bottom='auto';
+    startL=r.left; startT=r.top;
     e.preventDefault();
   }
   function onResizeDown(e){
-    v = document.getElementById('treinoVideo');
-    redimensionando=true;
+    v=document.getElementById('treinoVideo');
     var p=ptr(e);
-    var rect=v.getBoundingClientRect();
+    var r=fixarPosicao();
+    modo='redimensionar';
     startX=p.clientX; startY=p.clientY;
-    startW=rect.width; startH=rect.height;
-    startL=rect.left; startT=rect.top;
-    v.style.left=rect.left+'px'; v.style.top=rect.top+'px';
-    v.style.right='auto'; v.style.bottom='auto';
+    startW=r.width; startL=r.left; startT=r.top;
     e.preventDefault(); e.stopPropagation();
   }
   function onMove(e){
-    if(!arrastando && !redimensionando) return;
+    if(!modo) return;
     var p=ptr(e);
     var dx=p.clientX-startX, dy=p.clientY-startY;
-    if(arrastando){
+
+    if(modo==='mover'){
       var nl=startL+dx, nt=startT+dy;
-      /* limitar dentro da tela */
-      nl=Math.max(0,Math.min(window.innerWidth-v.offsetWidth, nl));
-      nt=Math.max(50,Math.min(window.innerHeight-v.offsetHeight, nt));
+      nl=Math.max(4, Math.min(window.innerWidth - v.offsetWidth - 4, nl));
+      nt=Math.max(56, Math.min(window.innerHeight - v.offsetHeight - 4, nt));
       v.style.left=nl+'px'; v.style.top=nt+'px';
-    } else if(redimensionando){
-      /* alça no canto inferior esquerdo: aumenta para a esquerda/baixo */
-      var nw=Math.max(120,Math.min(360,startW-dx));
-      var nh=nw*9/16;
-      var nl=startL+(startW-nw);
-      v.style.width=nw+'px'; v.style.height=nh+'px';
+    } else {
+      /* alça no canto inferior-esquerdo: arrastar p/ esquerda aumenta */
+      var nw=startW - dx;
+      nw=Math.max(130, Math.min(360, nw));
+      var nh=nw*9/16 + ALTURA_BARRA;
+      /* mantém o canto superior-direito fixo */
+      var nl=startL + (startW - nw);
+      v.style.width=nw+'px';
+      v.style.height=nh+'px';
       v.style.left=nl+'px';
+      /* garante que não saia pela esquerda */
+      if(nl<4){ v.style.left='4px'; }
     }
     e.preventDefault();
   }
-  function onUp(){ arrastando=false; redimensionando=false; }
+  function onUp(){ modo=null; }
 
   document.addEventListener('DOMContentLoaded', function(){
     bar=document.getElementById('treinoVideoBar');
     resize=document.getElementById('treinoVideoResize');
-    if(bar){ bar.addEventListener('mousedown',onDown); bar.addEventListener('touchstart',onDown,{passive:false}); }
-    if(resize){ resize.addEventListener('mousedown',onResizeDown); resize.addEventListener('touchstart',onResizeDown,{passive:false}); }
-    document.addEventListener('mousemove',onMove); document.addEventListener('touchmove',onMove,{passive:false});
-    document.addEventListener('mouseup',onUp); document.addEventListener('touchend',onUp);
+    if(bar){
+      bar.addEventListener('mousedown',onMoverDown);
+      bar.addEventListener('touchstart',onMoverDown,{passive:false});
+    }
+    if(resize){
+      resize.addEventListener('mousedown',onResizeDown);
+      resize.addEventListener('touchstart',onResizeDown,{passive:false});
+    }
+    document.addEventListener('mousemove',onMove,{passive:false});
+    document.addEventListener('touchmove',onMove,{passive:false});
+    document.addEventListener('mouseup',onUp);
+    document.addEventListener('touchend',onUp);
+    document.addEventListener('touchcancel',onUp);
   });
 })();
 
