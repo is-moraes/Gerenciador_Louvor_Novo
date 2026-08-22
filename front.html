@@ -850,6 +850,81 @@ footer i{color:var(--neon-a)}
 .tag-medley i{color:var(--medley)}
 .tag-medley .fa-chevron-down{font-size:.6rem;transition:transform .2s}
 
+/* ══ CHIP TREINAR ══ */
+.tag-treino{
+  display:inline-flex;align-items:center;gap:.3rem;
+  padding:.28rem .6rem;border-radius:8px;font-family:var(--fd);
+  font-size:.8rem;font-weight:700;white-space:nowrap;line-height:1;
+  background:linear-gradient(135deg,#2563eb,#3b82f6);color:#fff;cursor:pointer;
+  box-shadow:0 2px 8px rgba(37,99,235,.35);transition:transform .15s,box-shadow .2s;
+  -webkit-tap-highlight-color:transparent;border:none;
+}
+.tag-treino:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(37,99,235,.5)}
+.tag-treino:active{transform:scale(.94)}
+.tag-treino i{font-size:.72rem}
+
+/* ══ MODO TREINO (cifra tela cheia + vídeo flutuante) ══ */
+.treino-overlay{
+  position:fixed;inset:0;z-index:700;background:#0a0a0a;
+  display:none;flex-direction:column;
+}
+.treino-overlay.aberto{display:flex}
+.treino-header{
+  display:flex;align-items:center;justify-content:space-between;gap:.6rem;
+  padding:.7rem 1rem;background:#161616;border-bottom:1px solid rgba(255,255,255,.08);
+  flex-shrink:0;
+}
+.treino-title{font-family:var(--fd);font-size:.9rem;font-weight:700;color:#f0ede8;text-transform:uppercase;letter-spacing:.04em;display:flex;align-items:center;gap:.5rem;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.treino-title i{color:#3b82f6;flex-shrink:0}
+.treino-actions{display:flex;align-items:center;gap:.4rem;flex-shrink:0}
+.treino-btn{width:34px;height:34px;border-radius:8px;border:none;background:rgba(255,255,255,.08);color:#ccc;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.85rem;transition:background .18s}
+.treino-btn:hover{background:rgba(255,255,255,.16);color:#fff}
+.treino-btn.fechar{background:rgba(255,50,50,.15);color:#ff5555}
+.treino-btn.fechar:hover{background:rgba(255,50,50,.3);color:#fff}
+
+/* cifra ocupa toda a área */
+.treino-cifra{flex:1;position:relative;background:#fff;overflow:hidden}
+.treino-cifra iframe{width:100%;height:100%;border:none;display:block}
+.treino-cifra-loading{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.7rem;color:#999;font-size:.85rem;background:#12100c}
+.treino-cifra-loading i{font-size:1.8rem;color:#3b82f6;animation:spin 1s linear infinite}
+.treino-cifra-fallback{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:1rem;padding:2rem;text-align:center;background:#12100c;color:var(--t2)}
+.treino-cifra-fallback.mostrar{display:flex}
+.treino-cifra-fallback a{display:inline-flex;align-items:center;gap:.5rem;margin-top:.5rem;padding:.7rem 1.4rem;border-radius:12px;background:linear-gradient(135deg,#2563eb,#3b82f6);color:#fff;font-family:var(--fd);font-weight:700;text-decoration:none}
+
+/* vídeo flutuante */
+.treino-video{
+  position:absolute;bottom:16px;right:12px;z-index:5;
+  width:180px;height:101px;border-radius:12px;overflow:hidden;
+  background:#000;box-shadow:0 8px 30px rgba(0,0,0,.6);
+  border:2px solid rgba(59,130,246,.5);
+  touch-action:none;
+}
+.treino-video iframe{width:100%;height:100%;border:none;display:block;pointer-events:none}
+/* barra de arrastar no topo do vídeo */
+.treino-video-bar{
+  position:absolute;top:0;left:0;right:0;height:26px;z-index:6;
+  background:linear-gradient(180deg,rgba(0,0,0,.7),transparent);
+  display:flex;align-items:center;justify-content:space-between;padding:0 .35rem;
+  cursor:move;
+}
+.treino-video-bar .vb-drag{color:rgba(255,255,255,.85);font-size:.7rem;display:flex;align-items:center;gap:.3rem;font-family:var(--fd);font-weight:600}
+.treino-video-controls{display:flex;gap:.2rem}
+.tvc-btn{width:22px;height:22px;border-radius:6px;border:none;background:rgba(0,0,0,.5);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.62rem;transition:background .15s}
+.tvc-btn:hover{background:rgba(59,130,246,.8)}
+/* alça de redimensionar (canto inferior esquerdo, já que o vídeo fica à direita) */
+.treino-video-resize{
+  position:absolute;bottom:0;left:0;width:22px;height:22px;z-index:7;
+  cursor:nwse-resize;display:flex;align-items:flex-end;justify-content:flex-start;
+  padding:2px;touch-action:none;
+}
+.treino-video-resize::before{
+  content:'';width:0;height:0;
+  border-left:9px solid rgba(59,130,246,.9);
+  border-top:9px solid transparent;
+}
+/* barra de controle inferior (play/pause do vídeo) */
+.treino-video.oculto-player{opacity:.25}
+
 </style>
 </head>
 <body>
@@ -978,6 +1053,8 @@ function construirSongItem(m, num){
   if(m.seq) chips+='<button class="tag-bpm" onclick="abrirMetronomo(\''+nomeEsc+'\','+parseInt(m.seq)+')"><i class="fa-solid fa-drum"></i> '+m.seq+' BPM</button>';
   var temMedley = m.partes && m.partes.length;
   if(temMedley) chips+='<button class="tag-medley" onclick="toggleMedleyMenu(this)"><i class="fa-solid fa-layer-group"></i> Medley ('+(m.partes.length+1)+') <i class="fa-solid fa-chevron-down"></i></button>';
+  /* chip Treinar — só quando tem vídeo E cifra */
+  if(m.yt && m.cifra) chips+='<button class="tag-treino" onclick="abrirTreino(\''+escAspas(m.yt)+'\',\''+escAspas(m.cifra)+'\',\''+nomeEsc+'\')"><i class="fa-solid fa-dumbbell"></i> Treinar</button>';
 
   /* links principais (grade de 3) */
   var lnks='';
@@ -1483,6 +1560,166 @@ document.addEventListener('keydown', function(e){
   }
 });
 
+
+/* ══ MODO TREINO (cifra tela cheia + vídeo flutuante) ══ */
+var _treinoYtPlayer = null;
+var _treinoVideoVisivel = true;
+
+function abrirTreino(ytUrl, cifraUrl, titulo){
+  document.getElementById('treinoTitulo').textContent = titulo || 'Treino';
+  document.getElementById('treinoCifraExt').href = cifraUrl;
+  document.getElementById('treinoCifraFallbackBtn').href = cifraUrl;
+
+  var overlay = document.getElementById('treinoOverlay');
+  overlay.classList.add('aberto');
+  document.body.style.overflow = 'hidden';
+
+  /* ── CIFRA (reusa a lógica de prepararUrlCifra) ── */
+  var info = prepararUrlCifra(cifraUrl);
+  var iframe = document.getElementById('treinoCifraIframe');
+  var loading = document.getElementById('treinoCifraLoading');
+  var fallback = document.getElementById('treinoCifraFallback');
+  iframe.style.display='none'; fallback.classList.remove('mostrar'); loading.style.display='flex';
+
+  var embedCifra = info.embed;
+  if(info.tipo === 'docs') embedCifra = info.modoPdf || info.embed;
+
+  iframe.onload = function(){ loading.style.display='none'; iframe.style.display='block'; clearTimeout(_treinoCifraTimeout); };
+  iframe.src = embedCifra;
+  var tempoLimite = (info.tipo==='drive'||info.tipo==='docs') ? 6000 : 3500;
+  _treinoCifraTimeout = setTimeout(function(){
+    if(iframe.style.display==='none'){
+      loading.style.display='none';
+      fallback.classList.add('mostrar');
+    }
+  }, tempoLimite);
+
+  /* ── VÍDEO flutuante (YouTube IFrame API, COM som) ── */
+  _treinoVideoVisivel = true;
+  document.getElementById('treinoVideo').style.display='block';
+  var ytId = extrairYtId(ytUrl);
+  iniciarTreinoVideo(ytId);
+
+  /* posição inicial do vídeo (canto inferior direito) */
+  var v = document.getElementById('treinoVideo');
+  v.style.left=''; v.style.top='';
+  v.style.right='12px'; v.style.bottom='16px';
+  v.style.width='180px'; v.style.height='101px';
+}
+
+var _treinoCifraTimeout = null;
+
+function iniciarTreinoVideo(ytId){
+  if(!ytId){ document.getElementById('treinoVideo').style.display='none'; return; }
+  var tentativas=0;
+  (function esperar(){
+    if(_ytApiPronta && window.YT && window.YT.Player){
+      /* destruir player anterior se existir */
+      if(_treinoYtPlayer && _treinoYtPlayer.destroy){ try{_treinoYtPlayer.destroy();}catch(e){} _treinoYtPlayer=null; }
+      document.getElementById('treinoYtFrame').innerHTML='';
+      var div = document.createElement('div'); div.id='treinoYtFrameInner';
+      document.getElementById('treinoYtFrame').appendChild(div);
+      _treinoYtPlayer = new YT.Player('treinoYtFrameInner', {
+        videoId: ytId,
+        playerVars:{ autoplay:1, rel:0, playsinline:1, controls:1 },
+        events:{ 'onReady': function(e){ e.target.playVideo(); } }
+      });
+    } else if(tentativas<50){ tentativas++; setTimeout(esperar,100); }
+  })();
+}
+
+function treinoToggleVideo(){
+  _treinoVideoVisivel = !_treinoVideoVisivel;
+  document.getElementById('treinoVideo').style.display = _treinoVideoVisivel ? 'block' : 'none';
+  var ico = document.querySelector('#treinoVideoToggle i');
+  if(ico) ico.className = _treinoVideoVisivel ? 'fa-solid fa-video' : 'fa-solid fa-video-slash';
+  /* pausar/retomar quando oculta */
+  if(_treinoYtPlayer){
+    if(_treinoVideoVisivel && _treinoYtPlayer.playVideo) _treinoYtPlayer.playVideo();
+    else if(_treinoYtPlayer.pauseVideo) _treinoYtPlayer.pauseVideo();
+  }
+}
+function treinoMinimizarVideo(){ treinoToggleVideo(); }
+
+function fecharTreino(){
+  clearTimeout(_treinoCifraTimeout);
+  var iframe = document.getElementById('treinoCifraIframe');
+  iframe.src='';iframe.style.display='none';
+  if(_treinoYtPlayer && _treinoYtPlayer.destroy){ try{_treinoYtPlayer.destroy();}catch(e){} _treinoYtPlayer=null; }
+  document.getElementById('treinoYtFrame').innerHTML='';
+  document.getElementById('treinoOverlay').classList.remove('aberto');
+  document.body.style.overflow='';
+}
+
+/* ── arrastar o vídeo ── */
+(function initTreinoDrag(){
+  var v, bar, resize;
+  var arrastando=false, redimensionando=false;
+  var startX, startY, startL, startT, startW, startH;
+
+  function ptr(e){ return e.touches ? e.touches[0] : e; }
+
+  function onDown(e){
+    v = document.getElementById('treinoVideo');
+    arrastando=true;
+    var p=ptr(e);
+    var rect=v.getBoundingClientRect();
+    startX=p.clientX; startY=p.clientY;
+    startL=rect.left; startT=rect.top;
+    /* fixar em left/top para poder mover livremente */
+    v.style.left=rect.left+'px'; v.style.top=rect.top+'px';
+    v.style.right='auto'; v.style.bottom='auto';
+    e.preventDefault();
+  }
+  function onResizeDown(e){
+    v = document.getElementById('treinoVideo');
+    redimensionando=true;
+    var p=ptr(e);
+    var rect=v.getBoundingClientRect();
+    startX=p.clientX; startY=p.clientY;
+    startW=rect.width; startH=rect.height;
+    startL=rect.left; startT=rect.top;
+    v.style.left=rect.left+'px'; v.style.top=rect.top+'px';
+    v.style.right='auto'; v.style.bottom='auto';
+    e.preventDefault(); e.stopPropagation();
+  }
+  function onMove(e){
+    if(!arrastando && !redimensionando) return;
+    var p=ptr(e);
+    var dx=p.clientX-startX, dy=p.clientY-startY;
+    if(arrastando){
+      var nl=startL+dx, nt=startT+dy;
+      /* limitar dentro da tela */
+      nl=Math.max(0,Math.min(window.innerWidth-v.offsetWidth, nl));
+      nt=Math.max(50,Math.min(window.innerHeight-v.offsetHeight, nt));
+      v.style.left=nl+'px'; v.style.top=nt+'px';
+    } else if(redimensionando){
+      /* alça no canto inferior esquerdo: aumenta para a esquerda/baixo */
+      var nw=Math.max(120,Math.min(360,startW-dx));
+      var nh=nw*9/16;
+      var nl=startL+(startW-nw);
+      v.style.width=nw+'px'; v.style.height=nh+'px';
+      v.style.left=nl+'px';
+    }
+    e.preventDefault();
+  }
+  function onUp(){ arrastando=false; redimensionando=false; }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    bar=document.getElementById('treinoVideoBar');
+    resize=document.getElementById('treinoVideoResize');
+    if(bar){ bar.addEventListener('mousedown',onDown); bar.addEventListener('touchstart',onDown,{passive:false}); }
+    if(resize){ resize.addEventListener('mousedown',onResizeDown); resize.addEventListener('touchstart',onResizeDown,{passive:false}); }
+    document.addEventListener('mousemove',onMove); document.addEventListener('touchmove',onMove,{passive:false});
+    document.addEventListener('mouseup',onUp); document.addEventListener('touchend',onUp);
+  });
+})();
+
+/* fechar treino com Escape */
+document.addEventListener('keydown', function(e){
+  if(e.key==='Escape' && document.getElementById('treinoOverlay').classList.contains('aberto')){ fecharTreino(); }
+});
+
 /* ══ MODAL DE CIFRA (Google Drive / Cifra Club) ══ */
 var _cifraLinkAtual = '';
 
@@ -1973,6 +2210,41 @@ document.addEventListener('keydown', function(e){
           <small id="metroTapHint">toque no ritmo</small>
         </button>
       </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modo Treino -->
+<div class="treino-overlay" id="treinoOverlay">
+  <div class="treino-header">
+    <span class="treino-title"><i class="fa-solid fa-dumbbell"></i> <span id="treinoTitulo">Treino</span></span>
+    <div class="treino-actions">
+      <button class="treino-btn" id="treinoVideoToggle" onclick="treinoToggleVideo()" title="Mostrar/ocultar vídeo"><i class="fa-solid fa-video"></i></button>
+      <a class="treino-btn" id="treinoCifraExt" href="#" target="_blank" rel="noopener" title="Abrir cifra em nova aba"><i class="fa-solid fa-up-right-from-square"></i></a>
+      <button class="treino-btn fechar" onclick="fecharTreino()" title="Fechar"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+  </div>
+  <div class="treino-cifra">
+    <div class="treino-cifra-loading" id="treinoCifraLoading"><i class="fa-solid fa-spinner"></i><span>Carregando cifra…</span></div>
+    <div class="treino-cifra-fallback" id="treinoCifraFallback">
+      <div style="width:64px;height:64px;border-radius:18px;background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.3);display:flex;align-items:center;justify-content:center;font-size:1.6rem;color:#3b82f6"><i class="fa-solid fa-arrow-up-right-from-square"></i></div>
+      <h3 style="font-family:var(--fd);color:var(--t1);text-transform:uppercase;letter-spacing:.04em">Abrir a cifra</h3>
+      <p style="font-size:.85rem;line-height:1.6;max-width:320px">Este site não permite ser exibido aqui. Toque para abrir em nova aba (o vídeo continua tocando).</p>
+      <a id="treinoCifraFallbackBtn" href="#" target="_blank" rel="noopener"><i class="fa-solid fa-music"></i> Abrir Cifra</a>
+    </div>
+    <iframe id="treinoCifraIframe" src="" style="display:none;"></iframe>
+
+    <!-- vídeo flutuante -->
+    <div class="treino-video" id="treinoVideo">
+      <div class="treino-video-bar" id="treinoVideoBar">
+        <span class="vb-drag"><i class="fa-solid fa-up-down-left-right"></i> vídeo</span>
+        <div class="treino-video-controls">
+          <button class="tvc-btn" onclick="treinoMinimizarVideo()" title="Minimizar"><i class="fa-solid fa-minus"></i></button>
+        </div>
+      </div>
+      <div id="treinoYtFrame"></div>
+      <div class="treino-video-resize" id="treinoVideoResize"></div>
     </div>
   </div>
 </div>
