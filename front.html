@@ -894,7 +894,7 @@ footer i{color:var(--neon-a)}
 /* vídeo flutuante — position:fixed (viewport) para o arraste bater com o dedo/cursor */
 .treino-video{
   position:fixed;bottom:16px;right:12px;z-index:710;
-  width:180px;height:127px;border-radius:12px;overflow:hidden;
+  width:260px;height:171px;border-radius:12px;overflow:hidden;
   background:#000;box-shadow:0 8px 30px rgba(0,0,0,.6);
   border:2px solid rgba(59,130,246,.5);
   touch-action:none;
@@ -914,6 +914,7 @@ footer i{color:var(--neon-a)}
 .treino-video-controls{display:flex;gap:.2rem}
 .tvc-btn{width:20px;height:20px;border-radius:5px;border:none;background:rgba(255,255,255,.12);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.6rem;transition:background .15s}
 .tvc-btn:hover{background:rgba(59,130,246,.8)}
+.tvc-btn.tvc-fechar:hover{background:rgba(239,68,68,.85)}
 /* alça de redimensionar (canto inferior esquerdo) */
 .treino-video-resize{
   position:absolute;bottom:0;left:0;width:26px;height:26px;z-index:7;
@@ -1607,7 +1608,7 @@ function abrirTreino(ytUrl, cifraUrl, titulo){
   var v = document.getElementById('treinoVideo');
   v.style.left=''; v.style.top='';
   v.style.right='12px'; v.style.bottom='16px';
-  v.style.width='180px'; v.style.height='127px';
+  v.style.width='260px'; v.style.height='171px';
 }
 
 var _treinoCifraTimeout = null;
@@ -1643,6 +1644,14 @@ function treinoToggleVideo(){
   }
 }
 function treinoMinimizarVideo(){ treinoToggleVideo(); }
+function treinoFecharVideo(){
+  /* esconde o vídeo e para a reprodução (mantém a cifra aberta) */
+  _treinoVideoVisivel = false;
+  document.getElementById('treinoVideo').style.display = 'none';
+  var ico = document.querySelector('#treinoVideoToggle i');
+  if(ico) ico.className = 'fa-solid fa-video-slash';
+  if(_treinoYtPlayer && _treinoYtPlayer.pauseVideo){ try{_treinoYtPlayer.pauseVideo();}catch(e){} }
+}
 
 function fecharTreino(){
   clearTimeout(_treinoCifraTimeout);
@@ -2263,6 +2272,7 @@ document.addEventListener('keydown', function(e){
         <span class="vb-drag"><i class="fa-solid fa-up-down-left-right"></i> vídeo</span>
         <div class="treino-video-controls">
           <button class="tvc-btn" onclick="treinoMinimizarVideo()" title="Minimizar"><i class="fa-solid fa-minus"></i></button>
+          <button class="tvc-btn tvc-fechar" onclick="treinoFecharVideo()" title="Fechar vídeo"><i class="fa-solid fa-xmark"></i></button>
         </div>
       </div>
       <div id="treinoYtFrame"></div>
