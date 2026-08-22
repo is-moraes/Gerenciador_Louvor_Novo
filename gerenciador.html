@@ -2167,6 +2167,15 @@ var SP = {
     return null;
   },
 
+  /* extrai o ID/URI de um link do Spotify salvo na música */
+  uriDoLink: function(link){
+    if(!link) return null;
+    /* https://open.spotify.com/track/ID  ou  spotify:track:ID */
+    var m = link.match(/track[\/:]([a-zA-Z0-9]+)/);
+    if(m) return 'spotify:track:'+m[1];
+    return null;
+  },
+
   /* ── Gerar playlist ── */
   gerarPlaylist: async function(){
     var btnGen=document.getElementById('btnGerarPlaylist');
@@ -2176,10 +2185,9 @@ var SP = {
     document.getElementById('spLog').innerHTML='';
 
     try{
-      // 1. pegar músicas
-      var nomes=[];
-      document.querySelectorAll('#linhasRepertorio .nomeMusica').forEach(function(inp){ var n=inp.value.trim(); if(n) nomes.push(n); });
-      if(!nomes.length){ spLog('Nenhuma música no repertório!','err'); return; }
+      // 1. pegar músicas COM seus links salvos (nome + link Spotify)
+      var musicas = coletarMusicasParaPlaylist();
+      if(!musicas.length){ spLog('Nenhuma música no repertório!','err'); return; }
 
       // 2. usuário
       spLog('Obtendo dados do usuário...','ok');
@@ -2195,13 +2203,20 @@ var SP = {
       });
       var playlistId=playlist.id;
 
-      // 4. buscar tracks
+      // 4. resolver cada faixa: PRIMEIRO usa o link salvo, senão busca pelo nome
       var uris=[];
-      for(var i=0;i<nomes.length;i++){
-        spLog('Buscando: '+nomes[i]+'...','');
-        var uri=await this.buscarTrack(nomes[i]);
-        if(uri){ uris.push(uri); spLog('✓ '+nomes[i],'ok'); }
-        else    { spLog('⚠ Não encontrada: '+nomes[i],'warn'); }
+      for(var i=0;i<musicas.length;i++){
+        var mus=musicas[i];
+        var uri=this.uriDoLink(mus.sp);
+        if(uri){
+          uris.push(uri);
+          spLog('✓ '+mus.nome+' (link salvo)','ok');
+        } else {
+          spLog('Buscando: '+mus.nome+'...','');
+          var achado=await this.buscarTrack(mus.nome);
+          if(achado){ uris.push(achado); spLog('✓ '+mus.nome+' (busca)','ok'); }
+          else      { spLog('⚠ Não encontrada: '+mus.nome,'warn'); }
+        }
       }
 
       // 5. adicionar tracks
@@ -2231,6 +2246,29 @@ var SP = {
     }
   }
 };
+
+/* coleta músicas do repertório com nome + links salvos (inclui partes de medley) */
+function coletarMusicasParaPlaylist(){
+  var lista=[];
+  document.querySelectorAll('#linhasRepertorio .musica-card').forEach(function(card){
+    var nome=card.querySelector('.nomeMusica').value.trim();
+    if(!nome) return;
+    var mainLinks=card.querySelector('.musica-links');
+    lista.push({
+      nome:nome,
+      yt: mainLinks.querySelector('.linkYt').value.trim(),
+      sp: mainLinks.querySelector('.linkSp').value.trim()
+    });
+    /* partes do medley entram como faixas próprias */
+    card.querySelectorAll('.medley-parte').forEach(function(p){
+      var pnome=p.querySelector('.medley-parte-nome').value.trim();
+      var pyt=p.querySelector('.linkYt').value.trim();
+      var psp=p.querySelector('.linkSp').value.trim();
+      if(pnome||pyt||psp) lista.push({ nome:pnome||nome, yt:pyt, sp:psp });
+    });
+  });
+  return lista;
+}
 
 function spLog(msg,tipo){
   var el=document.getElementById('spLog');
@@ -2377,6 +2415,16 @@ var YT_API = {
     });
   },
 
+  /* extrai o ID de um link do YouTube salvo na música */
+  idDoLink: function(link){
+    if(!link) return null;
+    var m = link.match(/youtu\.be\/([^?&]+)/);        if(m) return m[1];
+    m = link.match(/[?&]v=([^?&]+)/);                  if(m) return m[1];
+    m = link.match(/embed\/([^?&]+)/);                 if(m) return m[1];
+    m = link.match(/shorts\/([^?&]+)/);                if(m) return m[1];
+    return null;
+  },
+
   /* Criar playlist e adicionar vídeos */
   gerarPlaylist: async function(){
     var btnGen = document.getElementById('btnGerarPlaylistYt');
@@ -2386,12 +2434,9 @@ var YT_API = {
     document.getElementById('ytLog').innerHTML='';
 
     try{
-      /* 1. coletar músicas */
-      var nomes=[];
-      document.querySelectorAll('#linhasRepertorio .nomeMusica').forEach(function(inp){
-        var n=inp.value.trim(); if(n) nomes.push(n);
-      });
-      if(!nomes.length){ ytLog('Nenhuma música no repertório!','err'); return; }
+      /* 1. coletar músicas COM seus links salvos */
+      var musicas = coletarMusicasParaPlaylist();
+      if(!musicas.length){ ytLog('Nenhuma música no repertório!','err'); return; }
 
       /* 2. criar playlist */
       var semLabel = modoAvulso && avulsoAtualId
@@ -2409,17 +2454,23 @@ var YT_API = {
       if(!playlistRes.id){ ytLog('Erro ao criar playlist: '+(playlistRes.error&&playlistRes.error.message||JSON.stringify(playlistRes)),'err'); return; }
       var playlistId = playlistRes.id;
 
-      /* 3. buscar e adicionar vídeos */
+      /* 3. resolver cada vídeo: PRIMEIRO o link salvo, senão busca pelo nome */
       var adicionados = 0;
-      for(var i=0;i<nomes.length;i++){
-        ytLog('Buscando: '+nomes[i]+'...','');
-        var videoId = await this.buscarVideo(nomes[i]);
-        if(!videoId){ ytLog('⚠ Não encontrado: '+nomes[i],'warn'); continue; }
+      for(var i=0;i<musicas.length;i++){
+        var mus=musicas[i];
+        var videoId = this.idDoLink(mus.yt);
+        if(videoId){
+          ytLog('✓ '+mus.nome+' (link salvo)','ok');
+        } else {
+          ytLog('Buscando: '+mus.nome+'...','');
+          videoId = await this.buscarVideo(mus.nome);
+          if(videoId) ytLog('✓ '+mus.nome+' (busca)','ok');
+        }
+        if(!videoId){ ytLog('⚠ Não encontrado: '+mus.nome,'warn'); continue; }
         await this.apiPost(
           'https://www.googleapis.com/youtube/v3/playlistItems?part=snippet',
           { snippet:{ playlistId:playlistId, resourceId:{ kind:'youtube#video', videoId:videoId } } }
         );
-        ytLog('✓ '+nomes[i],'ok');
         adicionados++;
       }
 
