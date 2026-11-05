@@ -56,9 +56,10 @@ button{font-family:inherit}
 
 /* ══════════ TOPBAR ══════════ */
 .topbar{position:sticky;top:0;z-index:200;padding:.7rem 1rem .5rem;background:linear-gradient(var(--bg) 62%,transparent)}
-.topbar-in{max-width:1100px;margin:0 auto;height:62px;display:flex;align-items:center;gap:.7rem;padding:0 .8rem 0 1rem;background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-s)}
+.topbar-in{max-width:1100px;margin:0 auto;height:62px;display:flex;align-items:center;gap:.4rem;padding:0 .7rem 0 .9rem;background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-s)}
 .brand{display:flex;align-items:center;gap:.65rem;min-width:0;flex:1;cursor:pointer;background:none;border:none;color:inherit;text-align:left}
 .brand svg{width:36px;height:36px;flex-shrink:0}
+.brand>span{min-width:0;display:block;overflow:hidden}
 .brand-t{font-weight:800;font-size:1.02rem;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
 .brand-s{font-size:.68rem;color:var(--fg2);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
 .dnav{display:none;gap:.2rem;margin-right:.4rem}
@@ -170,18 +171,26 @@ body.modo-avulso .c-nav{display:none}
 .ibtn.play{background:var(--play-bg);color:var(--play-fg)}
 .ibtn.sm{width:28px;height:28px;font-size:.75rem}
 .ibtn.off{opacity:.2;pointer-events:none;filter:grayscale(.7)}
-@media(max-width:560px){
+.lbl{display:none}
+.links{display:flex;gap:.45rem;align-items:center}
+@media(max-width:620px){
   .wrap{padding-left:.7rem;padding-right:.7rem}
   .panel{padding:.85rem .7rem}
-  .song{gap:.55rem;padding:.65rem .45rem}
-  .ibtn{width:28px;height:28px;font-size:.74rem}
-  .acts{gap:.3rem}
-  .s-name{font-size:.93rem}
-}
-@media(max-width:399px){
-  .song{grid-template-columns:30px minmax(0,1fr);grid-template-areas:"num name" ". acts";gap:.5rem .7rem}
-  .acts{gap:.5rem}
-  .ibtn{width:34px;height:34px;font-size:.88rem}
+  .song{grid-template-columns:30px minmax(0,1fr) 46px;grid-template-areas:"num name play" ". links links";gap:.6rem .7rem;padding:.75rem .5rem}
+  .acts{display:contents}
+  .ibtn.play{grid-area:play;width:46px;height:46px;font-size:1rem;align-self:center}
+  .links{grid-area:links;display:grid;grid-template-columns:repeat(4,1fr);gap:.45rem}
+  .links .ibtn{width:auto;height:50px;border-radius:14px;flex-direction:column;gap:.2rem;font-size:1rem;padding:.2rem 0}
+  .links .lbl{display:block;font-size:.62rem;font-weight:700;line-height:1}
+  .links .ibtn.yt{background:rgba(255,59,59,.15);color:#ff5252}
+  .links .ibtn.bpm{background:rgba(29,155,240,.16);color:#2aa3f5}
+  .links .ibtn.sp{background:rgba(29,185,84,.16);color:#22c25f}
+  .links .ibtn.ci{background:rgba(251,191,36,.18);color:#e5a600}
+  .links .ibtn.off{opacity:.3}
+  .s-name{font-size:.97rem}
+  .legenda{display:none !important}
+  .brand-t{font-size:.95rem}
+  .avatar{display:none}
 }
 .chip{display:inline-flex;align-items:center;gap:.3rem;padding:.2rem .55rem;border-radius:8px;font-size:.7rem;font-weight:700;background:var(--chip-bg);color:var(--fg2);border:1px solid var(--line);line-height:1.1}
 .chip i{font-size:.62rem}
@@ -1024,13 +1033,16 @@ function renderConteudo(d,tituloVazio,msgVazio){
 
 /* ══ REPERTÓRIO ══ */
 function temYt(m){return !!(m.yt&&extrairYtId(m.yt));}
+var ROTULOS={yt:'YouTube',bpm:'Metrônomo',sp:'Spotify',ci:'Cifra'};
 function ibtn(cls,icone,acao,ativo,titulo,sm){
-  return '<button class="ibtn '+cls+(sm?' sm':'')+(ativo?'':' off')+'" title="'+esc(titulo)+'" aria-label="'+esc(titulo)+'" onclick="'+acao+'"><i class="'+icone+'"></i></button>';
+  var l=ROTULOS[cls]?'<span class="lbl">'+ROTULOS[cls]+'</span>':'';
+  return '<button class="ibtn '+cls+(sm?' sm':'')+(ativo?'':' off')+'" title="'+esc(titulo)+'" aria-label="'+esc(titulo)+'" onclick="'+acao+'"><i class="'+icone+'"></i>'+l+'</button>';
 }
 function spBtn(url,sm){
   var u=urlOk(url);
-  if(!u) return '<span class="ibtn sp off'+(sm?' sm':'')+'"><i class="fa-brands fa-spotify"></i></span>';
-  return '<a class="ibtn sp'+(sm?' sm':'')+'" href="'+esc(u)+'" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify"><i class="fa-brands fa-spotify"></i></a>';
+  var l='<span class="lbl">Spotify</span>';
+  if(!u) return '<span class="ibtn sp off'+(sm?' sm':'')+'"><i class="fa-brands fa-spotify"></i>'+l+'</span>';
+  return '<a class="ibtn sp'+(sm?' sm':'')+'" href="'+esc(u)+'" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify"><i class="fa-brands fa-spotify"></i>'+l+'</a>';
 }
 function songHtml(m,i){
   var nome=m.nome||'—';
@@ -1043,12 +1055,12 @@ function songHtml(m,i){
 
   var bpm=parseInt(m.seq);
   var podeTocar=temYt(m)||partes.some(function(p){return p.yt&&extrairYtId(p.yt);});
-  var acts=
+  var acts='<div class="links">'+
     ibtn('yt','fa-brands fa-youtube','acaoMusica('+i+',\'yt\')',!!m.yt,'YouTube')+
     ibtn('bpm','fa-solid fa-drum','acaoMusica('+i+',\'metro\')',!isNaN(bpm),'Metrônomo'+(m.seq?' ('+m.seq+' BPM)':''))+
     spBtn(m.sp)+
     ibtn('ci','fa-solid fa-music','acaoMusica('+i+',\'cifra\')',!!m.cifra,'Cifra')+
-    ibtn('play','fa-solid fa-play','acaoMusica('+i+',\'play\')',podeTocar,'Tocar a partir daqui');
+  '</div>'+ibtn('play','fa-solid fa-play','acaoMusica('+i+',\'play\')',podeTocar,'Tocar a partir daqui');
 
   var medley='';
   if(partes.length){
