@@ -4,730 +4,295 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Ministério de Louvor</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-tap-highlight-color:transparent;scroll-behavior:smooth}
 
+/* ══════════ TEMA ESCURO (padrão) ══════════ */
 :root{
-  /* ── ESCURO: azul-noite + azul/roxo (padrão) ── */
-  --bg:#10121b;
-  --bg2:#191d2a;
-  --surface-2:#23283a;
-  --glass:#191d2a;
-  --glass-hover:#20253480;
-  --glass-border:rgba(255,255,255,.07);
-  --glass-border-lit:rgba(130,144,255,.32);
-
-  /* ── Azul / Roxo ── */
-  --neon-a:#8290ff;   /* azul-roxo principal */
-  --neon-b:#a78bfa;   /* roxo claro */
-  --neon-c:#63b3ff;   /* azul claro */
-
-  --neon-a-glow:rgba(130,144,255,.5);
-  --neon-b-glow:rgba(167,139,250,.35);
-  --neon-c-glow:rgba(99,179,255,.4);
-
-  --neon-a-soft:rgba(130,144,255,.14);
-  --neon-b-soft:rgba(167,139,250,.1);
-  --neon-c-soft:rgba(99,179,255,.1);
-
-  --t1:#f2f3fb;
-  --t2:#a0a6bd;
-  --t3:#5b6180;
-
-  --hero-grad-start:#ffffff;
-  --chip-bg:rgba(255,255,255,.05);
-  --medley:#b57bef;
-  --medley-soft:rgba(181,123,239,.16);
-  --medley-border:rgba(181,123,239,.4);
-
-  --r:18px;
-  --r-sm:12px;
-  --hh:60px;
-  --fh:'Space Grotesk',sans-serif;
-  --fd:'Rajdhani',sans-serif;
+  --bg:#0d0f16; --surface:#161a24; --surface2:#1d2230;
+  --line:#262c3c; --line2:#323a52;
+  --fg:#f2f4fb; --fg2:#a2abc8; --fg3:#69728f;
+  --accent:#4f7cff; --accent2:#7c5cff; --accent-soft:rgba(79,124,255,.15);
+  --gold:#fbbf24;
+  --card-grad:linear-gradient(135deg,#161c40 0%,#0f1330 55%,#0b0e22 100%);
+  --play-bg:#2b3144; --play-fg:#e9ecf8;
+  --row-alt:rgba(255,255,255,.028);
+  --shadow:0 10px 34px rgba(0,0,0,.45);
+  --shadow-s:0 4px 18px rgba(0,0,0,.35);
+  --chip-bg:rgba(255,255,255,.06);
+  --medley:#b57bef; --medley-soft:rgba(181,123,239,.13); --medley-border:rgba(181,123,239,.35);
+  --fd:'Plus Jakarta Sans','Inter',sans-serif; --fh:'Plus Jakarta Sans','Inter',sans-serif;
 }
-
-html{-webkit-tap-highlight-color:transparent}
+/* ══════════ TEMA CLARO ══════════ */
+body[data-theme="claro"]{
+  --bg:#eef1f9; --surface:#ffffff; --surface2:#f3f5fc;
+  --line:#e3e7f4; --line2:#d2d9ee;
+  --fg:#12183a; --fg2:#566085; --fg3:#8d96b5;
+  --accent:#3552d9; --accent2:#6a4fe0; --accent-soft:rgba(53,82,217,.1);
+  --card-grad:linear-gradient(135deg,#2a3996 0%,#1d2a78 52%,#2c3da3 100%);
+  --play-bg:#141a3a; --play-fg:#ffffff;
+  --row-alt:#f6f8fe;
+  --shadow:0 12px 34px rgba(40,55,120,.12);
+  --shadow-s:0 4px 16px rgba(40,55,120,.08);
+  --chip-bg:rgba(0,0,0,.04);
+  --medley:#8b3fd4; --medley-soft:rgba(139,63,212,.08); --medley-border:rgba(139,63,212,.3);
+}
+/* aliases p/ estilos reaproveitados (modais, player, treino, metrônomo) — resolvidos no body */
 body{
-  font-family:var(--fh);
-  background:var(--bg);
-  color:var(--t1);
-  min-height:100vh;
-  overflow-x:hidden;
+  --glass:var(--surface); --glass-border:var(--line); --glass-border-lit:var(--line2);
+  --neon-a:var(--accent); --neon-b:var(--gold); --neon-c:var(--accent2);
+  --neon-a-glow:rgba(79,124,255,.45); --neon-c-glow:rgba(124,92,255,.4);
+  --neon-a-soft:var(--accent-soft);
+  --t1:var(--fg); --t2:var(--fg2); --t3:var(--fg3);
 }
 
-/* ══ FUNDO ANIMADO ══ */
-.bg-fx{
-  position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
-}
-.bg-fx::before{
-  content:'';position:absolute;
-  width:520px;height:520px;border-radius:50%;
-  background:radial-gradient(circle,var(--neon-a-soft) 0%,transparent 70%);
-  top:-160px;left:-100px;
-  animation:driftA 18s ease-in-out infinite;
-}
-.bg-fx::after{
-  content:'';position:absolute;
-  width:420px;height:420px;border-radius:50%;
-  background:radial-gradient(circle,var(--neon-b-soft) 0%,transparent 70%);
-  bottom:-120px;right:-80px;
-  animation:driftB 22s ease-in-out infinite;
-}
-.bg-orb3{
-  position:absolute;
-  width:300px;height:300px;border-radius:50%;
-  background:radial-gradient(circle,var(--neon-c-soft) 0%,transparent 70%);
-  top:45%;left:45%;transform:translate(-50%,-50%);
-  animation:driftC 26s ease-in-out infinite;
-}
-@keyframes driftA{0%,100%{transform:translate(0,0)}40%{transform:translate(60px,40px)}70%{transform:translate(-30px,70px)}}
-@keyframes driftB{0%,100%{transform:translate(0,0)}35%{transform:translate(-50px,-40px)}65%{transform:translate(40px,-60px)}}
-@keyframes driftC{0%,100%{transform:translate(-50%,-50%)}50%{transform:translate(-45%,-55%)}}
-
-/* scanline sutil */
-.bg-fx .scan{
-  position:absolute;inset:0;
-  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(255,255,255,.012) 3px,rgba(255,255,255,.012) 4px);
-  pointer-events:none;
-}
-
-/* ══ HEADER ══ */
-header{
-  position:sticky;top:0;z-index:200;height:var(--hh);
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 1.1rem;
-  background:rgba(0,0,0,.6);
-  backdrop-filter:blur(28px) saturate(1.6);
-  -webkit-backdrop-filter:blur(28px) saturate(1.6);
-  border-bottom:1px solid var(--glass-border);
-}
-header::after{
-  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent 0%,var(--neon-a) 30%,var(--neon-b) 70%,transparent 100%);
-  opacity:.5;
-}
-
-.hd-brand{display:flex;align-items:center;gap:.6rem}
-.hd-gem{
-  position:relative;width:34px;height:34px;border-radius:10px;
-  background:linear-gradient(135deg,var(--neon-a),var(--neon-b));
-  display:flex;align-items:center;justify-content:center;
-  color:#fff;font-size:.88rem;flex-shrink:0;
-  box-shadow:0 0 18px var(--neon-a-glow),0 0 6px rgba(255,255,255,.15) inset;
-}
-.hd-gem::after{
-  content:'';position:absolute;inset:1px;border-radius:8px;
-  background:linear-gradient(135deg,rgba(255,255,255,.25),transparent);
-  pointer-events:none;
-}
-.hd-info{display:flex;flex-direction:column;gap:.05rem}
-.hd-name{
-  font-family:var(--fd);font-size:1rem;font-weight:700;
-  letter-spacing:.06em;color:var(--t1);line-height:1;
-  text-transform:uppercase;
-}
-.hd-date{
-  font-size:.62rem;font-weight:400;color:var(--t3);
-  display:flex;align-items:center;gap:.35rem;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-  max-width:200px;
-}
-.hd-live{
-  display:inline-flex;align-items:center;gap:.25rem;
-  background:var(--neon-a-soft);border:1px solid var(--glass-border-lit);
-  border-radius:20px;padding:.06rem .38rem;
-  font-size:.58rem;font-weight:700;color:var(--neon-a);
-  text-transform:uppercase;letter-spacing:.08em;flex-shrink:0;
-}
-.hd-live-dot{width:5px;height:5px;border-radius:50%;background:var(--neon-a);animation:pulse 1.4s ease-in-out infinite}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.7)}}
-
-/* temas */
-.theme-toggle-btn{
-  width:36px;height:36px;border-radius:11px;flex-shrink:0;
-  border:1px solid var(--glass-border-lit);background:var(--glass);
-  color:var(--neon-a);cursor:pointer;outline:none;
-  display:flex;align-items:center;justify-content:center;font-size:.95rem;
-  transition:transform .18s,border-color .2s,color .2s;
-  -webkit-tap-highlight-color:transparent;
-}
-.theme-toggle-btn:hover{border-color:var(--neon-a);box-shadow:0 0 12px var(--neon-a-glow)}
-.theme-toggle-btn:active{transform:scale(.9)}
-
-/* ════════════════════════════════════════
-   TEMAS — Escuro (padrão, no :root) e Claro
-════════════════════════════════════════ */
-
-/* ── CLARO: branco + azul/roxo ── */
-[data-theme="claro"]{
-  --bg:#f4f5fa;--bg2:#ffffff;--surface-2:#f0f1f8;
-  --glass:#ffffff;--glass-hover:rgba(82,101,217,.04);
-  --glass-border:#e8e9f0;--glass-border-lit:rgba(82,101,217,.32);
-  --neon-a:#5265d9;--neon-b:#7c5cd9;--neon-c:#3a8fd9;
-  --neon-a-glow:rgba(82,101,217,.22);--neon-b-glow:rgba(124,92,217,.2);--neon-c-glow:rgba(58,143,217,.2);
-  --neon-a-soft:rgba(82,101,217,.09);--neon-b-soft:rgba(124,92,217,.08);--neon-c-soft:rgba(58,143,217,.08);
-  --t1:#202440;--t2:#858ba5;--t3:#b4b9cc;
-  --hero-grad-start:#202440;
-  --chip-bg:rgba(82,101,217,.06);
-  --medley:#8b3fd4;--medley-soft:rgba(139,63,212,.1);--medley-border:rgba(139,63,212,.28);
-}
-
-/* ══ MAIN (área de conteúdo, dentro de .content-area) ══ */
-main{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:0}
-
-/* Animações de entrada */
-@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-.su{animation:slideUp .45s cubic-bezier(.22,1,.36,1) both}
-.su1{animation-delay:.04s}.su2{animation-delay:.1s}.su3{animation-delay:.17s}.su4{animation-delay:.24s}
-
-/* ══ HERO ══ */
-.hero{
-  position:relative;overflow:hidden;
-  border-radius:22px;padding:1.6rem 1.4rem 1.4rem;margin-bottom:1rem;
-  background:var(--glass);
-  border:1px solid var(--glass-border);
-  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
-}
-.hero::before{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,var(--neon-a-soft),transparent 55%,var(--neon-b-soft));
-  pointer-events:none;
-}
-/* brilho no topo */
-.hero::after{
-  content:'';position:absolute;top:0;left:10%;right:10%;height:1px;
-  background:linear-gradient(90deg,transparent,var(--neon-a),var(--neon-b),transparent);
-  opacity:.7;
-}
-.hero-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.1rem}
-.hero-week-label{
-  font-family:var(--fd);font-size:.75rem;font-weight:600;
-  color:var(--neon-a);letter-spacing:.12em;text-transform:uppercase;
-}
-.nav-cluster{display:flex;align-items:center;gap:.4rem}
-
-/* ── BOTÕES NAV — novo estilo ── */
-.nav-btn{
-  position:relative;
-  width:36px;height:36px;border-radius:10px;
-  border:1px solid var(--glass-border-lit);
-  background:var(--glass);
-  color:var(--t2);font-size:.78rem;
-  cursor:pointer;display:flex;align-items:center;justify-content:center;
-  transition:color .2s,border-color .2s,background .2s;
-  overflow:hidden;
-  -webkit-tap-highlight-color:transparent;
-}
-.nav-btn::before{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,var(--neon-a),var(--neon-b));
-  opacity:0;transition:opacity .2s;
-}
-.nav-btn:active{transform:scale(.91);transition:transform .1s}
-.nav-btn:hover{color:#fff;border-color:var(--neon-a);box-shadow:0 0 14px var(--neon-a-glow)}
-.nav-btn:hover::before{opacity:.15}
-.nav-btn i{position:relative;z-index:1}
-
-.nav-sem{
-  font-family:var(--fd);font-size:.78rem;font-weight:600;
-  color:var(--t2);letter-spacing:.05em;min-width:56px;text-align:center;
-}
-
-.hero-title{
-  font-family:var(--fd);
-  font-size:clamp(1.9rem,8vw,2.8rem);font-weight:700;line-height:1;
-  letter-spacing:.02em;text-transform:uppercase;
-  background:linear-gradient(120deg,var(--hero-grad-start) 20%,var(--neon-a) 60%,var(--neon-c) 95%);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  margin-bottom:.8rem;
-}
-.hero-date-chip{
-  display:inline-flex;align-items:center;gap:.5rem;
-  padding:.4rem .9rem;border-radius:10px;
-  background:rgba(255,255,255,.05);border:1px solid var(--glass-border-lit);
-  font-size:.8rem;font-weight:400;color:var(--t2);
-  backdrop-filter:blur(8px);
-}
-.hero-date-chip i{color:var(--neon-b);font-size:.85rem}
-
-/* ══ SECTION CARDS ══ */
-.sc{
-  background:var(--glass);
-  border:1px solid var(--glass-border);
-  border-radius:var(--r);
-  overflow:hidden;
-  margin-bottom:1rem;
-  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-  transition:border-color .3s;
-}
-.sc:hover{border-color:var(--glass-border-lit)}
-.sc-head{
-  display:flex;align-items:center;gap:.55rem;
-  padding:.7rem 1.1rem;
-  border-bottom:1px solid var(--glass-border);
-  background:rgba(255,255,255,.025);
-}
-.sc-head-icon{
-  width:28px;height:28px;border-radius:8px;
-  background:linear-gradient(135deg,var(--neon-a),var(--neon-b));
-  display:flex;align-items:center;justify-content:center;
-  font-size:.72rem;color:#fff;flex-shrink:0;
-  box-shadow:0 0 10px var(--neon-a-glow);
-}
-.sc-head-label{
-  font-family:var(--fd);font-size:.75rem;font-weight:700;
-  color:var(--t2);text-transform:uppercase;letter-spacing:.1em;
-}
-.sc-body{padding:.85rem}
-
-/* ══ REPERTÓRIO ══ */
-.rep-list{display:flex;flex-direction:column;gap:.55rem}
-/* linha de música (estilo do modelo): nº | nome + pílulas | ▶ */
-.rep-item{
-  display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:.9rem;
-  padding:.8rem .9rem .8rem 1rem;
-  background:var(--glass);
-  border:1px solid var(--glass-border);
-  border-radius:14px;
-  transition:border-color .2s,background .2s;
-  -webkit-tap-highlight-color:transparent;
-}
-.rep-item:hover{border-color:var(--glass-border-lit)}
-
-.rep-num{
-  width:34px;height:34px;border-radius:50%;
-  background:var(--surface-2,var(--neon-a-soft));
-  color:var(--neon-a);
-  font-family:var(--fd);font-size:.9rem;font-weight:700;
-  display:flex;align-items:center;justify-content:center;
-  align-self:start;margin-top:.05rem;
-}
-.rep-content{min-width:0;display:flex;flex-direction:column;gap:.45rem}
-.rep-nome{
-  font-family:var(--fh);font-size:1rem;font-weight:600;line-height:1.3;color:var(--t1);
-  overflow-wrap:anywhere;
-}
-/* uma linha só: etiquetas + links, quebrando se faltar espaço */
-.rep-meta{display:flex;flex-wrap:wrap;gap:.35rem;align-items:center}
-.rep-sep{width:1px;height:16px;background:var(--glass-border-lit);margin:0 .15rem}
-
-/* etiquetas */
-.tag-tom,.tag-bpm,.tag-medley{
-  display:inline-flex;align-items:center;gap:.3rem;
-  padding:.24rem .55rem;border-radius:999px;font-family:var(--fd);
-  font-size:.72rem;font-weight:700;white-space:nowrap;line-height:1.1;
-}
-.tag-tom{background:linear-gradient(135deg,var(--neon-a),var(--neon-c));color:#fff;min-width:24px;justify-content:center}
-
-/* ── LINKS EM PÍLULA ── */
-.rep-tags,.rep-links{display:flex;flex-wrap:wrap;gap:.35rem;align-items:center}
-.lnk{
-  display:inline-flex;align-items:center;gap:.3rem;
-  padding:.24rem .65rem;border-radius:999px;
-  font-size:.72rem;font-weight:600;text-decoration:none;line-height:1.1;
-  border:1px solid;cursor:pointer;transition:background .18s,color .18s;
-  white-space:nowrap;-webkit-tap-highlight-color:transparent;font-family:var(--fh);
-}
-.lnk i{font-size:.74rem}
-.lnk:active{transform:scale(.95)}
-.lnk-yt{background:rgba(255,60,60,.1);color:#ff5555;border-color:rgba(255,60,60,.25)}
-.lnk-yt:hover{background:#ff4444;color:#fff}
-.lnk-sp{background:rgba(29,185,84,.1);color:#1db954;border-color:rgba(29,185,84,.25)}
-.lnk-sp:hover{background:#1db954;color:#fff}
-.lnk-ci{background:rgba(240,144,10,.1);color:#e8890a;border-color:rgba(240,144,10,.28)}
-.lnk-ci:hover{background:#e8890a;color:#fff}
-
-/* botão ▶ redondo à direita */
-.rep-play{
-  width:38px;height:38px;border-radius:50%;border:none;cursor:pointer;
-  background:var(--neon-a);color:#fff;font-size:.8rem;
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:0 3px 12px var(--neon-a-glow);transition:transform .15s;
-  -webkit-tap-highlight-color:transparent;
-}
-.rep-play i{margin-left:2px}
-.rep-play:hover{transform:scale(1.07)}
-.rep-play:active{transform:scale(.92)}
-
-/* ── mini-menu do medley ── */
-.medley-menu{
-  margin-top:.15rem;background:var(--medley-soft);border:1px solid var(--medley-border);
-  border-radius:12px;padding:.65rem .7rem;display:none;flex-direction:column;gap:.55rem;
-}
-.medley-menu.aberto{display:flex}
-.medley-part{display:flex;flex-direction:column;gap:.35rem}
-.medley-part-title{
-  font-family:var(--fd);font-size:.75rem;font-weight:700;color:var(--medley);
-  text-transform:uppercase;letter-spacing:.04em;display:flex;align-items:center;gap:.4rem;
-}
-.medley-part-title .pnum{width:18px;height:18px;border-radius:50%;background:var(--medley);color:#fff;font-size:.62rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.medley-part-links{display:flex;flex-wrap:wrap;gap:.35rem}
-
-/* cabeçalho do repertório: título | busca + tocar tudo */
-.rep-head{display:flex;align-items:center;justify-content:space-between;gap:.8rem;flex-wrap:wrap;margin:.3rem 0 .9rem}
-.rep-head h2{font-family:var(--fd);font-size:1.15rem;font-weight:700;color:var(--t1);display:flex;align-items:center;gap:.5rem}
-.rep-head h2 i{color:var(--neon-a)}
-.rep-head-tools{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
-.rep-head-tools .search-box{width:250px;max-width:250px;padding:.55rem .9rem}
-.rep-head-tools .btn-tocar-tudo{margin-left:0}
-@media(max-width:560px){
-  .rep-head-tools{width:100%}
-  .rep-head-tools .search-box{width:auto;max-width:none;flex:1;min-width:0}
-  .rep-meta{flex-direction:column;align-items:flex-start;gap:.4rem}
-  .rep-sep{display:none}
-  .rep-item{gap:.7rem;padding:.75rem .7rem .75rem .8rem}
-  .rep-play{width:36px;height:36px}
-}
-
-/* ══ PLAYLIST AVISO ══ */
-.av-playlist{
-  margin-top:.55rem;display:flex;flex-direction:column;gap:.4rem;
-}
-.av-playlist-label{
-  font-family:var(--fd);font-size:.68rem;font-weight:700;
-  color:var(--neon-b);text-transform:uppercase;letter-spacing:.08em;
-  display:flex;align-items:center;gap:.35rem;margin-bottom:.15rem;
-}
-.av-playlist-btns{display:flex;gap:.45rem;flex-wrap:wrap;}
-.av-pl-btn{
-  display:inline-flex;align-items:center;gap:.4rem;
-  padding:.38rem .85rem;border-radius:9px;
-  font-size:.78rem;font-weight:600;text-decoration:none;
-  border:1px solid;transition:transform .2s,box-shadow .2s,opacity .2s;
-  -webkit-tap-highlight-color:transparent;
-}
-.av-pl-btn:hover{transform:translateY(-2px);opacity:.85}
-.av-pl-btn:active{transform:scale(.93)}
-.av-pl-btn.yt{background:rgba(255,50,50,.1);color:#ff5555;border-color:rgba(255,50,50,.25)}
-.av-pl-btn.yt:hover{box-shadow:0 0 14px rgba(255,50,50,.35)}
-.av-pl-btn.sp{background:rgba(29,185,84,.1);color:#1db954;border-color:rgba(29,185,84,.25)}
-.av-pl-btn.sp:hover{box-shadow:0 0 14px rgba(29,185,84,.35)}
-
-/* ══ ESCALA ══ */
-.esc-grid{display:grid;grid-template-columns:1fr 1fr;gap:.55rem}
-.esc-card{
-  background:rgba(255,255,255,.03);border:1px solid var(--glass-border);
-  border-radius:var(--r-sm);padding:.8rem .85rem;
-  transition:border-color .22s;
-}
-.esc-card:hover{border-color:var(--glass-border-lit)}
-.esc-role{
-  font-family:var(--fd);font-size:.68rem;font-weight:700;
-  color:var(--neon-b);text-transform:uppercase;letter-spacing:.1em;
-  display:flex;align-items:center;gap:.35rem;margin-bottom:.6rem;
-}
-.esc-role i{font-size:.8rem}
-.esc-membro{display:flex;align-items:center;gap:.45rem;margin-bottom:.3rem}
-.esc-av{
-  width:26px;height:26px;border-radius:8px;flex-shrink:0;
-  background:linear-gradient(135deg,rgba(176,110,243,.2),rgba(79,195,247,.2));
-  border:1px solid var(--glass-border-lit);
-  color:var(--neon-a);font-family:var(--fd);font-size:.62rem;font-weight:700;
-  display:flex;align-items:center;justify-content:center;
-}
-.esc-nome{font-size:.85rem;font-weight:500;color:var(--t1)}
-.esc-vazio{font-size:.8rem;color:var(--t3);font-style:italic}
-
-/* ══ AVISOS ══ */
-.avisos-list{display:flex;flex-direction:column;gap:.55rem}
-.av-item{
-  display:flex;gap:.8rem;align-items:flex-start;
-  padding:.85rem .9rem;
-  background:rgba(255,255,255,.03);border:1px solid var(--glass-border);
-  border-radius:var(--r-sm);
-  transition:border-color .22s,transform .22s cubic-bezier(.22,1,.36,1);
-}
-.av-item:hover{border-color:var(--glass-border-lit);transform:translateX(4px)}
-.av-icon{
-  width:38px;height:38px;border-radius:10px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;font-size:.95rem;
-}
-.av-icon.comemorativa{background:rgba(255,215,64,.08);border:1px solid rgba(255,215,64,.22);color:#ffd740}
-.av-icon.futura      {background:var(--neon-a-soft);border:1px solid var(--glass-border-lit);color:var(--neon-a)}
-.av-icon.playlist    {background:rgba(29,185,84,.1);border:1px solid rgba(29,185,84,.22);color:#1db954}
-.av-icon.geral       {background:rgba(105,255,71,.08);border:1px solid rgba(105,255,71,.22);color:#69ff47}
-.av-body{flex:1;min-width:0}
-.av-titulo{font-size:.9rem;font-weight:600;color:var(--t1);margin-bottom:.22rem;display:flex;align-items:center;gap:.4rem;flex-wrap:wrap}
-.av-pill{
-  padding:.07rem .42rem;border-radius:5px;font-size:.6rem;font-weight:700;
-  text-transform:uppercase;letter-spacing:.07em;
-}
-.av-pill.comemorativa{background:rgba(255,215,64,.1);color:#ffd740;border:1px solid rgba(255,215,64,.2)}
-.av-pill.futura      {background:var(--neon-a-soft);color:var(--neon-a);border:1px solid var(--glass-border-lit)}
-.av-pill.playlist    {background:rgba(29,185,84,.1);color:#1db954;border:1px solid rgba(29,185,84,.2)}
-.av-pill.geral       {background:rgba(105,255,71,.08);color:#69ff47;border:1px solid rgba(105,255,71,.18)}
-.av-desc{font-size:.83rem;color:var(--t2);line-height:1.55}
-.av-date{font-size:.73rem;color:var(--t3);margin-top:.28rem;display:flex;align-items:center;gap:.3rem;font-weight:500}
-.av-yt{
-  display:inline-flex;align-items:center;gap:.32rem;
-  margin-top:.45rem;font-size:.74rem;font-weight:600;
-  color:#ff5555;text-decoration:none;
-  transition:opacity .2s;
-}
-.av-yt:hover{opacity:.65}
-
-/* ══ ESTADOS ESPECIAIS ══ */
-.empty{display:flex;flex-direction:column;align-items:center;text-align:center;padding:4.5rem 2rem;gap:1rem}
-.empty-ico{
-  width:70px;height:70px;border-radius:20px;
-  background:var(--glass);border:1px solid var(--glass-border);
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.7rem;color:var(--t3);
-  box-shadow:0 0 30px var(--neon-a-soft) inset;
-}
-.empty h3{font-family:var(--fd);font-size:1rem;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.08em}
-.empty p{font-size:.83rem;color:var(--t3);max-width:260px;line-height:1.55}
-.loading{text-align:center;padding:5rem 2rem;color:var(--t3)}
-.loading i{font-size:1.8rem;color:var(--neon-a);display:block;margin-bottom:1rem;animation:spin 1s linear infinite}
+body{font-family:var(--fh);background:var(--bg);color:var(--fg);min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s}
+button{font-family:inherit}
 @keyframes spin{to{transform:rotate(360deg)}}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 
-/* ══ FOOTER ══ */
-footer{
-  position:relative;z-index:1;text-align:center;
-  padding:1.3rem 1rem;font-size:.7rem;color:var(--t3);
-  border-top:1px solid var(--glass-border);
-}
-footer i{color:var(--neon-a)}
+/* ══════════ TOPBAR ══════════ */
+.topbar{position:sticky;top:0;z-index:200;padding:.7rem 1rem .5rem;background:linear-gradient(var(--bg) 62%,transparent)}
+.topbar-in{max-width:1100px;margin:0 auto;height:62px;display:flex;align-items:center;gap:.7rem;padding:0 .8rem 0 1rem;background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-s)}
+.brand{display:flex;align-items:center;gap:.65rem;min-width:0;flex:1;cursor:pointer;background:none;border:none;color:inherit;text-align:left}
+.brand svg{width:36px;height:36px;flex-shrink:0}
+.brand-t{font-weight:800;font-size:1.02rem;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.brand-s{font-size:.68rem;color:var(--fg2);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.dnav{display:none;gap:.2rem;margin-right:.4rem}
+.dnav button{display:inline-flex;align-items:center;gap:.45rem;padding:.5rem .85rem;border-radius:12px;border:none;background:none;color:var(--fg2);font-weight:600;font-size:.84rem;cursor:pointer;transition:background .2s,color .2s}
+.dnav button:hover{background:var(--surface2);color:var(--fg)}
+.dnav button.ativo{background:var(--accent-soft);color:var(--accent)}
+.icon-btn{position:relative;width:38px;height:38px;border-radius:12px;border:none;background:transparent;color:var(--fg2);font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s,color .2s;flex-shrink:0}
+.icon-btn:hover{background:var(--surface2);color:var(--fg)}
+.icon-btn:active{transform:scale(.92)}
+.badge-n{position:absolute;top:3px;right:2px;min-width:16px;height:16px;padding:0 4px;border-radius:8px;background:#ef4444;color:#fff;font-size:.6rem;font-weight:800;display:none;align-items:center;justify-content:center;border:2px solid var(--surface);box-sizing:content-box}
+.avatar{width:38px;height:38px;border-radius:50%;border:none;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:.95rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 0 2px var(--surface),0 0 0 4px var(--line2)}
 
+/* ══════════ NAV INFERIOR (mobile) ══════════ */
+.bnav{position:fixed;left:0;right:0;bottom:0;z-index:180;display:flex;padding:.4rem .5rem calc(.4rem + env(safe-area-inset-bottom));background:var(--surface);border-top:1px solid var(--line);box-shadow:0 -6px 24px rgba(0,0,0,.14)}
+.bnav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:.18rem;padding:.3rem 0;border:none;background:none;color:var(--fg3);font-size:.62rem;font-weight:700;cursor:pointer;transition:color .2s}
+.bnav button i{width:44px;height:28px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:.95rem;transition:background .2s}
+.bnav button.ativo{color:var(--accent)}
+.bnav button.ativo i{background:var(--accent-soft)}
+body.modo-avulso .nav-cultos{display:none !important}
 
-/* ════════════════════════════════════════
-   LAYOUT COM SIDEBAR
-════════════════════════════════════════ */
-.app{display:flex;min-height:100vh;position:relative;z-index:1}
-
-/* ── SIDEBAR ── */
-.sidebar{
-  width:248px;flex-shrink:0;
-  background:var(--bg2);
-  border-right:1px solid var(--glass-border);
-  padding:1.5rem 1rem;
-  display:flex;flex-direction:column;
-  position:fixed;inset:0 auto 0 0;z-index:120;
-  transition:transform .28s cubic-bezier(.22,1,.36,1);
-}
-.sb-logo{display:flex;align-items:center;gap:.7rem;padding:0 .5rem;margin-bottom:2rem}
-.sb-gem{
-  width:44px;height:44px;border-radius:13px;flex-shrink:0;
-  background:linear-gradient(135deg,var(--neon-a),var(--neon-b));
-  display:flex;align-items:center;justify-content:center;
-  color:#fff;font-size:1.15rem;
-  box-shadow:0 0 20px var(--neon-a-glow);
-}
-.sb-logo-txt h2{font-family:var(--fd);font-size:.95rem;font-weight:700;color:var(--t1);line-height:1.1;letter-spacing:.02em}
-.sb-logo-txt span{font-size:.65rem;color:var(--t2)}
-.sb-label{
-  font-size:.62rem;font-weight:700;color:var(--t3);
-  letter-spacing:.12em;padding:0 .7rem;margin-bottom:.7rem;text-transform:uppercase;
-}
-.sb-menu{display:flex;flex-direction:column;gap:.3rem}
-.sb-item{
-  display:flex;align-items:center;gap:.8rem;
-  padding:.78rem .85rem;border-radius:12px;
-  color:var(--t2);font-size:.85rem;font-weight:600;
-  cursor:pointer;border:none;background:none;width:100%;text-align:left;
-  font-family:var(--fh);transition:color .2s,background .2s;
-  -webkit-tap-highlight-color:transparent;
-}
-.sb-item i{width:20px;font-size:.95rem;text-align:center;flex-shrink:0}
-.sb-item:hover{color:var(--neon-a);background:var(--neon-a-soft)}
-.sb-item.active{color:var(--neon-a);background:var(--neon-a-soft)}
-.sb-item.active i{color:var(--neon-a)}
-.sb-bottom{
-  margin-top:auto;background:var(--glass);border:1px solid var(--glass-border);
-  padding:1rem;border-radius:14px;text-align:center;
-}
-.sb-bottom i{color:var(--neon-a);font-size:1.4rem;margin-bottom:.5rem}
-.sb-bottom p{font-size:.72rem;color:var(--t2);line-height:1.55}
-
-/* overlay para fechar sidebar no mobile */
-.sb-backdrop{
-  position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:110;
-  opacity:0;pointer-events:none;transition:opacity .25s;
-}
-.sb-backdrop.show{opacity:1;pointer-events:auto}
-
-/* ── ÁREA PRINCIPAL ── */
-.content-area{
-  margin-left:248px;flex:1;min-width:0;
-  padding:1.6rem 2rem 3rem;
+@media(min-width:900px){
+  .dnav{display:flex}
+  .bnav{display:none}
+  .wrap{padding-bottom:3rem !important}
 }
 
-/* ── TOPBAR ── */
-header.topbar{position:static;height:auto;padding:0;background:none;backdrop-filter:none;-webkit-backdrop-filter:none;border:none;z-index:auto}
-header.topbar::after{display:none}
-.topbar{
-  display:flex;align-items:center;justify-content:space-between;gap:1rem;
-  margin-bottom:1.6rem;max-width:760px;margin-left:auto;margin-right:auto;
-}
-.topbar-left{min-width:0}
-.topbar-left small{color:var(--t2);font-size:.72rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;display:flex;align-items:center;gap:.4rem}
-.topbar-left .live-chip{
-  display:inline-flex;align-items:center;gap:.3rem;
-  background:var(--neon-a-soft);border:1px solid var(--glass-border-lit);
-  border-radius:20px;padding:.08rem .45rem;color:var(--neon-a);
-  font-size:.6rem;font-weight:700;letter-spacing:.06em;
-}
-.topbar-left .live-dot{width:5px;height:5px;border-radius:50%;background:var(--neon-a);animation:pulse 1.4s ease-in-out infinite}
-.topbar-left h3{font-size:1.15rem;font-weight:700;color:var(--t1);margin-top:.3rem;font-family:var(--fd)}
-.topbar-actions{display:flex;align-items:center;gap:.6rem;flex-shrink:0}
-.icon-btn{
-  width:40px;height:40px;border-radius:12px;
-  background:var(--glass);border:1px solid var(--glass-border);
-  color:var(--t1);cursor:pointer;display:flex;align-items:center;justify-content:center;
-  font-size:.95rem;transition:border-color .2s,color .2s;
-  -webkit-tap-highlight-color:transparent;
-}
-.icon-btn:hover{border-color:var(--neon-a);color:var(--neon-a)}
-.topbar-menu-btn{display:none}
+/* ══════════ ESTRUTURA ══════════ */
+.wrap{max-width:1100px;margin:0 auto;padding:.5rem 1rem 6.5rem}
+.view{display:none}
+.view.ativa{display:block;animation:rise .4s cubic-bezier(.22,1,.36,1) both}
 
-/* ── BANNER (culto especial) ── */
-.banner{
-  position:relative;overflow:hidden;
-  border-radius:20px;padding:1.8rem 1.6rem;margin-bottom:1.4rem;
-  background:linear-gradient(120deg,var(--neon-a),var(--neon-b));
-  color:#fff;display:flex;justify-content:space-between;align-items:center;gap:1.2rem;
-  box-shadow:0 10px 40px var(--neon-a-glow);
-}
-.banner::before{content:'';position:absolute;top:-50px;right:-30px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.1)}
-.banner::after{content:'';position:absolute;bottom:-60px;right:120px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,.07)}
-.banner-main{position:relative;z-index:1;min-width:0}
-.banner-tag{
-  display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.25);
-  padding:.35rem .8rem;border-radius:20px;font-size:.62rem;font-weight:700;letter-spacing:.1em;margin-bottom:.8rem;text-transform:uppercase;
-}
-.banner-main h1{font-size:clamp(1.5rem,3vw,2rem);font-weight:800;margin-bottom:.4rem;font-family:var(--fd)}
-.banner-main p{font-size:.85rem;color:rgba(255,255,255,.88)}
-.banner-info{
-  position:relative;z-index:1;flex-shrink:0;
-  background:rgba(255,255,255,.15);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
-  border:1px solid rgba(255,255,255,.22);border-radius:15px;padding:1.1rem 1.3rem;min-width:220px;
-}
-.banner-info small{font-size:.62rem;color:rgba(255,255,255,.85);font-weight:700;letter-spacing:.06em;text-transform:uppercase;display:flex;align-items:center;gap:.35rem}
-.banner-info h2{font-size:1.25rem;font-weight:800;margin:.5rem 0;font-family:var(--fd)}
-.banner-info p{font-size:.72rem;color:rgba(255,255,255,.85);margin-top:.4rem;display:flex;align-items:center;gap:.4rem}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:1.1rem;box-shadow:var(--shadow-s);margin-top:1rem}
+.sec-h{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;margin-bottom:.9rem}
+.sec-h h2{font-size:1.12rem;font-weight:800;display:flex;align-items:center;gap:.55rem}
+.sec-h h2 svg{width:22px;height:22px;flex-shrink:0}
+.sec-h .sub{font-size:.76rem;color:var(--fg2);font-weight:500}
+.sec-h .grow{flex:1}
+.page-title{display:flex;align-items:center;gap:.7rem;margin:.6rem .2rem .2rem}
+.page-title .pt-ico{width:42px;height:42px;border-radius:14px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:1.05rem}
+.page-title h1{font-size:1.4rem;font-weight:800;line-height:1.15}
+.page-title p{font-size:.78rem;color:var(--fg2);margin-top:.1rem}
 
-/* ── ACESSO RÁPIDO ── */
-.qa-title{margin:1.6rem 0 .9rem}
-.qa-title h2{font-size:1.05rem;font-weight:700;color:var(--t1);font-family:var(--fd)}
-.qa-title p{color:var(--t2);font-size:.75rem;margin-top:.25rem}
-.qa-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;margin-bottom:1.4rem}
-.qa-card{
-  background:var(--glass);border:1px solid var(--glass-border);border-radius:15px;
-  padding:1.1rem;cursor:pointer;transition:transform .2s,border-color .2s;
-  -webkit-tap-highlight-color:transparent;
-}
-.qa-card:hover{transform:translateY(-3px);border-color:var(--neon-a)}
-.qa-icon{
-  width:42px;height:42px;border-radius:12px;background:var(--neon-a-soft);color:var(--neon-a);
-  display:flex;align-items:center;justify-content:center;font-size:1.05rem;margin-bottom:.8rem;
-}
-.qa-card h3{font-size:.85rem;font-weight:700;color:var(--t1);margin-bottom:.3rem;font-family:var(--fh)}
-.qa-card p{color:var(--t2);font-size:.68rem}
+/* ══════════ HERO / BANNER ══════════ */
+.hero{position:relative;overflow:hidden;border-radius:24px;min-height:190px;display:flex;align-items:center;padding:1.4rem 1.5rem;background:#10142a center/cover no-repeat;box-shadow:var(--shadow);isolation:isolate}
+.hero-art{position:absolute;inset:0;width:100%;height:100%;z-index:-2;display:block}
+.hero-art.claro{display:none}
+body[data-theme="claro"] .hero-art.claro{display:block}
+body[data-theme="claro"] .hero-art.escuro{display:none}
+.hero.com-foto .hero-art{display:none !important}
+.hero::before{content:'';position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(9,12,30,.82) 0%,rgba(9,12,30,.5) 42%,rgba(9,12,30,0) 78%)}
+.hero-txt{max-width:420px;color:#fff}
+.hero h1{font-size:clamp(1.9rem,6.5vw,2.8rem);font-weight:800;line-height:1.05;letter-spacing:-.01em}
+.hero p{margin-top:.55rem;font-size:clamp(.88rem,2.6vw,1.05rem);line-height:1.4;color:rgba(255,255,255,.92);font-weight:500}
+.hero-bar{width:60px;height:3px;border-radius:3px;background:var(--gold);margin-top:.9rem}
 
-/* ── BUSCA ── */
-.rep-search-row{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1rem;flex-wrap:wrap}
-.search-box{
-  background:var(--glass);border:1px solid var(--glass-border);border-radius:12px;
-  padding:.7rem 1rem;display:flex;gap:.6rem;align-items:center;color:var(--t2);
-  max-width:300px;width:100%;transition:border-color .2s;
-}
-.search-box:focus-within{border-color:var(--neon-a)}
-.search-box input{background:none;border:none;outline:none;color:var(--t1);width:100%;font-size:.85rem;font-family:var(--fh)}
-.search-box input::placeholder{color:var(--t3)}
+/* ══════════ HOME GRID ══════════ */
+.home-grid{display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);gap:1rem;margin-top:1rem}
+@media(max-width:419px){.home-grid{grid-template-columns:1fr}}
+.culto{position:relative;overflow:hidden;border-radius:22px;padding:1.15rem;color:#fff;background:var(--card-grad);border:1px solid rgba(255,255,255,.07);display:flex;flex-direction:column;gap:.5rem;min-height:196px;box-shadow:var(--shadow)}
+.culto::after{content:'';position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(110,140,255,.28),transparent 70%);pointer-events:none}
+.c-badge{display:inline-flex;align-items:center;gap:.4rem;font-size:.76rem;font-weight:600;color:#e4e9ff;position:relative;z-index:1;padding-right:64px}
+.c-badge i{color:var(--gold);font-size:.9rem}
+.c-title{font-size:clamp(1.55rem,5.6vw,2.15rem);font-weight:800;letter-spacing:.01em;text-transform:uppercase;line-height:1.05;word-break:break-word;position:relative;z-index:1;margin-top:.15rem}
+.c-sub{font-size:.76rem;color:#b9c3ee;font-weight:500;position:relative;z-index:1;margin-top:-.2rem}
+.c-data{display:flex;align-items:center;gap:.45rem;font-size:.8rem;color:#e1e7ff;font-weight:500;position:relative;z-index:1}
+.c-data i{color:#cdd6ff}
+.c-nav{position:absolute;top:.85rem;right:.85rem;display:flex;gap:.3rem;z-index:2}
+.c-nav button{width:28px;height:28px;border-radius:9px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.1);color:#fff;font-size:.68rem;cursor:pointer;transition:background .2s}
+.c-nav button:hover{background:rgba(255,255,255,.22)}
+body.modo-avulso .c-nav{display:none}
+.btn-gold{margin-top:auto;align-self:flex-start;display:inline-flex;align-items:center;gap:.55rem;padding:.62rem 1.05rem;border-radius:12px;border:none;background:linear-gradient(135deg,#ffd54f,#f5a623);color:#2a1c00;font-weight:800;font-size:.82rem;cursor:pointer;position:relative;z-index:1;box-shadow:0 6px 16px rgba(245,166,35,.32);transition:transform .15s}
+.btn-gold:hover{transform:translateY(-2px)}
+.btn-gold:active{transform:scale(.96)}
 
-/* setas de semana dentro do banner */
-.banner-week{display:flex;align-items:center;gap:.5rem;margin:.5rem 0}
-.banner-week h2{margin:0}
-.banner-nav{
-  width:30px;height:30px;border-radius:9px;flex-shrink:0;cursor:pointer;
-  background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);color:#fff;
-  display:flex;align-items:center;justify-content:center;font-size:.75rem;transition:background .2s;
-}
-.banner-nav:hover{background:rgba(255,255,255,.32)}
-.inicio-rep-title{margin:.4rem 0 .8rem}
-.inicio-rep-title h2{font-size:1.05rem;font-weight:700;color:var(--t1);font-family:var(--fd);display:flex;align-items:center;gap:.5rem}
-.inicio-rep-title h2 i{color:var(--neon-a)}
-#sec-inicio .qa-title{margin-top:1.8rem}
+.quick{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:1.1rem .8rem;box-shadow:var(--shadow-s)}
+.quick h3{font-size:1.02rem;font-weight:800;margin-bottom:.9rem}
+.q-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem .1rem}
+.q{display:flex;flex-direction:column;align-items:center;gap:.4rem;background:none;border:none;color:var(--fg);font-size:.64rem;letter-spacing:-.01em;font-weight:700;cursor:pointer;min-width:0}
+.q span.q-i{width:50px;height:50px;border-radius:15px;background:var(--surface2);border:1px solid var(--line);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:1.1rem;transition:transform .18s,background .2s,box-shadow .2s}
+.q:hover span.q-i{transform:translateY(-3px);background:var(--accent-soft);box-shadow:0 8px 18px rgba(79,124,255,.18)}
+.q:active span.q-i{transform:scale(.93)}
+@media(min-width:900px){.q-grid{grid-template-columns:repeat(6,1fr)}}
+@media(min-width:560px) and (max-width:899px){.q-grid{grid-template-columns:repeat(6,1fr)}}
 
-/* ── NAVEGAÇÃO DE SEÇÕES ── */
-.sec-view{display:none;animation:slideUp .4s cubic-bezier(.22,1,.36,1) both}
-.sec-view.active{display:block}
-.sec-vazio-busca{text-align:center;color:var(--t3);font-style:italic;padding:2rem 1rem;font-size:.85rem}
+/* ══════════ REPERTÓRIO ══════════ */
+.search{position:relative;flex:1;min-width:150px;max-width:300px}
+.search i{position:absolute;left:.85rem;top:50%;transform:translateY(-50%);color:var(--fg3);font-size:.78rem}
+.search input{width:100%;padding:.55rem .9rem .55rem 2.2rem;border-radius:14px;border:1px solid var(--line);background:var(--surface2);color:var(--fg);font-family:inherit;font-size:.82rem;outline:none;transition:border-color .2s}
+.search input:focus{border-color:var(--accent)}
+.search input::placeholder{color:var(--fg3)}
+.count-pill{padding:.15rem .6rem;border-radius:20px;background:var(--accent-soft);color:var(--accent);font-size:.7rem;font-weight:800}
 
-/* ══ MOBILE ══ */
-/* tablet: sidebar mais estreita */
-@media(max-width:980px){
-  .sidebar{width:216px}
-  .content-area{margin-left:216px;padding:1.4rem 1.3rem 3rem}
-  .qa-grid{grid-template-columns:repeat(2,1fr)}
+.song-wrap{border-radius:15px;transition:background .2s}
+.song-wrap:nth-child(odd){background:var(--row-alt)}
+.song-wrap:hover{background:var(--surface2)}
+.song{display:grid;grid-template-columns:32px minmax(0,1fr) auto;grid-template-areas:"num name acts";align-items:center;gap:.75rem;padding:.7rem .7rem}
+.s-num{grid-area:num;width:30px;height:30px;border-radius:50%;background:var(--surface2);border:1px solid var(--line);color:var(--fg);font-weight:800;font-size:.78rem;display:flex;align-items:center;justify-content:center}
+.s-main{grid-area:name;min-width:0}
+.s-name{font-weight:700;font-size:.98rem;line-height:1.28;word-break:break-word}
+.s-tags{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.35rem}
+.acts{grid-area:acts;display:flex;align-items:center;gap:.45rem}
+.ibtn{width:32px;height:32px;border-radius:50%;border:none;display:inline-flex;align-items:center;justify-content:center;font-size:.85rem;cursor:pointer;text-decoration:none;flex-shrink:0;transition:transform .15s,box-shadow .2s,opacity .2s}
+.ibtn:hover{transform:translateY(-2px);box-shadow:0 6px 14px rgba(0,0,0,.25)}
+.ibtn:active{transform:scale(.9)}
+.ibtn.yt{background:#ff3b3b;color:#fff}
+.ibtn.bpm{background:#1d9bf0;color:#fff}
+.ibtn.sp{background:#1db954;color:#fff}
+.ibtn.ci{background:#fbbf24;color:#2a1c00}
+.ibtn.play{background:var(--play-bg);color:var(--play-fg)}
+.ibtn.sm{width:28px;height:28px;font-size:.75rem}
+.ibtn.off{opacity:.2;pointer-events:none;filter:grayscale(.7)}
+@media(max-width:560px){
+  .wrap{padding-left:.7rem;padding-right:.7rem}
+  .panel{padding:.85rem .7rem}
+  .song{gap:.55rem;padding:.65rem .45rem}
+  .ibtn{width:28px;height:28px;font-size:.74rem}
+  .acts{gap:.3rem}
+  .s-name{font-size:.93rem}
 }
-/* mobile: sidebar vira drawer */
-@media(max-width:720px){
-  .sidebar{transform:translateX(-100%);width:260px;box-shadow:0 0 40px rgba(0,0,0,.4)}
-  .sidebar.open{transform:translateX(0)}
-  .content-area{margin-left:0;padding:1.1rem .9rem 3.5rem}
-  .topbar-menu-btn{display:flex}
-  .banner{flex-direction:column;align-items:stretch;padding:1.4rem}
-  .banner-info{min-width:0}
-  .qa-grid{grid-template-columns:repeat(2,1fr);gap:.6rem}
-  .qa-card{padding:.9rem}
+@media(max-width:399px){
+  .song{grid-template-columns:30px minmax(0,1fr);grid-template-areas:"num name" ". acts";gap:.5rem .7rem}
+  .acts{gap:.5rem}
+  .ibtn{width:34px;height:34px;font-size:.88rem}
 }
-@media(max-width:480px){
-  .content-area{padding:1rem .7rem 3.5rem}
-  .esc-grid{grid-template-columns:1fr}
-  .hero-title{font-size:1.9rem}
-  .topbar-left h3{font-size:1rem}
-  .banner-main h1{font-size:1.35rem}
-}
-@media(max-width:380px){
-  .qa-grid{grid-template-columns:1fr 1fr}
-  .search-box{max-width:100%}
-}
-/* ══ MODO AVULSO ══ */
-.avulso-hero{
-  position:relative;overflow:hidden;
-  border-radius:22px;padding:1.6rem 1.4rem 1.4rem;margin-bottom:1rem;
-  background:linear-gradient(135deg,rgba(245,158,11,.18),rgba(217,119,6,.1));
-  border:1px solid rgba(245,158,11,.35);
-}
-.avulso-hero::after{
-  content:'';position:absolute;top:0;left:10%;right:10%;height:1px;
-  background:linear-gradient(90deg,transparent,#f59e0b,#fbbf24,transparent);
-  opacity:.7;
-}
-.avulso-badge-tipo{
-  display:inline-flex;align-items:center;gap:.4rem;
-  padding:.25rem .8rem;border-radius:20px;
-  background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.35);
-  font-size:.7rem;font-weight:600;color:#f59e0b;
-  letter-spacing:.08em;text-transform:uppercase;margin-bottom:.9rem;
-}
-.avulso-hero-title{
-  font-family:var(--fd);
-  font-size:clamp(1.7rem,7vw,2.4rem);font-weight:700;line-height:1.05;
-  letter-spacing:.02em;text-transform:uppercase;
-  background:linear-gradient(120deg,var(--hero-grad-start) 20%,#e8610a 70%,#f0900a 100%);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  margin-bottom:.8rem;
-}
-.avulso-date-chip{
-  display:inline-flex;align-items:center;gap:.5rem;
-  padding:.4rem .9rem;border-radius:10px;
-  background:rgba(255,255,255,.06);border:1px solid rgba(245,158,11,.25);
-  font-size:.8rem;font-weight:400;color:var(--t2);
-}
-.avulso-date-chip i{color:#f59e0b;}
-.avulso-isolado-info{
-  display:flex;align-items:center;gap:.5rem;
-  padding:.5rem .85rem;border-radius:10px;
-  background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.18);
-  font-size:.75rem;color:var(--t2);margin-top:.8rem;
-}
-.avulso-isolado-info i{color:#f59e0b;flex-shrink:0;}
+.chip{display:inline-flex;align-items:center;gap:.3rem;padding:.2rem .55rem;border-radius:8px;font-size:.7rem;font-weight:700;background:var(--chip-bg);color:var(--fg2);border:1px solid var(--line);line-height:1.1}
+.chip i{font-size:.62rem}
+.chip-tom{background:var(--accent-soft);color:var(--accent);border-color:transparent}
+.tag-medley{display:inline-flex;align-items:center;gap:.3rem;padding:.2rem .55rem;border-radius:8px;font-size:.7rem;font-weight:700;font-family:inherit;line-height:1.1}
+.tag-medley .fa-chevron-down{font-size:.55rem;transition:transform .2s}
+.tag-treino{font-size:.7rem !important;padding:.22rem .55rem !important;border-radius:8px !important;font-family:inherit !important}
 
+.medley-box{display:none;margin:0 .7rem .7rem 3.6rem;padding:.4rem .75rem;border-radius:14px;background:var(--medley-soft);border:1px solid var(--medley-border)}
+.medley-box.aberto{display:block;animation:rise .25s ease both}
+.mpart{display:flex;align-items:center;gap:.6rem;padding:.5rem 0;flex-wrap:wrap}
+.mpart+.mpart{border-top:1px dashed var(--medley-border)}
+.mp-num{width:22px;height:22px;border-radius:50%;background:var(--medley);color:#fff;font-size:.66rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.mp-name{flex:1;min-width:120px;font-size:.86rem;font-weight:700;color:var(--fg)}
+.mp-acts{display:flex;gap:.4rem}
+@media(max-width:470px){.medley-box{margin-left:1rem}}
+
+/* ══════════ ESCALA ══════════ */
+.esc-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:700px){.esc-grid{grid-template-columns:1fr}}
+.esc-box{border:1px solid var(--line);border-radius:18px;padding:.8rem;background:var(--surface)}
+.esc-h{display:flex;align-items:center;gap:.65rem;margin-bottom:.45rem;padding:.1rem .2rem}
+.esc-h .eh-i{width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:.95rem;color:#fff}
+.esc-h b{font-size:.98rem;font-weight:800;flex:1}
+.pessoa{display:flex;align-items:center;gap:.75rem;padding:.6rem .6rem;border-radius:13px}
+.pessoa:nth-child(even){background:var(--row-alt)}
+.p-av{width:34px;height:34px;border-radius:50%;background:var(--surface2);border:1px solid var(--line);color:var(--accent);font-weight:800;font-size:.74rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.p-nome{font-weight:700;font-size:.93rem}
+.p-vazio{padding:.8rem .6rem;color:var(--fg3);font-size:.84rem;font-style:italic}
+.resumo-esc{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.9rem}
+
+/* ══════════ AVISOS ══════════ */
+.filtros{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.9rem}
+.filtro{display:inline-flex;align-items:center;gap:.4rem;padding:.4rem .8rem;border-radius:20px;border:1px solid var(--line);background:var(--surface2);color:var(--fg2);font-size:.74rem;font-weight:700;cursor:pointer;transition:all .2s}
+.filtro:hover{border-color:var(--accent);color:var(--accent)}
+.filtro.ativo{background:var(--accent);border-color:var(--accent);color:#fff}
+.av-row{display:flex;gap:.85rem;padding:.85rem .75rem;border-radius:15px;align-items:flex-start}
+.av-row:nth-child(odd){background:var(--row-alt)}
+.av-ico{width:40px;height:40px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.95rem}
+.av-ico.comemorativa{background:rgba(251,191,36,.16);color:#e8a60c}
+.av-ico.futura{background:var(--accent-soft);color:var(--accent)}
+.av-ico.playlist{background:rgba(29,185,84,.15);color:#17a74a}
+.av-ico.geral{background:rgba(124,92,255,.15);color:#7c5cff}
+.av-body{flex:1;min-width:0}
+.av-t{font-weight:700;font-size:.97rem;display:flex;align-items:center;gap:.45rem;flex-wrap:wrap;word-break:break-word}
+.av-pill{padding:.1rem .5rem;border-radius:7px;font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em}
+.av-pill.comemorativa{background:rgba(251,191,36,.16);color:#c98c00}
+.av-pill.futura{background:var(--accent-soft);color:var(--accent)}
+.av-pill.playlist{background:rgba(29,185,84,.15);color:#17a74a}
+.av-pill.geral{background:rgba(124,92,255,.15);color:#7c5cff}
+.av-d{font-size:.85rem;color:var(--fg2);line-height:1.55;margin-top:.25rem;white-space:pre-line;word-break:break-word}
+.av-dt{display:inline-flex;align-items:center;gap:.35rem;font-size:.74rem;color:var(--fg3);font-weight:600;margin-top:.35rem}
+.av-acts{display:flex;gap:.45rem;flex-wrap:wrap;margin-top:.55rem}
+.pbtn{display:inline-flex;align-items:center;gap:.45rem;padding:.42rem .85rem;border-radius:11px;border:none;font-size:.76rem;font-weight:700;cursor:pointer;text-decoration:none;transition:transform .15s}
+.pbtn:hover{transform:translateY(-2px)}
+.pbtn.yt{background:#ff3b3b;color:#fff}
+.pbtn.sp{background:#1db954;color:#fff}
+
+/* ══════════ CULTOS ══════════ */
+.semana-nav{display:flex;align-items:center;gap:.8rem;padding:.9rem;border-radius:18px;background:var(--card-grad);color:#fff;margin-bottom:1rem}
+.semana-nav .sn-mid{flex:1;text-align:center}
+.semana-nav b{display:block;font-size:1.25rem;font-weight:800}
+.semana-nav small{font-size:.76rem;color:#c3ccf5}
+.semana-nav button{width:38px;height:38px;border-radius:12px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff;cursor:pointer}
+.semana-nav button:hover{background:rgba(255,255,255,.22)}
+.sem-row{display:flex;align-items:center;gap:.8rem;padding:.8rem .7rem;border-radius:15px;cursor:pointer;border:none;background:none;width:100%;text-align:left;color:var(--fg);transition:background .2s}
+.sem-row:nth-child(odd){background:var(--row-alt)}
+.sem-row:hover{background:var(--surface2)}
+.sem-row.atual .s-num{background:var(--accent);color:#fff;border-color:transparent}
+.sem-row .sr-t{font-weight:700;font-size:.93rem}
+.sem-row .sr-s{font-size:.75rem;color:var(--fg2);margin-top:.1rem}
+.sem-row>i{color:var(--fg3);font-size:.75rem}
+.sem-row .grow{flex:1;min-width:0}
+
+/* ══════════ CONFIG / AJUDA ══════════ */
+.opt-row{display:flex;align-items:center;gap:.85rem;padding:.85rem .7rem;border-radius:15px;width:100%;border:none;background:none;color:var(--fg);text-align:left;cursor:pointer;transition:background .2s}
+.opt-row:nth-child(odd){background:var(--row-alt)}
+.opt-row:hover{background:var(--surface2)}
+.opt-row .o-i{width:40px;height:40px;border-radius:13px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0}
+.opt-row b{display:block;font-size:.92rem}
+.opt-row small{font-size:.76rem;color:var(--fg2)}
+.tema-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+.tema-opt{border:2px solid var(--line);border-radius:16px;padding:.7rem;background:var(--surface2);color:var(--fg);cursor:pointer;display:flex;flex-direction:column;gap:.55rem;align-items:stretch;font-weight:700;font-size:.85rem;transition:border-color .2s}
+.tema-opt.ativo{border-color:var(--accent)}
+.tema-prev{height:54px;border-radius:10px;display:flex;gap:.3rem;padding:.4rem}
+.tema-prev.t-esc{background:#0d0f16}.tema-prev.t-cla{background:#eef1f9}
+.tema-prev i{flex:1;border-radius:6px;display:block}
+.t-esc i:nth-child(1){background:#161a24}.t-esc i:nth-child(2){background:#4f7cff}
+.t-cla i:nth-child(1){background:#fff}.t-cla i:nth-child(2){background:#3552d9}
+.faq{border:1px solid var(--line);border-radius:15px;margin-bottom:.6rem;background:var(--surface2);overflow:hidden}
+.faq summary{list-style:none;cursor:pointer;padding:.85rem 1rem;font-weight:700;font-size:.9rem;display:flex;align-items:center;gap:.65rem}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary i{color:var(--accent);width:18px;text-align:center}
+.faq summary::after{content:'\f078';font-family:'Font Awesome 6 Free';font-weight:900;margin-left:auto;font-size:.65rem;color:var(--fg3);transition:transform .2s}
+.faq[open] summary::after{transform:rotate(180deg)}
+.faq p{padding:0 1rem .9rem 2.8rem;font-size:.85rem;line-height:1.6;color:var(--fg2)}
+.legenda{display:flex;gap:.9rem;flex-wrap:wrap;margin-top:.6rem}
+.legenda span{display:inline-flex;align-items:center;gap:.4rem;font-size:.78rem;color:var(--fg2);font-weight:600}
+
+/* ══════════ ESTADOS ══════════ */
+.empty{display:flex;flex-direction:column;align-items:center;text-align:center;padding:2.8rem 1.5rem;gap:.7rem}
+.empty .e-ico{width:62px;height:62px;border-radius:20px;background:var(--surface2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:var(--fg3)}
+.empty h3{font-size:1rem;font-weight:800}
+.empty p{font-size:.84rem;color:var(--fg2);max-width:280px;line-height:1.55}
+.loading{text-align:center;padding:3rem 1rem;color:var(--fg3)}
+.loading i{font-size:1.6rem;color:var(--accent);display:block;margin-bottom:.8rem;animation:spin 1s linear infinite}
+footer{text-align:center;padding:1rem;font-size:.7rem;color:var(--fg3)}
+footer i{color:var(--accent)}
+.btn-tocar-tudo{margin-left:0 !important}
+
+/* ═══ Modais, player, metrônomo, cifra e modo treino (mantidos) ═══ */
 /* ══ MODAL DE VÍDEO YOUTUBE ══ */
 .yt-modal-overlay{
   position:fixed;inset:0;z-index:500;
@@ -1129,97 +694,242 @@ header.topbar::after{display:none}
   filter:drop-shadow(0 0 2px rgba(0,0,0,.5));
 }
 .treino-video.oculto-player{opacity:.25}
-
-/* tamanho uniforme das etiquetas na linha da música */
-.rep-meta .tag-bpm,.rep-meta .tag-medley,.rep-meta .tag-treino{padding:.24rem .55rem;font-size:.72rem;border-radius:999px;line-height:1.1}
-.rep-meta .tag-bpm i,.rep-meta .tag-medley i,.rep-meta .tag-treino i{font-size:.66rem}
 </style>
 </head>
 <body>
 
-<div class="bg-fx" aria-hidden="true">
-  <div class="bg-orb3"></div>
-  <div class="scan"></div>
-</div>
+<!-- ═════════ TOPBAR ═════════ -->
+<header class="topbar">
+  <div class="topbar-in">
+    <button class="brand" onclick="irPara('home')" aria-label="Início">
+      <svg viewBox="0 0 40 40" aria-hidden="true">
+        <defs><linearGradient id="lgWave" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4f7cff"/><stop offset="1" stop-color="#7c5cff"/></linearGradient></defs>
+        <g fill="url(#lgWave)">
+          <rect x="3" y="15" width="3.4" height="10" rx="1.7"/><rect x="9" y="9" width="3.4" height="22" rx="1.7"/>
+          <rect x="15" y="3" width="3.4" height="34" rx="1.7"/><rect x="21" y="11" width="3.4" height="18" rx="1.7"/>
+          <rect x="27" y="6" width="3.4" height="28" rx="1.7"/><rect x="33" y="14" width="3.4" height="12" rx="1.7"/>
+        </g>
+      </svg>
+      <span><span class="brand-t">Ministério de Louvor</span><span class="brand-s">Servindo com música e adoração</span></span>
+    </button>
 
-<div class="app">
-
-  <!-- ══ SIDEBAR ══ -->
-  <div class="sb-backdrop" id="sbBackdrop" onclick="fecharMenu()"></div>
-  <aside class="sidebar" id="sidebar">
-    <div class="sb-logo">
-      <div class="sb-gem"><i class="fa-solid fa-music"></i></div>
-      <div class="sb-logo-txt">
-        <h2>Ministério<br>de Louvor</h2>
-        <span>Adorando em unidade</span>
-      </div>
-    </div>
-    <div class="sb-label">Menu Principal</div>
-    <nav class="sb-menu">
-      <button class="sb-item active" data-sec="inicio"     onclick="irPara('inicio')"><i class="fa-solid fa-house"></i> Início</button>
-      <button class="sb-item"        data-sec="repertorio" onclick="irPara('repertorio')"><i class="fa-solid fa-list-music"></i> Repertório</button>
-      <button class="sb-item"        data-sec="cultos"     onclick="irPara('cultos')"><i class="fa-regular fa-calendar"></i> Cultos</button>
-      <button class="sb-item"        data-sec="equipe"     onclick="irPara('equipe')"><i class="fa-solid fa-users"></i> Equipe</button>
-      <button class="sb-item"        data-sec="avisos"     onclick="irPara('avisos')"><i class="fa-solid fa-chalkboard"></i> Avisos</button>
+    <nav class="dnav" aria-label="Menu principal">
+      <button data-nav="home" onclick="irPara('home')"><i class="fa-solid fa-house"></i> Início</button>
+      <button data-nav="escala" onclick="irPara('escala')"><i class="fa-solid fa-users"></i> Escala</button>
+      <button data-nav="avisos" onclick="irPara('avisos')"><i class="fa-solid fa-bullhorn"></i> Avisos</button>
+      <button data-nav="cultos" class="nav-cultos" onclick="irPara('cultos')"><i class="fa-regular fa-calendar"></i> Cultos</button>
     </nav>
-    <div class="sb-bottom">
-      <i class="fa-solid fa-hands-praying"></i>
-      <p>Servindo a Deus através da música e da adoração.</p>
+
+    <button class="icon-btn" id="themeToggle" onclick="alternarTema()" title="Alternar tema claro/escuro" aria-label="Alternar tema"><i class="fa-solid fa-moon"></i></button>
+    <button class="icon-btn" onclick="irPara('avisos')" title="Avisos" aria-label="Avisos"><i class="fa-regular fa-bell"></i><span class="badge-n" id="bellBadge">0</span></button>
+    <button class="avatar" onclick="irPara('config')" title="Configurações" aria-label="Configurações"><i class="fa-solid fa-user"></i></button>
+  </div>
+</header>
+
+<main class="wrap" id="conteudo">
+
+  <!-- ═════════ INÍCIO ═════════ -->
+  <section class="view ativa" id="v-home">
+
+    <div class="hero" id="heroBanner">
+      <!-- Banner escuro: pôr do sol dramático -->
+      <svg class="hero-art escuro" viewBox="0 0 800 320" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <defs>
+          <linearGradient id="skyD" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0d1126"/><stop offset=".42" stop-color="#2f2a55"/><stop offset=".72" stop-color="#b2562b"/><stop offset="1" stop-color="#ffaa4a"/></linearGradient>
+          <radialGradient id="sunD" cx="610" cy="205" r="300" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff7d6"/><stop offset=".14" stop-color="#ffd884" stop-opacity=".95"/><stop offset=".45" stop-color="#f4903a" stop-opacity=".55"/><stop offset="1" stop-color="#f4903a" stop-opacity="0"/></radialGradient>
+          <linearGradient id="hillD" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#07080e"/><stop offset=".7" stop-color="#14100f"/><stop offset="1" stop-color="#2a1a12"/></linearGradient>
+          <filter id="blD" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="13"/></filter>
+        </defs>
+        <rect width="800" height="320" fill="url(#skyD)"/>
+        <g filter="url(#blD)" opacity=".75" fill="#171433"><ellipse cx="140" cy="70" rx="190" ry="26"/><ellipse cx="420" cy="48" rx="170" ry="20"/><ellipse cx="700" cy="84" rx="150" ry="22"/><ellipse cx="330" cy="130" rx="150" ry="16"/></g>
+        <rect width="800" height="320" fill="url(#sunD)"/>
+        <g fill="#ffe9b3" opacity=".2"><polygon points="610,205 430,0 520,0"/><polygon points="610,205 590,0 650,0"/><polygon points="610,205 720,0 800,0"/><polygon points="610,205 800,60 800,150"/><polygon points="610,205 300,40 330,0"/></g>
+        <path d="M0 320 V272 C110 262 220 276 330 262 C430 250 520 240 600 228 C690 215 760 224 800 234 V320 Z" fill="url(#hillD)"/>
+        <g fill="#05060a"><rect x="606" y="118" width="9" height="114" rx="1.5"/><rect x="581" y="146" width="59" height="9" rx="1.5"/></g>
+      </svg>
+      <!-- Banner claro: amanhecer suave -->
+      <svg class="hero-art claro" viewBox="0 0 800 320" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <defs>
+          <linearGradient id="skyL" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7a78c6"/><stop offset=".4" stop-color="#e3a0b0"/><stop offset=".72" stop-color="#f7b36a"/><stop offset="1" stop-color="#ffe3a6"/></linearGradient>
+          <radialGradient id="sunL" cx="610" cy="205" r="300" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#ffffff"/><stop offset=".16" stop-color="#fff0c2" stop-opacity=".95"/><stop offset=".5" stop-color="#ffc56e" stop-opacity=".5"/><stop offset="1" stop-color="#ffc56e" stop-opacity="0"/></radialGradient>
+          <linearGradient id="hillL" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#241f34"/><stop offset="1" stop-color="#4a3328"/></linearGradient>
+          <filter id="blL" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="13"/></filter>
+        </defs>
+        <rect width="800" height="320" fill="url(#skyL)"/>
+        <g filter="url(#blL)" opacity=".55" fill="#6b5a93"><ellipse cx="150" cy="72" rx="190" ry="24"/><ellipse cx="430" cy="46" rx="170" ry="18"/><ellipse cx="700" cy="86" rx="150" ry="20"/></g>
+        <rect width="800" height="320" fill="url(#sunL)"/>
+        <g fill="#fff6dc" opacity=".3"><polygon points="610,205 430,0 520,0"/><polygon points="610,205 590,0 650,0"/><polygon points="610,205 720,0 800,0"/><polygon points="610,205 800,60 800,150"/></g>
+        <path d="M0 320 V272 C110 262 220 276 330 262 C430 250 520 240 600 228 C690 215 760 224 800 234 V320 Z" fill="url(#hillL)"/>
+        <g fill="#16121f"><rect x="606" y="118" width="9" height="114" rx="1.5"/><rect x="581" y="146" width="59" height="9" rx="1.5"/></g>
+      </svg>
+      <div class="hero-txt">
+        <h1>Bem-vindo(a)!</h1>
+        <p>Que a presença de Deus nos guie em cada canção.</p>
+        <div class="hero-bar"></div>
+      </div>
     </div>
-  </aside>
 
-  <!-- ══ CONTEÚDO ══ -->
-  <div class="content-area">
-
-    <header class="topbar">
-      <div class="topbar-left">
-        <small>
-          <button class="icon-btn topbar-menu-btn" onclick="abrirMenu()" aria-label="Menu" style="margin-right:.2rem"><i class="fa-solid fa-bars"></i></button>
-          <span class="live-chip"><span class="live-dot"></span> live</span>
-          <span id="headerDate">carregando…</span>
-        </small>
-        <h3 id="topbarTitulo">Programação do Culto</h3>
+    <div class="home-grid">
+      <div class="culto">
+        <div class="c-nav">
+          <button onclick="navSem(-1)" aria-label="Semana anterior"><i class="fa-solid fa-chevron-left"></i></button>
+          <button onclick="navSem(1)" aria-label="Próxima semana"><i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+        <div class="c-badge"><i class="fa-solid fa-star" id="cultoIco"></i> <span id="cultoLabel">Culto</span></div>
+        <div class="c-title" id="cultoTitulo">—</div>
+        <div class="c-sub" id="cultoSub"></div>
+        <div class="c-data"><i class="fa-regular fa-calendar-check"></i> <span id="cultoData">—</span></div>
+        <button class="btn-gold" onclick="irRepertorio()">Ver Programação <i class="fa-solid fa-arrow-right"></i></button>
       </div>
-      <div class="topbar-actions">
-        <button class="icon-btn" id="themeToggle" onclick="alternarTema()" title="Alternar tema" aria-label="Alternar tema claro/escuro"><i class="fa-solid fa-moon"></i></button>
+
+      <div class="quick">
+        <h3>Acesso Rápido</h3>
+        <div class="q-grid">
+          <button class="q" onclick="irRepertorio()"><span class="q-i"><i class="fa-solid fa-music"></i></span>Repertório</button>
+          <button class="q" onclick="irPara('escala')"><span class="q-i"><i class="fa-solid fa-users"></i></span>Escala</button>
+          <button class="q" onclick="irPara('avisos')"><span class="q-i"><i class="fa-solid fa-bullhorn"></i></span>Avisos</button>
+          <button class="q nav-cultos" onclick="irPara('cultos')"><span class="q-i"><i class="fa-regular fa-calendar"></i></span>Cultos</button>
+          <button class="q" onclick="irPara('config')"><span class="q-i"><i class="fa-solid fa-gear"></i></span>Configurações</button>
+          <button class="q" onclick="irPara('ajuda')"><span class="q-i"><i class="fa-solid fa-circle-question"></i></span>Ajuda</button>
+        </div>
       </div>
-    </header>
+    </div>
 
-    <main id="conteudo">
-      <div class="loading">
-        <i class="fa-solid fa-spinner"></i>
-        Carregando programação…
+    <div class="panel" id="secRepertorio">
+      <div class="sec-h">
+        <h2>
+          <svg viewBox="0 0 40 40" aria-hidden="true"><g fill="url(#lgWave)"><rect x="3" y="15" width="4" height="10" rx="2"/><rect x="10" y="9" width="4" height="22" rx="2"/><rect x="17" y="3" width="4" height="34" rx="2"/><rect x="24" y="11" width="4" height="18" rx="2"/><rect x="31" y="6" width="4" height="28" rx="2"/></g></svg>
+          Repertório
+        </h2>
+        <span class="count-pill" id="repCount" style="display:none"></span>
+        <span class="grow"></span>
+        <div class="search"><i class="fa-solid fa-magnifying-glass"></i><input type="search" id="buscaRep" placeholder="Buscar..." oninput="filtrarMusicas(this.value)" autocomplete="off"></div>
+        <button class="btn-tocar-tudo" id="btnTocarTudo" onclick="tocarRepertorio()" style="display:none"><i class="fa-solid fa-play"></i> Tocar Tudo</button>
       </div>
-    </main>
+      <div id="repList"><div class="loading"><i class="fa-solid fa-spinner"></i>Carregando programação…</div></div>
+      <div class="legenda">
+        <span><i class="ibtn sm yt" style="pointer-events:none"><i class="fa-brands fa-youtube"></i></i> Vídeo</span>
+        <span><i class="ibtn sm bpm" style="pointer-events:none"><i class="fa-solid fa-drum"></i></i> Metrônomo</span>
+        <span><i class="ibtn sm sp" style="pointer-events:none"><i class="fa-brands fa-spotify"></i></i> Spotify</span>
+        <span><i class="ibtn sm ci" style="pointer-events:none"><i class="fa-solid fa-music"></i></i> Cifra</span>
+        <span><i class="ibtn sm play" style="pointer-events:none"><i class="fa-solid fa-play"></i></i> Tocar a partir daqui</span>
+      </div>
+    </div>
+  </section>
 
-  </div><!-- /content-area -->
+  <!-- ═════════ ESCALA ═════════ -->
+  <section class="view" id="v-escala">
+    <div class="page-title"><div class="pt-ico"><i class="fa-solid fa-users"></i></div><div><h1>Escala de Serviço</h1><p id="escalaSub">—</p></div></div>
+    <div class="panel" id="escalaBody"></div>
+  </section>
 
-</div><!-- /app -->
+  <!-- ═════════ AVISOS ═════════ -->
+  <section class="view" id="v-avisos">
+    <div class="page-title"><div class="pt-ico"><i class="fa-solid fa-bullhorn"></i></div><div><h1>Quadro de Avisos</h1><p id="avisosSub">—</p></div></div>
+    <div class="panel" id="avisosBody"></div>
+  </section>
+
+  <!-- ═════════ CULTOS ═════════ -->
+  <section class="view" id="v-cultos">
+    <div class="page-title"><div class="pt-ico"><i class="fa-regular fa-calendar"></i></div><div><h1>Cultos</h1><p>Navegue pelas semanas e veja as programações publicadas</p></div></div>
+    <div class="panel" id="cultosBody"></div>
+  </section>
+
+  <!-- ═════════ CONFIGURAÇÕES ═════════ -->
+  <section class="view" id="v-config">
+    <div class="page-title"><div class="pt-ico"><i class="fa-solid fa-gear"></i></div><div><h1>Configurações</h1><p>Aparência e ferramentas</p></div></div>
+    <div class="panel">
+      <div class="sec-h"><h2><i class="fa-solid fa-palette" style="color:var(--accent)"></i> Aparência</h2></div>
+      <div class="tema-grid">
+        <button class="tema-opt" data-tema="claro" onclick="setTema('claro')"><span class="tema-prev t-cla"><i></i><i></i></span><span><i class="fa-solid fa-sun"></i> Modo claro</span></button>
+        <button class="tema-opt" data-tema="escuro" onclick="setTema('escuro')"><span class="tema-prev t-esc"><i></i><i></i></span><span><i class="fa-solid fa-moon"></i> Modo escuro</span></button>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="sec-h"><h2><i class="fa-solid fa-screwdriver-wrench" style="color:var(--accent)"></i> Ferramentas</h2></div>
+      <button class="opt-row" onclick="abrirMetronomo('Metrônomo livre',100)"><span class="o-i"><i class="fa-solid fa-drum"></i></span><span><b>Metrônomo livre</b><small>Abra o metrônomo com ajuste de BPM e tap tempo</small></span></button>
+      <button class="opt-row" onclick="tocarRepertorio()"><span class="o-i"><i class="fa-solid fa-play"></i></span><span><b>Tocar repertório completo</b><small>Reproduz os vídeos em sequência</small></span></button>
+      <button class="opt-row" id="btnCopiarLink" onclick="copiarLinkAtual()"><span class="o-i"><i class="fa-solid fa-link"></i></span><span><b>Copiar link desta página</b><small>Compartilhe esta programação com a equipe</small></span></button>
+    </div>
+  </section>
+
+  <!-- ═════════ AJUDA ═════════ -->
+  <section class="view" id="v-ajuda">
+    <div class="page-title"><div class="pt-ico"><i class="fa-solid fa-circle-question"></i></div><div><h1>Ajuda</h1><p>Como aproveitar o portal do ministério</p></div></div>
+    <div class="panel">
+      <details class="faq" open><summary><i class="fa-solid fa-play"></i> Como ouvir as músicas?</summary><p>Toque no botão vermelho para abrir o vídeo, no verde para o Spotify, ou no botão escuro com ▶ para tocar o repertório em sequência a partir daquela música. Em “Tocar Tudo” o repertório inteiro toca em ordem.</p></details>
+      <details class="faq"><summary><i class="fa-solid fa-music"></i> Onde ficam as cifras?</summary><p>No botão amarelo de cada música. A cifra abre dentro do portal; se o site não permitir, um botão leva você para uma nova aba.</p></details>
+      <details class="faq"><summary><i class="fa-solid fa-dumbbell"></i> O que é o modo Treinar?</summary><p>Quando a música tem vídeo e cifra, aparece o botão “Treinar”: a cifra ocupa a tela inteira e o vídeo fica em uma janela flutuante que você pode arrastar e redimensionar.</p></details>
+      <details class="faq"><summary><i class="fa-solid fa-drum"></i> Como usar o metrônomo?</summary><p>Toque no botão azul da música para abrir o metrônomo já ajustado no BPM dela. Você pode alterar o andamento, o compasso ou usar o “Tap” para marcar no ritmo.</p></details>
+      <details class="faq"><summary><i class="fa-solid fa-layer-group"></i> O que é um Medley?</summary><p>É uma música com várias partes. Toque na etiqueta “Medley” para ver e abrir cada parte separadamente.</p></details>
+      <details class="faq"><summary><i class="fa-regular fa-calendar"></i> Como ver outra semana?</summary><p>Use as setas no cartão do culto ou abra o menu “Cultos” para escolher entre as semanas com programação publicada.</p></details>
+    </div>
+  </section>
+
+</main>
+
+<footer><i class="fa-solid fa-bolt"></i> Firebase Realtime &nbsp;·&nbsp; <i class="fa-solid fa-heart"></i> Ministério de Louvor</footer>
+
+<!-- ═════════ NAV INFERIOR (mobile) ═════════ -->
+<nav class="bnav" aria-label="Menu principal">
+  <button data-nav="home" class="ativo" onclick="irPara('home')"><i class="fa-solid fa-house"></i>Início</button>
+  <button data-nav="escala" onclick="irPara('escala')"><i class="fa-solid fa-users"></i>Escala</button>
+  <button data-nav="avisos" onclick="irPara('avisos')"><i class="fa-solid fa-bullhorn"></i>Avisos</button>
+  <button data-nav="cultos" class="nav-cultos" onclick="irPara('cultos')"><i class="fa-regular fa-calendar"></i>Cultos</button>
+  <button data-nav="config" onclick="irPara('config')"><i class="fa-solid fa-gear"></i>Config</button>
+</nav>
 
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 <script>
 var CHAVE='mlTema2';
+/* Opcional: coloque aqui a URL de uma foto para substituir o banner ilustrado (uma por tema) */
+var BANNER_CLARO='';
+var BANNER_ESCURO='';
+
 var MESES=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-var DIAS=['domingo','segunda-feira','terça-feira','quarta-feira','quinta-feira','sexta-feira','sábado'];
+var DIAS_ABR=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
 var progs={};
 var semAtual=0;
-var _secAtual='inicio';
 var ano=new Date().getFullYear();
+var modoAvulso=false;
+var avulsoAtual=null;
+var _avisosAtual=[];
+var _filtroAviso='todos';
 
+/* ── utilitários ── */
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function urlOk(u){u=String(u||'').trim();return /^https?:\/\//i.test(u)?u:'';}
+function el(id){return document.getElementById(id);}
+function initials(n){var p=(n||'').trim().split(/\s+/);return((p[0]||'?')[0]+(p[1]?p[1][0]:'')).toUpperCase();}
+function emptyHtml(icon,titulo,msg){
+  return '<div class="empty"><div class="e-ico"><i class="fa-solid '+icon+'"></i></div><h3>'+esc(titulo)+'</h3><p>'+esc(msg)+'</p></div>';
+}
+
+/* ── Tema ── */
+function aplicarBanner(t){
+  var hero=el('heroBanner'); if(!hero) return;
+  var url=urlOk(t==='claro'?BANNER_CLARO:BANNER_ESCURO);
+  if(url){hero.style.backgroundImage='url("'+url+'")';hero.classList.add('com-foto');}
+  else{hero.style.backgroundImage='';hero.classList.remove('com-foto');}
+}
 function setTema(t){
-  if(t!=='claro' && t!=='escuro') t='escuro';
+  if(t!=='claro'&&t!=='escuro') t='escuro';
   document.body.setAttribute('data-theme', t==='claro'?'claro':'');
-  localStorage.setItem(CHAVE,t);
+  try{localStorage.setItem(CHAVE,t);}catch(e){}
   var ico=document.querySelector('#themeToggle i');
-  if(ico) ico.className = t==='claro' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+  if(ico) ico.className=t==='claro'?'fa-solid fa-sun':'fa-solid fa-moon';
+  document.querySelectorAll('.tema-opt').forEach(function(b){b.classList.toggle('ativo',b.getAttribute('data-tema')===t);});
+  aplicarBanner(t);
 }
 function alternarTema(){
-  var atual = localStorage.getItem(CHAVE)||'escuro';
+  var atual='escuro'; try{atual=localStorage.getItem(CHAVE)||'escuro';}catch(e){}
   setTema(atual==='claro'?'escuro':'claro');
 }
-setTema(localStorage.getItem(CHAVE)||'escuro');
+var _temaInicial='escuro'; try{_temaInicial=localStorage.getItem(CHAVE)||'escuro';}catch(e){}
+setTema(_temaInicial);
 
+/* ── Firebase ── */
 firebase.initializeApp({
   apiKey:"AIzaSyASRX7kZJUmp7jfx_C7buYnLfpz0reby4E",
   authDomain:"ministerio-de-louvor-e2eb3.firebaseapp.com",
@@ -1231,6 +941,7 @@ firebase.initializeApp({
 var db=firebase.firestore();
 var col=db.collection('ministerios');
 
+/* ── Datas ── */
 function domingoISO(a,s){
   var j4=new Date(a,0,4),d4=(j4.getDay()+6)%7;
   var seg=new Date(j4);seg.setDate(j4.getDate()-d4+(s-1)*7);
@@ -1241,526 +952,302 @@ function semISO(){
   var seg=new Date(j4);seg.setDate(j4.getDate()-d4);
   return Math.ceil((n-seg)/(7*864e5));
 }
-function fmtData(s){
-  var d=domingoISO(ano,s);
-  return DIAS[d.getDay()].replace(/^\w/,function(c){return c.toUpperCase()})+
-    ', '+d.getDate()+' de '+MESES[d.getMonth()]+' de '+d.getFullYear();
-}
-function fmtAv(s){if(!s)return'';var p=s.split('-');return p[2]?p[2]+'/'+p[1]+'/'+p[0]:p[1]+'/'+p[0]}
-function chave(s){return ano+'-'+String(s).padStart(2,'0')}
-function initials(n){var p=(n||'').trim().split(/\s+/);return(p[0][0]+(p[1]?p[1][0]:'')).toUpperCase()}
+function pad2(n){return String(n).padStart(2,'0');}
+function fmtDataCurta(d){return DIAS_ABR[d.getDay()]+', '+pad2(d.getDate())+' de '+MESES[d.getMonth()].toLowerCase()+' de '+d.getFullYear();}
+function fmtAv(s){if(!s)return'';var p=s.split('-');return p[2]?p[2]+'/'+p[1]+'/'+p[0]:p[1]+'/'+p[0];}
+function chave(s){return ano+'-'+String(s).padStart(2,'0');}
 
-function navSem(d){var n=semAtual+d;if(n<1)n=1;if(n>53)n=53;renderSem(n)}
+/* ── Navegação entre telas ── */
+function irPara(v,semScroll){
+  document.querySelectorAll('.view').forEach(function(e){e.classList.toggle('ativa',e.id==='v-'+v);});
+  document.querySelectorAll('[data-nav]').forEach(function(b){b.classList.toggle('ativo',b.getAttribute('data-nav')===v);});
+  if(!semScroll) window.scrollTo({top:0,behavior:'smooth'});
+}
+function irRepertorio(){
+  irPara('home',true);
+  setTimeout(function(){el('secRepertorio').scrollIntoView({behavior:'smooth',block:'start'});},60);
+}
+
+/* ── Contexto do culto (cartão azul) ── */
+function aplicarContexto(c){
+  document.body.classList.toggle('modo-avulso',!!c.avulso);
+  el('cultoLabel').textContent=c.label;
+  el('cultoIco').className='fa-solid '+c.icone;
+  el('cultoTitulo').textContent=c.titulo;
+  el('cultoSub').textContent=c.sub||'';
+  el('cultoData').textContent=c.data||'—';
+  var ref=c.titulo+(c.data?' · '+c.data:'');
+  el('escalaSub').textContent=ref;
+  el('avisosSub').textContent=ref;
+}
+
+/* ── Semana normal ── */
+function navSem(d){var n=semAtual+d;if(n<1)n=1;if(n>53)n=53;renderSem(n);}
 window.navegarSemana=navSem;
-
-/* ══ NAVEGAÇÃO DE SEÇÕES (sidebar) ══ */
-var SEC_TITULOS={
-  inicio:'Início',
-  repertorio:'Repertório',
-  cultos:'Programação do Culto',
-  equipe:'Escala de Serviço',
-  avisos:'Quadro de Avisos'
-};
-function setTopbarTitulo(sec){
-  var el=document.getElementById('topbarTitulo');
-  if(el) el.textContent=SEC_TITULOS[sec]||'Ministério de Louvor';
-}
-function irPara(sec){
-  _secAtual=sec;
-  /* ativar view */
-  document.querySelectorAll('.sec-view').forEach(function(v){
-    v.classList.toggle('active', v.id==='sec-'+sec);
-  });
-  /* ativar item do menu */
-  document.querySelectorAll('.sb-item').forEach(function(b){
-    b.classList.toggle('active', b.getAttribute('data-sec')===sec);
-  });
-  setTopbarTitulo(sec);
-  fecharMenu();
-  /* rolar para o topo da área de conteúdo */
-  var ca=document.querySelector('.content-area'); if(ca) ca.scrollIntoView({behavior:'smooth',block:'start'});
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-
-/* ══ MENU MOBILE (drawer) ══ */
-function abrirMenu(){
-  document.getElementById('sidebar').classList.add('open');
-  document.getElementById('sbBackdrop').classList.add('show');
-}
-function fecharMenu(){
-  var sb=document.getElementById('sidebar'); if(sb) sb.classList.remove('open');
-  var bk=document.getElementById('sbBackdrop'); if(bk) bk.classList.remove('show');
-}
-
-/* ══ BUSCA DE MÚSICAS ══ */
-function filtrarMusicas(inp){
-  var sec=(inp&&inp.closest('.sec-view'))||document;
-  var q=((inp&&inp.value)||'').trim().toLowerCase();
-  var itens=sec.querySelectorAll('.rep-list .rep-item');
-  var achou=0;
-  itens.forEach(function(it){
-    var txt=it.textContent.toLowerCase();
-    var mostra=!q||txt.indexOf(q)>=0;
-    it.style.display=mostra?'':'none';
-    if(mostra) achou++;
-  });
-  var vazio=sec.querySelector('.sec-vazio-busca');
-  if(vazio) vazio.style.display=(achou===0&&itens.length)?'block':'none';
-}
-
-function setHeaderDate(s){
-  var el=document.getElementById('headerDate');
-  if(el)el.textContent=s?'Culto · '+fmtData(s):'—';
-}
 
 function renderSem(s){
   semAtual=s;
-  setHeaderDate(s);
-  var d=progs[chave(s)];
-  if(!d){
-    document.getElementById('conteudo').innerHTML=
-      '<div class="empty su">'+
-        '<div class="empty-ico"><i class="fa-solid fa-calendar-xmark"></i></div>'+
-        '<h3>Sem Programação</h3>'+
-        '<p>Nenhum repertório cadastrado para esta semana.</p>'+
-      '</div>';
-    return;
-  }
-  d.semana=s;
-  render(d);
+  var dom=domingoISO(ano,s);
+  aplicarContexto({avulso:false,label:'Culto de Domingo',icone:'fa-church',titulo:'Semana '+s,sub:MESES[dom.getMonth()]+' de '+dom.getFullYear(),data:fmtDataCurta(dom)});
+  var d=progs[chave(s)]||null;
+  renderConteudo(d,'Sem programação','Nenhum repertório cadastrado para esta semana.');
+  renderCultos();
 }
+function selecionarSemana(s){renderSem(s);irPara('home');}
 
-
-/* ══ CONSTRUÇÃO DO CARD DE MÚSICA (layout novo) ══ */
-function escAspas(s){ return String(s||'').replace(/'/g,"\\'").replace(/"/g,'&quot;'); }
-
-function construirSongItem(m, num, idx){
-  var nome = m.nome || '—';
-  var nomeEsc = escAspas(m.nome||'Música');
-
-  /* chips */
-  var chips='';
-  if(m.tom) chips+='<span class="tag-tom">'+m.tom+'</span>';
-  if(m.seq) chips+='<button class="tag-bpm" onclick="abrirMetronomo(\''+nomeEsc+'\','+parseInt(m.seq)+')"><i class="fa-solid fa-drum"></i> '+m.seq+' BPM</button>';
-  var temMedley = m.partes && m.partes.length;
-  if(temMedley) chips+='<button class="tag-medley" onclick="toggleMedleyMenu(this)"><i class="fa-solid fa-layer-group"></i> Medley ('+(m.partes.length+1)+') <i class="fa-solid fa-chevron-down"></i></button>';
-  /* chip Treinar — só quando tem vídeo E cifra */
-  if(m.yt && m.cifra) chips+='<button class="tag-treino" onclick="abrirTreino(\''+escAspas(m.yt)+'\',\''+escAspas(m.cifra)+'\',\''+nomeEsc+'\')"><i class="fa-solid fa-dumbbell"></i> Treinar</button>';
-
-  /* links principais (grade de 3) */
-  var lnks='';
-  if(m.yt)   lnks+='<button class="lnk lnk-yt" onclick="abrirYtModal(\''+escAspas(m.yt)+'\',\''+nomeEsc+'\')"><i class="fa-brands fa-youtube"></i> <span>YouTube</span></button>';
-  if(m.sp)   lnks+='<a class="lnk lnk-sp" href="'+m.sp+'" target="_blank" rel="noopener"><i class="fa-brands fa-spotify"></i> <span>Spotify</span></a>';
-  if(m.cifra)lnks+='<button class="lnk lnk-ci" onclick="abrirCifraModal(\''+escAspas(m.cifra)+'\',\''+nomeEsc+'\')"><i class="fa-solid fa-music"></i> <span>Cifra</span></button>';
-
-  /* mini-menu do medley */
-  var medleyMenu='';
-  if(temMedley){
-    medleyMenu+='<div class="medley-menu">';
-    m.partes.forEach(function(p,pi){
-      var pnome=p.nome||('Parte '+(pi+2));
-      var pnomeEsc=escAspas(pnome);
-      var plinks='';
-      if(p.yt)   plinks+='<button class="lnk lnk-yt" onclick="abrirYtModal(\''+escAspas(p.yt)+'\',\''+pnomeEsc+'\')"><i class="fa-brands fa-youtube"></i> <span>YouTube</span></button>';
-      if(p.sp)   plinks+='<a class="lnk lnk-sp" href="'+p.sp+'" target="_blank" rel="noopener"><i class="fa-brands fa-spotify"></i> <span>Spotify</span></a>';
-      if(p.cifra)plinks+='<button class="lnk lnk-ci" onclick="abrirCifraModal(\''+escAspas(p.cifra)+'\',\''+pnomeEsc+'\')"><i class="fa-solid fa-music"></i> <span>Cifra</span></button>';
-      medleyMenu+=
-        '<div class="medley-part">'+
-          '<div class="medley-part-title"><span class="pnum">'+(pi+2)+'</span> '+pnome+'</div>'+
-          (plinks?'<div class="medley-part-links">'+plinks+'</div>':'<div style="font-size:.72rem;color:var(--t3);font-style:italic">Sem links</div>')+
-        '</div>';
-    });
-    medleyMenu+='</div>';
-  }
-
-  var play = m.yt ? '<button class="rep-play" onclick="tocarAPartirDe('+(typeof idx==='number'?idx:num-1)+')" title="Tocar a partir desta música" aria-label="Tocar '+nomeEsc+'"><i class="fa-solid fa-play"></i></button>' : '<span></span>';
-
-  return '<div class="rep-item">'+
-    '<span class="rep-num">'+num+'</span>'+
-    '<div class="rep-content">'+
-      '<div class="rep-nome">'+nome+'</div>'+
-      ((chips||lnks)?'<div class="rep-meta">'+(chips?'<span class="rep-tags">'+chips+'</span>':'')+(chips&&lnks?'<span class="rep-sep" aria-hidden="true"></span>':'')+(lnks?'<span class="rep-links">'+lnks+'</span>':'')+'</div>':'')+
-      medleyMenu+
-    '</div>'+
-    play+
-  '</div>';
-}
-
-function toggleMedleyMenu(btn){
-  var content = btn.closest('.rep-content');
-  var menu = content.querySelector('.medley-menu');
-  if(!menu) return;
-  menu.classList.toggle('aberto');
-  var chev = btn.querySelector('.fa-chevron-down');
-  if(chev) chev.style.transform = menu.classList.contains('aberto') ? 'rotate(180deg)' : '';
-}
-
-function render(d){
-  var s=d.semana;
-  var mesNome=MESES[d.mes]||'';
-  _repertorioAtual = d.repertorio || [];
-  _secAtual = _secAtual || 'inicio';
-
-  /* atualizar título da topbar conforme seção */
-  setTopbarTitulo(_secAtual);
-
-  /* ---- blocos reutilizáveis ---- */
-  var temVideoRep = (d.repertorio||[]).some(function(m){ return m.yt || (m.partes&&m.partes.some(function(p){return p.yt;})); });
-
-  /* navegação de semana (usada em Cultos e Início) */
-  function navSemanaHtml(){
-    return '<div class="hero su su1">'+
-      '<div class="hero-nav">'+
-        '<span class="hero-week-label"><i class="fa-solid fa-calendar-week"></i> &nbsp;Sem. '+s+' · '+mesNome+' '+ano+'</span>'+
-        '<div class="nav-cluster">'+
-          '<button class="nav-btn" onclick="navSem(-1)" aria-label="Semana anterior"><i class="fa-solid fa-chevron-left"></i></button>'+
-          '<span class="nav-sem">Sem. '+s+'</span>'+
-          '<button class="nav-btn" onclick="navSem(1)" aria-label="Próxima semana"><i class="fa-solid fa-chevron-right"></i></button>'+
-        '</div>'+
-      '</div>'+
-      '<div class="hero-title">Programação<br>do Culto</div>'+
-      '<div class="hero-date-chip"><i class="fa-regular fa-calendar-check"></i> '+fmtData(s)+'</div>'+
-    '</div>';
-  }
-
-  /* card de repertório */
-  function repCardHtml(){
-    var h='<div class="rep-block">'+
-      '<div class="rep-head"><h2><i class="fa-solid fa-music"></i> Repertório</h2>'+
-        '<div class="rep-head-tools">'+searchHtml+
-          (temVideoRep?'<button class="btn-tocar-tudo" onclick="tocarRepertorio()"><i class="fa-solid fa-play"></i> Tocar Tudo</button>':'')+
-        '</div>'+
-      '</div>'+
-      '<div>';
-    if(!d.repertorio||!d.repertorio.length){
-      h+='<p style="color:var(--t3);font-style:italic;font-size:.85rem">Nenhuma música cadastrada.</p>';
-    } else {
-      h+='<div class="rep-list">';
-      d.repertorio.forEach(function(m,i){ h+=construirSongItem(m, i+1, i); });
-      h+='</div>';
-      h+='<div class="sec-vazio-busca" style="display:none">Nenhuma música encontrada.</div>';
-    }
-    h+='</div></div>';
-    return h;
-  }
-
-  /* card de escala */
-  function escCardHtml(){
-    var h='<div class="sc">'+
-      '<div class="sc-head"><div class="sc-head-icon"><i class="fa-solid fa-users"></i></div><span class="sc-head-label">Escala de Serviço</span></div>'+
-      '<div class="sc-body"><div class="esc-grid">';
-    [
-      {key:'vocal',       icon:'fa-microphone',label:'Vocal'},
-      {key:'instrumental',icon:'fa-guitar',    label:'Instrumental'},
-      {key:'multimidia',  icon:'fa-display',   label:'Multimídia'},
-      {key:'midia',       icon:'fa-video',     label:'Mídia / Som'}
-    ].forEach(function(p){
-      var mbrs=d[p.key]||[];
-      var cnt=!mbrs.length?'<div class="esc-vazio">Não definido</div>':
-        mbrs.map(function(n){
-          return '<div class="esc-membro"><div class="esc-av">'+initials(n)+'</div><span class="esc-nome">'+n+'</span></div>';
-        }).join('');
-      h+='<div class="esc-card"><div class="esc-role"><i class="fa-solid '+p.icon+'"></i> '+p.label+'</div>'+cnt+'</div>';
-    });
-    h+='</div></div></div>';
-    return h;
-  }
-
-  /* card de avisos */
-  function avisosCardHtml(){
-    var avisos=d.avisos||[];
-    if(!avisos.length) return '';
-    var TIPOS={
-      comemorativa:{label:'Data Comemorativa',icon:'fa-star'},
-      futura:{label:'Música Futura',icon:'fa-music'},
-      playlist:{label:'Playlist do Dia',icon:'fa-list-music'},
-      geral:{label:'Aviso Geral',icon:'fa-bullhorn'}
-    };
-    var h='<div class="sc">'+
-      '<div class="sc-head"><div class="sc-head-icon"><i class="fa-solid fa-chalkboard"></i></div><span class="sc-head-label">Quadro de Avisos</span></div>'+
-      '<div class="sc-body"><div class="avisos-list">';
-    avisos.forEach(function(av){
-      var tipo=av.tipo||'geral';
-      var inf=TIPOS[tipo]||TIPOS.geral;
-      h+=
-        '<div class="av-item">'+
-          '<div class="av-icon '+tipo+'"><i class="fa-solid '+inf.icon+'"></i></div>'+
-          '<div class="av-body">'+
-            '<div class="av-titulo">'+(av.titulo||'—')+'<span class="av-pill '+tipo+'">'+inf.label+'</span></div>'+
-            (av.descricao?'<div class="av-desc">'+av.descricao+'</div>':'')+
-            (av.data?'<div class="av-date"><i class="fa-regular fa-calendar"></i> '+fmtAv(av.data)+'</div>':'')+
-            (av.tipo==='futura'&&av.youtube?'<button class="av-yt" style="background:none;cursor:pointer;border:none;font-family:inherit;" onclick="abrirYtModal(\''+av.youtube+'\',\''+av.titulo+'\')"><i class="fa-brands fa-youtube"></i> Ver no YouTube</button>':'')+
-            (av.tipo==='playlist'&&(av.playlistYt||av.playlistSp)?
-              '<div class="av-playlist">'+
-                '<div class="av-playlist-label"><i class="fa-solid fa-list-music"></i> Ouvir a Playlist</div>'+
-                '<div class="av-playlist-btns">'+
-                  (av.playlistYt?'<a class="av-pl-btn yt" href="'+av.playlistYt+'" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i> YouTube</a>':'')+
-                  (av.playlistSp?'<a class="av-pl-btn sp" href="'+av.playlistSp+'" target="_blank" rel="noopener"><i class="fa-brands fa-spotify"></i> Spotify</a>':'')+
-                '</div>'+
-              '</div>'
-            : '')+
-          '</div>'+
-        '</div>';
-    });
-    h+='</div></div></div>';
-    return h;
-  }
-
-  /* banner do culto */
-  var nMusicas=(d.repertorio||[]).length;
-  var bannerHtml=
-    '<div class="banner su su1">'+
-      '<div class="banner-main">'+
-        '<span class="banner-tag">Ministério de Louvor</span>'+
-        '<h1>Bem-vindo(a)!</h1>'+
-        '<p>Que a presença de Deus nos guie em cada canção.</p>'+
-      '</div>'+
-      '<div class="banner-info">'+
-        '<small><i class="fa-solid fa-calendar-check"></i> Culto da Semana</small>'+
-        '<div class="banner-week">'+
-          '<button class="banner-nav" onclick="navSem(-1)" aria-label="Semana anterior"><i class="fa-solid fa-chevron-left"></i></button>'+
-          '<h2>Semana '+s+'</h2>'+
-          '<button class="banner-nav" onclick="navSem(1)" aria-label="Próxima semana"><i class="fa-solid fa-chevron-right"></i></button>'+
-        '</div>'+
-        '<p><i class="fa-regular fa-calendar"></i> '+fmtData(s)+'</p>'+
-        '<p><i class="fa-solid fa-music"></i> '+nMusicas+' música'+(nMusicas===1?'':'s')+' no repertório</p>'+
-      '</div>'+
-    '</div>';
-
-  /* acesso rápido */
-  var quickHtml=
-    '<div class="qa-title su su2"><h2>Acesso rápido</h2><p>Encontre rapidamente o que precisa.</p></div>'+
-    '<div class="qa-grid su su2">'+
-      '<div class="qa-card" onclick="irPara(\'repertorio\')"><div class="qa-icon"><i class="fa-solid fa-list-music"></i></div><h3>Repertório</h3><p>Consulte as músicas</p></div>'+
-      '<div class="qa-card" onclick="irPara(\'cultos\')"><div class="qa-icon"><i class="fa-regular fa-calendar"></i></div><h3>Cultos</h3><p>Programação e data</p></div>'+
-      '<div class="qa-card" onclick="irPara(\'equipe\')"><div class="qa-icon"><i class="fa-solid fa-users"></i></div><h3>Equipe</h3><p>Escala de serviço</p></div>'+
-      '<div class="qa-card" onclick="irPara(\'avisos\')"><div class="qa-icon"><i class="fa-solid fa-chalkboard"></i></div><h3>Avisos</h3><p>Quadro de avisos</p></div>'+
-    '</div>';
-
-  /* busca no repertório */
-  var searchHtml=
-      '<div class="search-box"><i class="fa-solid fa-magnifying-glass"></i>'+
-        '<input type="text" class="busca-musica" placeholder="Buscar música..." aria-label="Buscar música" oninput="filtrarMusicas(this)">'+
-      '</div>';
-
-  /* ---- montar as seções ---- */
-  var h='';
-
-  /* INÍCIO: banner + repertório (com busca) + acesso rápido */
-  h+='<div class="sec-view'+(_secAtual==='inicio'?' active':'')+'" id="sec-inicio">'+
-       bannerHtml +
-       repCardHtml() +
-       quickHtml +
-     '</div>';
-
-  /* REPERTÓRIO: busca + lista */
-  h+='<div class="sec-view'+(_secAtual==='repertorio'?' active':'')+'" id="sec-repertorio">'+
-       repCardHtml() +
-     '</div>';
-
-  /* CULTOS: nav de semana + hero */
-  h+='<div class="sec-view'+(_secAtual==='cultos'?' active':'')+'" id="sec-cultos">'+
-       navSemanaHtml() +
-     '</div>';
-
-  /* EQUIPE: escala */
-  h+='<div class="sec-view'+(_secAtual==='equipe'?' active':'')+'" id="sec-equipe">'+
-       escCardHtml() +
-     '</div>';
-
-  /* AVISOS */
-  var avHtml=avisosCardHtml();
-  h+='<div class="sec-view'+(_secAtual==='avisos'?' active':'')+'" id="sec-avisos">'+
-       (avHtml || '<div class="empty"><div class="empty-ico"><i class="fa-solid fa-chalkboard"></i></div><h3>Nenhum aviso</h3><p>Não há avisos publicados para esta semana.</p></div>') +
-     '</div>';
-
-  document.getElementById('conteudo').innerHTML=h;
-}
-
-/* ══ MODO AVULSO ══ */
-function renderErroAvulso(msg){
-  document.getElementById('conteudo').innerHTML=
-    '<div class="empty su">'+
-      '<div class="empty-ico"><i class="fa-solid fa-star-slash"></i></div>'+
-      '<h3>Culto não encontrado</h3>'+
-      '<p>'+msg+'</p>'+
-    '</div>';
-  document.getElementById('headerDate').textContent='—';
-}
-
+/* ── Culto avulso (link isolado) ── */
 function renderAvulso(av){
-  var d = av.programacao;
-  var hdr = document.getElementById('headerDate');
-  _repertorioAtual = (d && d.repertorio) ? d.repertorio : [];
-
-  /* data formatada */
-  var dataFmt = av.data
-    ? new Date(av.data+'T12:00').toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})
-    : '';
-  if(hdr) hdr.textContent = av.nome + (dataFmt ? ' · ' + dataFmt : '');
-
-  var h = '';
-
-  /* HERO do avulso */
-  h +=
-    '<div class="avulso-hero su su1">'+
-      '<div class="avulso-badge-tipo"><i class="fa-solid fa-star"></i> Culto Especial</div>'+
-      '<div class="avulso-hero-title">'+av.nome+'</div>'+
-      (dataFmt?'<div class="avulso-date-chip"><i class="fa-regular fa-calendar-check"></i> '+dataFmt+'</div>':'')+
-      '<div class="avulso-isolado-info">'+
-        '<i class="fa-solid fa-lock"></i>'+
-        '<span>Programação exclusiva deste culto</span>'+
-      '</div>'+
-    '</div>';
-
-  if(!d){
-    h += '<div class="empty su"><div class="empty-ico"><i class="fa-solid fa-music"></i></div>'+
-         '<h3>Sem programação</h3><p>O líder ainda não publicou o repertório deste culto.</p></div>';
-    document.getElementById('conteudo').innerHTML = h;
-    return;
-  }
-
-  /* REPERTÓRIO */
-  var temVideoAv = (d.repertorio||[]).some(function(m){ return m.yt || (m.partes&&m.partes.some(function(p){return p.yt;})); });
-  h += '<div class="sc su su2">'+
-    '<div class="sc-head"><div class="sc-head-icon"><i class="fa-solid fa-list-music"></i></div><span class="sc-head-label">Repertório</span>'+
-      (temVideoAv?'<button class="btn-tocar-tudo" onclick="tocarRepertorio()"><i class="fa-solid fa-play"></i> Tocar Tudo</button>':'')+
-    '</div>'+
-    '<div class="sc-body">';
-  if(!d.repertorio||!d.repertorio.length){
-    h += '<p style="color:var(--t3);font-style:italic;font-size:.85rem">Nenhuma música cadastrada.</p>';
-  } else {
-    h += '<div class="rep-list">';
-    d.repertorio.forEach(function(m,i){
-      h += construirSongItem(m, i+1);
-    });
-    h += '</div>';
-  }
-  h += '</div></div>';
-
-  /* ESCALA */
-  h += '<div class="sc su su3">'+
-    '<div class="sc-head"><div class="sc-head-icon"><i class="fa-solid fa-users"></i></div><span class="sc-head-label">Escala de Serviço</span></div>'+
-    '<div class="sc-body"><div class="esc-grid">';
-  [
-    {key:'vocal',       icon:'fa-microphone',label:'Vocal'},
-    {key:'instrumental',icon:'fa-guitar',    label:'Instrumental'},
-    {key:'multimidia',  icon:'fa-display',   label:'Multimídia'},
-    {key:'midia',       icon:'fa-video',     label:'Mídia / Som'}
-  ].forEach(function(p){
-    var mbrs=d[p.key]||[];
-    var cnt=!mbrs.length?'<div class="esc-vazio">Não definido</div>':
-      mbrs.map(function(n){
-        return '<div class="esc-membro"><div class="esc-av">'+initials(n)+'</div><span class="esc-nome">'+n+'</span></div>';
-      }).join('');
-    h+='<div class="esc-card"><div class="esc-role"><i class="fa-solid '+p.icon+'"></i> '+p.label+'</div>'+cnt+'</div>';
-  });
-  h += '</div></div></div>';
-
-  /* AVISOS */
-  var avisos = d.avisos||[];
-  if(avisos.length){
-    var TIPOS={
-      comemorativa:{label:'Data Comemorativa',icon:'fa-star'},
-      futura:{label:'Música Futura',icon:'fa-music'},
-      playlist:{label:'Playlist do Dia',icon:'fa-list-music'},
-      geral:{label:'Aviso Geral',icon:'fa-bullhorn'}
-    };
-    h += '<div class="sc su su4">'+
-      '<div class="sc-head"><div class="sc-head-icon"><i class="fa-solid fa-chalkboard"></i></div><span class="sc-head-label">Quadro de Avisos</span></div>'+
-      '<div class="sc-body"><div class="avisos-list">';
-    avisos.forEach(function(av){
-      var tipo=av.tipo||'geral';
-      var inf=TIPOS[tipo]||TIPOS.geral;
-      var playlistBtns='';
-      if(av.tipo==='playlist'&&(av.playlistYt||av.playlistSp)){
-        playlistBtns='<div class="av-playlist">'+
-          '<div class="av-playlist-label"><i class="fa-solid fa-list-music"></i> Ouvir a Playlist</div>'+
-          '<div class="av-playlist-btns">'+
-            (av.playlistYt?'<a class="av-pl-btn yt" href="'+av.playlistYt+'" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i> YouTube</a>':'')+
-            (av.playlistSp?'<a class="av-pl-btn sp" href="'+av.playlistSp+'" target="_blank" rel="noopener"><i class="fa-brands fa-spotify"></i> Spotify</a>':'')+
-          '</div></div>';
-      }
-      h +=
-        '<div class="av-item">'+
-          '<div class="av-icon '+tipo+'"><i class="fa-solid '+inf.icon+'"></i></div>'+
-          '<div class="av-body">'+
-            '<div class="av-titulo">'+(av.titulo||'—')+'<span class="av-pill '+tipo+'">'+inf.label+'</span></div>'+
-            (av.descricao?'<div class="av-desc">'+av.descricao+'</div>':'')+
-            (av.data?'<div class="av-date"><i class="fa-regular fa-calendar"></i> '+fmtAv(av.data)+'</div>':'')+
-            (av.tipo==='futura'&&av.youtube?'<button class="av-yt" style="background:none;cursor:pointer;border:none;font-family:inherit;" onclick="abrirYtModal(\''+av.youtube+'\',\''+av.titulo+'\')"><i class="fa-brands fa-youtube"></i> Ver no YouTube</button>':'')+
-            playlistBtns+
-          '</div>'+
-        '</div>';
-    });
-    h += '</div></div></div>';
-  }
-
-  document.getElementById('conteudo').innerHTML = h;
+  var data=av.data?new Date(av.data+'T12:00'):null;
+  aplicarContexto({avulso:true,label:'Culto Especial',icone:'fa-star',titulo:av.nome||'Culto Especial',sub:'',data:data?fmtDataCurta(data):''});
+  renderConteudo(av.programacao||null,'Sem programação','O líder ainda não publicou o repertório deste culto.');
+  renderCultos();
+}
+function renderErroGeral(icone,titulo,msg){
+  aplicarContexto({avulso:false,label:'Culto',icone:'fa-star',titulo:'—',sub:'',data:''});
+  var html=emptyHtml(icone,titulo,msg);
+  el('repList').innerHTML=html;
+  el('escalaBody').innerHTML=html;
+  el('avisosBody').innerHTML=html;
+  el('cultosBody').innerHTML=html;
+  el('btnTocarTudo').style.display='none';
 }
 
-(function(){
-  var params = new URLSearchParams(window.location.search);
-  var id       = params.get('id');
-  var avulsoId = params.get('avulso');
+/* ── Conteúdo (repertório / escala / avisos) ── */
+function renderConteudo(d,tituloVazio,msgVazio){
+  _repertorioAtual=(d&&d.repertorio)||[];
+  _avisosAtual=(d&&d.avisos)||[];
+  _filtroAviso='todos';
+  renderRepertorio(tituloVazio,msgVazio);
+  renderEscala(d,tituloVazio,msgVazio);
+  renderAvisos(tituloVazio,msgVazio);
+}
 
-  if(!id){
-    document.getElementById('conteudo').innerHTML=
-      '<div class="empty su">'+
-        '<div class="empty-ico"><i class="fa-solid fa-link-slash"></i></div>'+
-        '<h3>Link Inválido</h3>'+
-        '<p>Solicite o link correto ao seu líder.</p>'+
-      '</div>';
-    document.getElementById('headerDate').textContent='—';
+/* ══ REPERTÓRIO ══ */
+function temYt(m){return !!(m.yt&&extrairYtId(m.yt));}
+function ibtn(cls,icone,acao,ativo,titulo,sm){
+  return '<button class="ibtn '+cls+(sm?' sm':'')+(ativo?'':' off')+'" title="'+esc(titulo)+'" aria-label="'+esc(titulo)+'" onclick="'+acao+'"><i class="'+icone+'"></i></button>';
+}
+function spBtn(url,sm){
+  var u=urlOk(url);
+  if(!u) return '<span class="ibtn sp off'+(sm?' sm':'')+'"><i class="fa-brands fa-spotify"></i></span>';
+  return '<a class="ibtn sp'+(sm?' sm':'')+'" href="'+esc(u)+'" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify"><i class="fa-brands fa-spotify"></i></a>';
+}
+function songHtml(m,i){
+  var nome=m.nome||'—';
+  var partes=m.partes||[];
+  var tags='';
+  if(m.tom) tags+='<span class="chip chip-tom">Tom '+esc(m.tom)+'</span>';
+  if(m.seq) tags+='<span class="chip"><i class="fa-solid fa-drum"></i> '+esc(m.seq)+' BPM</span>';
+  if(partes.length) tags+='<button class="tag-medley" onclick="toggleMedleyMenu(this)"><i class="fa-solid fa-layer-group"></i> Medley ('+(partes.length+1)+') <i class="fa-solid fa-chevron-down"></i></button>';
+  if(m.yt&&m.cifra) tags+='<button class="tag-treino" onclick="acaoMusica('+i+',\'treino\')"><i class="fa-solid fa-dumbbell"></i> Treinar</button>';
+
+  var bpm=parseInt(m.seq);
+  var podeTocar=temYt(m)||partes.some(function(p){return p.yt&&extrairYtId(p.yt);});
+  var acts=
+    ibtn('yt','fa-brands fa-youtube','acaoMusica('+i+',\'yt\')',!!m.yt,'YouTube')+
+    ibtn('bpm','fa-solid fa-drum','acaoMusica('+i+',\'metro\')',!isNaN(bpm),'Metrônomo'+(m.seq?' ('+m.seq+' BPM)':''))+
+    spBtn(m.sp)+
+    ibtn('ci','fa-solid fa-music','acaoMusica('+i+',\'cifra\')',!!m.cifra,'Cifra')+
+    ibtn('play','fa-solid fa-play','acaoMusica('+i+',\'play\')',podeTocar,'Tocar a partir daqui');
+
+  var medley='';
+  if(partes.length){
+    medley='<div class="medley-box">';
+    partes.forEach(function(p,pi){
+      medley+='<div class="mpart"><span class="mp-num">'+(pi+2)+'</span><span class="mp-name">'+esc(p.nome||('Parte '+(pi+2)))+'</span><div class="mp-acts">'+
+        ibtn('yt','fa-brands fa-youtube','acaoParte('+i+','+pi+',\'yt\')',!!p.yt,'YouTube',true)+
+        spBtn(p.sp,true)+
+        ibtn('ci','fa-solid fa-music','acaoParte('+i+','+pi+',\'cifra\')',!!p.cifra,'Cifra',true)+
+      '</div></div>';
+    });
+    medley+='</div>';
+  }
+  return '<div class="song-wrap" data-nome="'+esc(nome.toLowerCase())+'">'+
+    '<div class="song"><span class="s-num">'+(i+1)+'</span>'+
+      '<div class="s-main"><div class="s-name">'+esc(nome)+'</div>'+(tags?'<div class="s-tags">'+tags+'</div>':'')+'</div>'+
+      '<div class="acts">'+acts+'</div>'+
+    '</div>'+medley+'</div>';
+}
+function renderRepertorio(tituloVazio,msgVazio){
+  var rep=_repertorioAtual;
+  var temVideo=rep.some(function(m){return m.yt||(m.partes&&m.partes.some(function(p){return p.yt;}));});
+  el('btnTocarTudo').style.display=temVideo?'':'none';
+  var cnt=el('repCount');
+  cnt.style.display=rep.length?'':'none';
+  cnt.textContent=rep.length+(rep.length===1?' música':' músicas');
+  el('buscaRep').value='';
+  if(!rep.length){
+    el('repList').innerHTML=emptyHtml('fa-calendar-xmark',tituloVazio||'Sem programação',msgVazio||'Nenhuma música cadastrada.');
     return;
   }
+  el('repList').innerHTML=rep.map(songHtml).join('')+'<div class="empty" id="repSemResultado" style="display:none;padding:1.4rem"><p>Nenhuma música encontrada.</p></div>';
+}
+function filtrarMusicas(q){
+  q=(q||'').toLowerCase().trim();
+  var n=0;
+  document.querySelectorAll('#repList .song-wrap').forEach(function(w){
+    var ok=!q||w.getAttribute('data-nome').indexOf(q)>=0;
+    w.style.display=ok?'':'none'; if(ok) n++;
+  });
+  var vazio=el('repSemResultado'); if(vazio) vazio.style.display=n?'none':'flex';
+}
+function toggleMedleyMenu(btn){
+  var wrap=btn.closest('.song-wrap');
+  var box=wrap.querySelector('.medley-box'); if(!box) return;
+  box.classList.toggle('aberto');
+  var chev=btn.querySelector('.fa-chevron-down');
+  if(chev) chev.style.transform=box.classList.contains('aberto')?'rotate(180deg)':'';
+}
+function acaoMusica(i,tipo){
+  var m=_repertorioAtual[i]; if(!m) return;
+  if(tipo==='yt'&&m.yt) abrirYtModal(m.yt,m.nome||'Música');
+  else if(tipo==='cifra'&&m.cifra) abrirCifraModal(m.cifra,m.nome||'Cifra');
+  else if(tipo==='metro') abrirMetronomo(m.nome||'Música',m.seq);
+  else if(tipo==='treino'&&m.yt&&m.cifra) abrirTreino(m.yt,m.cifra,m.nome||'Treino');
+  else if(tipo==='play') abrirPlayerSequencial(_repertorioAtual,i);
+}
+function acaoParte(i,pi,tipo){
+  var m=_repertorioAtual[i]; if(!m||!m.partes) return;
+  var p=m.partes[pi]; if(!p) return;
+  var nome=p.nome||('Parte '+(pi+2));
+  if(tipo==='yt'&&p.yt) abrirYtModal(p.yt,nome);
+  else if(tipo==='cifra'&&p.cifra) abrirCifraModal(p.cifra,nome);
+}
 
-  /* ── MODO AVULSO: link isolado ── */
-  if(avulsoId){
-    col.doc(id).get().then(function(doc){
-      if(!doc.exists){ renderErroAvulso('Ministério não encontrado.'); return; }
-      var data = doc.data();
-      var avulsos = data.avulsos || {};
-      var av = avulsos[avulsoId];
-      if(!av){ renderErroAvulso('Culto não encontrado ou removido.'); return; }
-      renderAvulso(av);
-    }).catch(function(err){ renderErroAvulso(err.message); });
-    return;
-  }
+/* ══ ESCALA ══ */
+var GRUPOS_ESCALA=[
+  {key:'vocal',        icon:'fa-microphone',label:'Vocal',        cor:'#4f7cff'},
+  {key:'instrumental', icon:'fa-guitar',    label:'Instrumental', cor:'#f59e0b'},
+  {key:'multimidia',   icon:'fa-display',   label:'Multimídia',   cor:'#22b35e'},
+  {key:'midia',        icon:'fa-video',     label:'Mídia / Som',  cor:'#ef4444'}
+];
+function renderEscala(d,tituloVazio,msgVazio){
+  var box=el('escalaBody');
+  if(!d){box.innerHTML=emptyHtml('fa-users-slash',tituloVazio||'Sem escala',msgVazio||'A escala ainda não foi publicada.');return;}
+  var total=0;
+  GRUPOS_ESCALA.forEach(function(g){total+=(d[g.key]||[]).length;});
+  var h='<div class="resumo-esc"><span class="count-pill">'+total+(total===1?' pessoa escalada':' pessoas escaladas')+'</span></div><div class="esc-grid">';
+  GRUPOS_ESCALA.forEach(function(g){
+    var mb=d[g.key]||[];
+    h+='<div class="esc-box"><div class="esc-h"><span class="eh-i" style="background:'+g.cor+'"><i class="fa-solid '+g.icon+'"></i></span><b>'+g.label+'</b><span class="count-pill">'+mb.length+'</span></div>';
+    if(!mb.length) h+='<div class="p-vazio">Não definido</div>';
+    else mb.forEach(function(n){h+='<div class="pessoa"><span class="p-av">'+esc(initials(n))+'</span><span class="p-nome">'+esc(n)+'</span></div>';});
+    h+='</div>';
+  });
+  box.innerHTML=h+'</div>';
+}
 
-  /* ── MODO NORMAL: semanas do domingo ── */
-  col.doc(id).onSnapshot(function(doc){
-    if(!doc.exists){
-      document.getElementById('conteudo').innerHTML=
-        '<div class="empty su">'+
-          '<div class="empty-ico"><i class="fa-solid fa-music"></i></div>'+
-          '<h3>Sem Programação</h3>'+
-          '<p>Seu líder ainda não publicou o repertório.</p>'+
-        '</div>';
-      return;
+/* ══ AVISOS ══ */
+var TIPOS_AVISO={
+  comemorativa:{label:'Data Comemorativa',icon:'fa-star'},
+  futura:{label:'Música Futura',icon:'fa-music'},
+  playlist:{label:'Playlist do Dia',icon:'fa-list-music'},
+  geral:{label:'Aviso Geral',icon:'fa-bullhorn'}
+};
+function filtrarAvisos(t){_filtroAviso=t;renderAvisos();}
+function renderAvisos(tituloVazio,msgVazio){
+  var box=el('avisosBody');
+  var badge=el('bellBadge');
+  var total=_avisosAtual.length;
+  badge.style.display=total?'flex':'none'; badge.textContent=total;
+  if(!total){box.innerHTML=emptyHtml('fa-bell-slash','Nenhum aviso','Não há avisos para este culto.');return;}
+  var cont={todos:total};
+  _avisosAtual.forEach(function(a){var t=TIPOS_AVISO[a.tipo]?a.tipo:'geral';cont[t]=(cont[t]||0)+1;});
+  var h='<div class="filtros">';
+  [['todos','Todos']].concat(Object.keys(TIPOS_AVISO).filter(function(k){return cont[k];}).map(function(k){return[k,TIPOS_AVISO[k].label];})).forEach(function(f){
+    h+='<button class="filtro'+(_filtroAviso===f[0]?' ativo':'')+'" onclick="filtrarAvisos(\''+f[0]+'\')">'+f[1]+' <span style="opacity:.7">'+cont[f[0]]+'</span></button>';
+  });
+  h+='</div>';
+  _avisosAtual.forEach(function(av,i){
+    var tipo=TIPOS_AVISO[av.tipo]?av.tipo:'geral';
+    if(_filtroAviso!=='todos'&&_filtroAviso!==tipo) return;
+    var inf=TIPOS_AVISO[tipo];
+    var acts='';
+    if(tipo==='futura'&&av.youtube) acts+='<button class="pbtn yt" onclick="acaoAviso('+i+')"><i class="fa-brands fa-youtube"></i> Ver no YouTube</button>';
+    if(tipo==='playlist'){
+      if(urlOk(av.playlistYt)) acts+='<a class="pbtn yt" href="'+esc(urlOk(av.playlistYt))+'" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i> YouTube</a>';
+      if(urlOk(av.playlistSp)) acts+='<a class="pbtn sp" href="'+esc(urlOk(av.playlistSp))+'" target="_blank" rel="noopener"><i class="fa-brands fa-spotify"></i> Spotify</a>';
     }
+    h+='<div class="av-row"><span class="av-ico '+tipo+'"><i class="fa-solid '+inf.icon+'"></i></span><div class="av-body">'+
+      '<div class="av-t">'+esc(av.titulo||'—')+'<span class="av-pill '+tipo+'">'+inf.label+'</span></div>'+
+      (av.descricao?'<div class="av-d">'+esc(av.descricao)+'</div>':'')+
+      (av.data?'<div class="av-dt"><i class="fa-regular fa-calendar"></i> '+fmtAv(av.data)+'</div>':'')+
+      (acts?'<div class="av-acts">'+acts+'</div>':'')+
+    '</div></div>';
+  });
+  box.innerHTML=h;
+}
+function acaoAviso(i){var a=_avisosAtual[i]; if(a&&a.youtube) abrirYtModal(a.youtube,a.titulo||'Vídeo');}
+
+/* ══ CULTOS (semanas publicadas) ══ */
+function renderCultos(){
+  var box=el('cultosBody'); if(!box) return;
+  if(modoAvulso){box.innerHTML=emptyHtml('fa-lock','Culto exclusivo','Este link mostra apenas a programação deste culto especial.');return;}
+  var dom=domingoISO(ano,semAtual);
+  var h='<div class="semana-nav"><button onclick="navSem(-1)" aria-label="Semana anterior"><i class="fa-solid fa-chevron-left"></i></button>'+
+    '<div class="sn-mid"><b>Semana '+semAtual+'</b><small>'+fmtDataCurta(dom)+'</small></div>'+
+    '<button onclick="navSem(1)" aria-label="Próxima semana"><i class="fa-solid fa-chevron-right"></i></button></div>';
+  var hoje=semISO();
+  if(semAtual!==hoje) h+='<button class="opt-row" onclick="selecionarSemana('+hoje+')" style="margin-bottom:.6rem"><span class="o-i"><i class="fa-solid fa-calendar-day"></i></span><span><b>Ir para esta semana</b><small>Semana '+hoje+'</small></span></button>';
+  var semanas=[];
+  Object.keys(progs).forEach(function(k){
+    var p=k.split('-'); if(parseInt(p[0],10)!==ano) return;
+    var w=parseInt(p[1],10); if(!isNaN(w)) semanas.push(w);
+  });
+  semanas.sort(function(a,b){return b-a;});
+  h+='<div class="sec-h" style="margin-top:.6rem"><h2><i class="fa-solid fa-list" style="color:var(--accent)"></i> Programações publicadas</h2></div>';
+  if(!semanas.length) h+=emptyHtml('fa-calendar-xmark','Nada publicado','Nenhuma semana tem programação ainda.');
+  semanas.forEach(function(w){
+    var p=progs[chave(w)]||{}; var n=(p.repertorio||[]).length;
+    var dw=domingoISO(ano,w);
+    h+='<button class="sem-row'+(w===semAtual?' atual':'')+'" onclick="selecionarSemana('+w+')"><span class="s-num">'+w+'</span>'+
+      '<span class="grow"><div class="sr-t">'+fmtDataCurta(dw)+(w===hoje?' · esta semana':'')+'</div><div class="sr-s">'+n+(n===1?' música':' músicas')+'</div></span><i class="fa-solid fa-chevron-right"></i></button>';
+  });
+  box.innerHTML=h;
+}
+
+/* ══ Compartilhar link ══ */
+function copiarLinkAtual(){
+  var btn=el('btnCopiarLink'); var url=window.location.href;
+  function ok(){var b=btn.querySelector('b'); if(!b) return; var t=b.textContent; b.textContent='Link copiado!'; setTimeout(function(){b.textContent=t;},1800);}
+  if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(ok).catch(function(){prompt('Copie o link:',url);});
+  else prompt('Copie o link:',url);
+}
+
+/* ══ CARREGAMENTO DOS DADOS ══ */
+(function(){
+  var params=new URLSearchParams(window.location.search);
+  var id=params.get('id');
+  var avulsoId=params.get('avulso');
+
+  if(!id){renderErroGeral('fa-link-slash','Link Inválido','Solicite o link correto ao seu líder.');return;}
+
+  /* MODO AVULSO: link isolado */
+  if(avulsoId){
+    modoAvulso=true;
+    col.doc(id).get().then(function(doc){
+      if(!doc.exists){renderErroGeral('fa-star','Culto não encontrado','Ministério não encontrado.');return;}
+      var av=(doc.data().avulsos||{})[avulsoId];
+      if(!av){renderErroGeral('fa-star','Culto não encontrado','Culto não encontrado ou removido.');return;}
+      renderAvulso(av);
+    }).catch(function(err){renderErroGeral('fa-triangle-exclamation','Erro de Conexão',err.message);});
+    return;
+  }
+
+  /* MODO NORMAL: semanas do domingo */
+  col.doc(id).onSnapshot(function(doc){
+    if(!doc.exists){renderErroGeral('fa-music','Sem Programação','Seu líder ainda não publicou o repertório.');return;}
     var data=doc.data();
     if(data.programacoes&&Object.keys(data.programacoes).length){
       progs=data.programacoes;
-    } else if(data.programacao){
+    }else if(data.programacao){
       var p0=data.programacao;
       progs[chave(p0.semana||1)]=p0;
     }
-    if(!semAtual){
-      semAtual=(data.programacao||{}).semana||semISO();
-    }
+    if(!semAtual){semAtual=(data.programacao||{}).semana||semISO();}
     renderSem(semAtual);
-  },function(err){
-    document.getElementById('conteudo').innerHTML=
-      '<div class="empty su">'+
-        '<div class="empty-ico"><i class="fa-solid fa-triangle-exclamation"></i></div>'+
-        '<h3>Erro de Conexão</h3>'+
-        '<p>'+err.message+'</p>'+
-      '</div>';
-  });
+  },function(err){renderErroGeral('fa-triangle-exclamation','Erro de Conexão',err.message);});
 })();
-
-
 
 
 /* ══ METRÔNOMO (som de bambu via Web Audio API) ══ */
@@ -2313,9 +1800,9 @@ window.onYouTubeIframeAPIReady = function(){ _ytApiPronta = true; };
 /* montar lista a partir do repertório atual e abrir */
 function abrirPlayerSequencial(repertorio, inicioMusica){
   _playerLista = [];
-  var inicioIdx = -1;
+  var _posInicio = -1;
   (repertorio||[]).forEach(function(m, mi){
-    if(mi === inicioMusica) inicioIdx = _playerLista.length;
+    if(mi === inicioMusica) _posInicio = _playerLista.length;
     /* música principal */
     var ytId = m.yt ? extrairYtId(m.yt) : null;
     _playerLista.push({ nome:m.nome||'Música', ytId:ytId, sp:m.sp||'', medley:false });
@@ -2330,8 +1817,8 @@ function abrirPlayerSequencial(repertorio, inicioMusica){
   });
 
   /* primeiro índice tocável (com vídeo) */
-  _playerIdx = _playerLista.findIndex(function(t){ return t.ytId; });
-  if(inicioIdx >= 0 && _playerLista[inicioIdx] && _playerLista[inicioIdx].ytId) _playerIdx = inicioIdx;
+  _playerIdx = _playerLista.findIndex(function(t, i){ return t.ytId && i >= Math.max(0,_posInicio); });
+  if(_playerIdx < 0) _playerIdx = _playerLista.findIndex(function(t){ return t.ytId; });
   if(_playerIdx < 0) _playerIdx = 0;
 
   document.getElementById('playerOverlay').classList.add('aberto');
@@ -2480,12 +1967,6 @@ function fecharPlayer(e){
 
 /* chamado pelo botão no repertório — usa o repertório da semana/avulso atual */
 var _repertorioAtual = [];
-/* ▶ de uma música: abre o player nela e segue o repertório */
-function tocarAPartirDe(i){
-  if(!_repertorioAtual || !_repertorioAtual[i]) return;
-  abrirPlayerSequencial(_repertorioAtual, i);
-}
-
 function tocarRepertorio(){
   if(!_repertorioAtual || !_repertorioAtual.length){ return; }
   var temVideo = _repertorioAtual.some(function(m){ return m.yt && extrairYtId(m.yt); });
@@ -2589,9 +2070,6 @@ document.addEventListener('keydown', function(e){
 });
 
 </script>
-
-
-
 
 <!-- Modal Metrônomo -->
 <div class="metro-overlay" id="metroOverlay" onclick="fecharMetro(event)">
@@ -2777,6 +2255,7 @@ document.addEventListener('keydown', function(e){
     </div>
   </div>
 </div>
+
 
 </body>
 </html>
