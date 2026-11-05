@@ -10,36 +10,37 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
 :root{
-  /* ── Obsidian/Chumbo + Laranja (padrão) ── */
-  --bg:#141414;
-  --bg2:#1c1c1c;
-  --glass:rgba(255,255,255,.04);
-  --glass-hover:rgba(255,255,255,.07);
-  --glass-border:rgba(255,255,255,.08);
-  --glass-border-lit:rgba(255,255,255,.16);
+  /* ── ESCURO: azul-noite + azul/roxo (padrão) ── */
+  --bg:#10121b;
+  --bg2:#191d2a;
+  --surface-2:#23283a;
+  --glass:#191d2a;
+  --glass-hover:#20253480;
+  --glass-border:rgba(255,255,255,.07);
+  --glass-border-lit:rgba(130,144,255,.32);
 
-  /* ── FORJA: carvão escuro + laranja brasa + dourado ── */
-  --neon-a:#e85a0a;   /* brasa */
-  --neon-b:#d4a030;   /* dourado */
-  --neon-c:#ff7820;   /* laranja vivo */
+  /* ── Azul / Roxo ── */
+  --neon-a:#8290ff;   /* azul-roxo principal */
+  --neon-b:#a78bfa;   /* roxo claro */
+  --neon-c:#63b3ff;   /* azul claro */
 
-  --neon-a-glow:rgba(232,90,10,.52);
-  --neon-b-glow:rgba(212,160,48,.35);
-  --neon-c-glow:rgba(255,120,32,.4);
+  --neon-a-glow:rgba(130,144,255,.5);
+  --neon-b-glow:rgba(167,139,250,.35);
+  --neon-c-glow:rgba(99,179,255,.4);
 
-  --neon-a-soft:rgba(232,90,10,.12);
-  --neon-b-soft:rgba(212,160,48,.09);
-  --neon-c-soft:rgba(255,120,32,.1);
+  --neon-a-soft:rgba(130,144,255,.14);
+  --neon-b-soft:rgba(167,139,250,.1);
+  --neon-c-soft:rgba(99,179,255,.1);
 
-  --t1:#f4ede0;
-  --t2:#8c7860;
-  --t3:#4a3c2e;
+  --t1:#f2f3fb;
+  --t2:#a0a6bd;
+  --t3:#5b6180;
 
   --hero-grad-start:#ffffff;
   --chip-bg:rgba(255,255,255,.05);
   --medley:#b57bef;
-  --medley-soft:rgba(181,123,239,.14);
-  --medley-border:rgba(181,123,239,.35);
+  --medley-soft:rgba(181,123,239,.16);
+  --medley-border:rgba(181,123,239,.4);
 
   --r:18px;
   --r-sm:12px;
@@ -160,22 +161,22 @@ header::after{
    TEMAS — Escuro (padrão, no :root) e Claro
 ════════════════════════════════════════ */
 
-/* ── CLARO: branco + laranja ── */
+/* ── CLARO: branco + azul/roxo ── */
 [data-theme="claro"]{
-  --bg:#f2f1ee;--bg2:#ffffff;
-  --glass:#ffffff;--glass-hover:rgba(0,0,0,.03);
-  --glass-border:rgba(0,0,0,.09);--glass-border-lit:rgba(232,97,10,.3);
-  --neon-a:#e8610a;--neon-b:#c94f00;--neon-c:#f0900a;
-  --neon-a-glow:rgba(232,97,10,.25);--neon-b-glow:rgba(201,79,0,.22);--neon-c-glow:rgba(240,144,10,.22);
-  --neon-a-soft:rgba(232,97,10,.1);--neon-b-soft:rgba(201,79,0,.08);--neon-c-soft:rgba(240,144,10,.09);
-  --t1:#1e1a15;--t2:#6a5f52;--t3:#a89a88;
-  --hero-grad-start:#2a2420;
-  --chip-bg:rgba(0,0,0,.04);
-  --medley:#8b3fd4;--medley-soft:rgba(139,63,212,.1);--medley-border:rgba(139,63,212,.3);
+  --bg:#f4f5fa;--bg2:#ffffff;--surface-2:#f0f1f8;
+  --glass:#ffffff;--glass-hover:rgba(82,101,217,.04);
+  --glass-border:#e8e9f0;--glass-border-lit:rgba(82,101,217,.32);
+  --neon-a:#5265d9;--neon-b:#7c5cd9;--neon-c:#3a8fd9;
+  --neon-a-glow:rgba(82,101,217,.22);--neon-b-glow:rgba(124,92,217,.2);--neon-c-glow:rgba(58,143,217,.2);
+  --neon-a-soft:rgba(82,101,217,.09);--neon-b-soft:rgba(124,92,217,.08);--neon-c-soft:rgba(58,143,217,.08);
+  --t1:#202440;--t2:#858ba5;--t3:#b4b9cc;
+  --hero-grad-start:#202440;
+  --chip-bg:rgba(82,101,217,.06);
+  --medley:#8b3fd4;--medley-soft:rgba(139,63,212,.1);--medley-border:rgba(139,63,212,.28);
 }
 
-/* ══ MAIN ══ */
-main{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:1.2rem .9rem 4rem}
+/* ══ MAIN (área de conteúdo, dentro de .content-area) ══ */
+main{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:0}
 
 /* Animações de entrada */
 @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
@@ -283,86 +284,103 @@ main{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:1.2rem .9
 .sc-body{padding:.85rem}
 
 /* ══ REPERTÓRIO ══ */
-.rep-list{display:flex;flex-direction:column;gap:.7rem}
+.rep-list{display:flex;flex-direction:column;gap:.55rem}
+/* linha de música (estilo do modelo): nº | nome + pílulas | ▶ */
 .rep-item{
-  display:flex;flex-direction:row;align-items:flex-start;gap:.85rem;
-  padding:.9rem 1rem;
+  display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:.9rem;
+  padding:.8rem .9rem .8rem 1rem;
   background:var(--glass);
   border:1px solid var(--glass-border);
-  border-radius:16px;
-  position:relative;overflow:hidden;
-  transition:border-color .25s,background .25s;
+  border-radius:14px;
+  transition:border-color .2s,background .2s;
   -webkit-tap-highlight-color:transparent;
-  cursor:default;
 }
-.rep-item:hover{ border-color:var(--glass-border-lit); }
+.rep-item:hover{border-color:var(--glass-border-lit)}
 
 .rep-num{
-  width:34px;height:34px;min-width:34px;border-radius:50%;
-  background:var(--neon-a-soft);
-  border:1px solid var(--glass-border-lit);
+  width:34px;height:34px;border-radius:50%;
+  background:var(--surface-2,var(--neon-a-soft));
   color:var(--neon-a);
   font-family:var(--fd);font-size:.9rem;font-weight:700;
   display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;margin-top:.1rem;
+  align-self:start;margin-top:.05rem;
 }
-/* corpo da música: nome grande + chips + links */
-.rep-content{flex:1;min-width:0;display:flex;flex-direction:column;gap:.6rem}
+.rep-content{min-width:0;display:flex;flex-direction:column;gap:.45rem}
 .rep-nome{
-  font-family:var(--fh);font-size:1.15rem;font-weight:600;line-height:1.25;color:var(--t1);
-  word-break:break-word;
+  font-family:var(--fh);font-size:1rem;font-weight:600;line-height:1.3;color:var(--t1);
+  overflow-wrap:anywhere;
 }
-/* linha de chips */
-.rep-tags{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center}
+/* uma linha só: etiquetas + links, quebrando se faltar espaço */
+.rep-meta{display:flex;flex-wrap:wrap;gap:.35rem;align-items:center}
+.rep-sep{width:1px;height:16px;background:var(--glass-border-lit);margin:0 .15rem}
 
-/* chip base */
+/* etiquetas */
 .tag-tom,.tag-bpm,.tag-medley{
   display:inline-flex;align-items:center;gap:.3rem;
-  padding:.28rem .6rem;border-radius:8px;font-family:var(--fd);
-  font-size:.8rem;font-weight:700;white-space:nowrap;line-height:1;
+  padding:.24rem .55rem;border-radius:999px;font-family:var(--fd);
+  font-size:.72rem;font-weight:700;white-space:nowrap;line-height:1.1;
 }
-.tag-tom{background:linear-gradient(135deg,var(--neon-a),var(--neon-c));color:#fff;box-shadow:0 2px 8px var(--neon-a-glow)}
+.tag-tom{background:linear-gradient(135deg,var(--neon-a),var(--neon-c));color:#fff;min-width:24px;justify-content:center}
 
-/* grade de links — sempre 3 na mesma linha */
-.rep-links{display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem}
-
-/* ── BOTÕES DE LINK ── */
+/* ── LINKS EM PÍLULA ── */
+.rep-tags,.rep-links{display:flex;flex-wrap:wrap;gap:.35rem;align-items:center}
 .lnk{
-  display:inline-flex;align-items:center;justify-content:center;gap:.35rem;
-  padding:.55rem .4rem;border-radius:10px;
-  font-size:.8rem;font-weight:600;text-decoration:none;
-  border:1px solid;cursor:pointer;transition:all .18s;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;
-  -webkit-tap-highlight-color:transparent;font-family:var(--fh);
+  display:inline-flex;align-items:center;gap:.3rem;
+  padding:.24rem .65rem;border-radius:999px;
+  font-size:.72rem;font-weight:600;text-decoration:none;line-height:1.1;
+  border:1px solid;cursor:pointer;transition:background .18s,color .18s;
+  white-space:nowrap;-webkit-tap-highlight-color:transparent;font-family:var(--fh);
 }
-.lnk i{font-size:.88rem;flex-shrink:0}
-.lnk span{overflow:hidden;text-overflow:ellipsis}
-.lnk:active{transform:scale(.96)}
-@media(max-width:400px){
-  .lnk{padding:.5rem .25rem;font-size:.72rem;gap:.28rem}
-  .lnk i{font-size:.8rem}
-}
-@media(max-width:340px){ .lnk{font-size:.66rem} }
+.lnk i{font-size:.74rem}
+.lnk:active{transform:scale(.95)}
 .lnk-yt{background:rgba(255,60,60,.1);color:#ff5555;border-color:rgba(255,60,60,.25)}
 .lnk-yt:hover{background:#ff4444;color:#fff}
 .lnk-sp{background:rgba(29,185,84,.1);color:#1db954;border-color:rgba(29,185,84,.25)}
 .lnk-sp:hover{background:#1db954;color:#fff}
-.lnk-ci{background:var(--neon-a-soft);color:var(--neon-a);border-color:var(--glass-border-lit)}
-.lnk-ci:hover{background:var(--neon-a);color:#fff}
+.lnk-ci{background:rgba(240,144,10,.1);color:#e8890a;border-color:rgba(240,144,10,.28)}
+.lnk-ci:hover{background:#e8890a;color:#fff}
+
+/* botão ▶ redondo à direita */
+.rep-play{
+  width:38px;height:38px;border-radius:50%;border:none;cursor:pointer;
+  background:var(--neon-a);color:#fff;font-size:.8rem;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 3px 12px var(--neon-a-glow);transition:transform .15s;
+  -webkit-tap-highlight-color:transparent;
+}
+.rep-play i{margin-left:2px}
+.rep-play:hover{transform:scale(1.07)}
+.rep-play:active{transform:scale(.92)}
 
 /* ── mini-menu do medley ── */
 .medley-menu{
-  margin-top:.2rem;background:var(--medley-soft);border:1px solid var(--medley-border);
-  border-radius:12px;padding:.7rem;display:none;flex-direction:column;gap:.6rem;
+  margin-top:.15rem;background:var(--medley-soft);border:1px solid var(--medley-border);
+  border-radius:12px;padding:.65rem .7rem;display:none;flex-direction:column;gap:.55rem;
 }
 .medley-menu.aberto{display:flex}
-.medley-part{display:flex;flex-direction:column;gap:.4rem}
+.medley-part{display:flex;flex-direction:column;gap:.35rem}
 .medley-part-title{
-  font-family:var(--fd);font-size:.78rem;font-weight:700;color:var(--medley);
+  font-family:var(--fd);font-size:.75rem;font-weight:700;color:var(--medley);
   text-transform:uppercase;letter-spacing:.04em;display:flex;align-items:center;gap:.4rem;
 }
 .medley-part-title .pnum{width:18px;height:18px;border-radius:50%;background:var(--medley);color:#fff;font-size:.62rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.medley-part-links{display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem}
+.medley-part-links{display:flex;flex-wrap:wrap;gap:.35rem}
+
+/* cabeçalho do repertório: título | busca + tocar tudo */
+.rep-head{display:flex;align-items:center;justify-content:space-between;gap:.8rem;flex-wrap:wrap;margin:.3rem 0 .9rem}
+.rep-head h2{font-family:var(--fd);font-size:1.15rem;font-weight:700;color:var(--t1);display:flex;align-items:center;gap:.5rem}
+.rep-head h2 i{color:var(--neon-a)}
+.rep-head-tools{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
+.rep-head-tools .search-box{width:250px;max-width:250px;padding:.55rem .9rem}
+.rep-head-tools .btn-tocar-tudo{margin-left:0}
+@media(max-width:560px){
+  .rep-head-tools{width:100%}
+  .rep-head-tools .search-box{width:auto;max-width:none;flex:1;min-width:0}
+  .rep-meta{flex-direction:column;align-items:flex-start;gap:.4rem}
+  .rep-sep{display:none}
+  .rep-item{gap:.7rem;padding:.75rem .7rem .75rem .8rem}
+  .rep-play{width:36px;height:36px}
+}
 
 /* ══ PLAYLIST AVISO ══ */
 .av-playlist{
@@ -474,16 +492,199 @@ footer{
 }
 footer i{color:var(--neon-a)}
 
+
+/* ════════════════════════════════════════
+   LAYOUT COM SIDEBAR
+════════════════════════════════════════ */
+.app{display:flex;min-height:100vh;position:relative;z-index:1}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  width:248px;flex-shrink:0;
+  background:var(--bg2);
+  border-right:1px solid var(--glass-border);
+  padding:1.5rem 1rem;
+  display:flex;flex-direction:column;
+  position:fixed;inset:0 auto 0 0;z-index:120;
+  transition:transform .28s cubic-bezier(.22,1,.36,1);
+}
+.sb-logo{display:flex;align-items:center;gap:.7rem;padding:0 .5rem;margin-bottom:2rem}
+.sb-gem{
+  width:44px;height:44px;border-radius:13px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--neon-a),var(--neon-b));
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:1.15rem;
+  box-shadow:0 0 20px var(--neon-a-glow);
+}
+.sb-logo-txt h2{font-family:var(--fd);font-size:.95rem;font-weight:700;color:var(--t1);line-height:1.1;letter-spacing:.02em}
+.sb-logo-txt span{font-size:.65rem;color:var(--t2)}
+.sb-label{
+  font-size:.62rem;font-weight:700;color:var(--t3);
+  letter-spacing:.12em;padding:0 .7rem;margin-bottom:.7rem;text-transform:uppercase;
+}
+.sb-menu{display:flex;flex-direction:column;gap:.3rem}
+.sb-item{
+  display:flex;align-items:center;gap:.8rem;
+  padding:.78rem .85rem;border-radius:12px;
+  color:var(--t2);font-size:.85rem;font-weight:600;
+  cursor:pointer;border:none;background:none;width:100%;text-align:left;
+  font-family:var(--fh);transition:color .2s,background .2s;
+  -webkit-tap-highlight-color:transparent;
+}
+.sb-item i{width:20px;font-size:.95rem;text-align:center;flex-shrink:0}
+.sb-item:hover{color:var(--neon-a);background:var(--neon-a-soft)}
+.sb-item.active{color:var(--neon-a);background:var(--neon-a-soft)}
+.sb-item.active i{color:var(--neon-a)}
+.sb-bottom{
+  margin-top:auto;background:var(--glass);border:1px solid var(--glass-border);
+  padding:1rem;border-radius:14px;text-align:center;
+}
+.sb-bottom i{color:var(--neon-a);font-size:1.4rem;margin-bottom:.5rem}
+.sb-bottom p{font-size:.72rem;color:var(--t2);line-height:1.55}
+
+/* overlay para fechar sidebar no mobile */
+.sb-backdrop{
+  position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:110;
+  opacity:0;pointer-events:none;transition:opacity .25s;
+}
+.sb-backdrop.show{opacity:1;pointer-events:auto}
+
+/* ── ÁREA PRINCIPAL ── */
+.content-area{
+  margin-left:248px;flex:1;min-width:0;
+  padding:1.6rem 2rem 3rem;
+}
+
+/* ── TOPBAR ── */
+header.topbar{position:static;height:auto;padding:0;background:none;backdrop-filter:none;-webkit-backdrop-filter:none;border:none;z-index:auto}
+header.topbar::after{display:none}
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  margin-bottom:1.6rem;max-width:760px;margin-left:auto;margin-right:auto;
+}
+.topbar-left{min-width:0}
+.topbar-left small{color:var(--t2);font-size:.72rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;display:flex;align-items:center;gap:.4rem}
+.topbar-left .live-chip{
+  display:inline-flex;align-items:center;gap:.3rem;
+  background:var(--neon-a-soft);border:1px solid var(--glass-border-lit);
+  border-radius:20px;padding:.08rem .45rem;color:var(--neon-a);
+  font-size:.6rem;font-weight:700;letter-spacing:.06em;
+}
+.topbar-left .live-dot{width:5px;height:5px;border-radius:50%;background:var(--neon-a);animation:pulse 1.4s ease-in-out infinite}
+.topbar-left h3{font-size:1.15rem;font-weight:700;color:var(--t1);margin-top:.3rem;font-family:var(--fd)}
+.topbar-actions{display:flex;align-items:center;gap:.6rem;flex-shrink:0}
+.icon-btn{
+  width:40px;height:40px;border-radius:12px;
+  background:var(--glass);border:1px solid var(--glass-border);
+  color:var(--t1);cursor:pointer;display:flex;align-items:center;justify-content:center;
+  font-size:.95rem;transition:border-color .2s,color .2s;
+  -webkit-tap-highlight-color:transparent;
+}
+.icon-btn:hover{border-color:var(--neon-a);color:var(--neon-a)}
+.topbar-menu-btn{display:none}
+
+/* ── BANNER (culto especial) ── */
+.banner{
+  position:relative;overflow:hidden;
+  border-radius:20px;padding:1.8rem 1.6rem;margin-bottom:1.4rem;
+  background:linear-gradient(120deg,var(--neon-a),var(--neon-b));
+  color:#fff;display:flex;justify-content:space-between;align-items:center;gap:1.2rem;
+  box-shadow:0 10px 40px var(--neon-a-glow);
+}
+.banner::before{content:'';position:absolute;top:-50px;right:-30px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.1)}
+.banner::after{content:'';position:absolute;bottom:-60px;right:120px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,.07)}
+.banner-main{position:relative;z-index:1;min-width:0}
+.banner-tag{
+  display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.25);
+  padding:.35rem .8rem;border-radius:20px;font-size:.62rem;font-weight:700;letter-spacing:.1em;margin-bottom:.8rem;text-transform:uppercase;
+}
+.banner-main h1{font-size:clamp(1.5rem,3vw,2rem);font-weight:800;margin-bottom:.4rem;font-family:var(--fd)}
+.banner-main p{font-size:.85rem;color:rgba(255,255,255,.88)}
+.banner-info{
+  position:relative;z-index:1;flex-shrink:0;
+  background:rgba(255,255,255,.15);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.22);border-radius:15px;padding:1.1rem 1.3rem;min-width:220px;
+}
+.banner-info small{font-size:.62rem;color:rgba(255,255,255,.85);font-weight:700;letter-spacing:.06em;text-transform:uppercase;display:flex;align-items:center;gap:.35rem}
+.banner-info h2{font-size:1.25rem;font-weight:800;margin:.5rem 0;font-family:var(--fd)}
+.banner-info p{font-size:.72rem;color:rgba(255,255,255,.85);margin-top:.4rem;display:flex;align-items:center;gap:.4rem}
+
+/* ── ACESSO RÁPIDO ── */
+.qa-title{margin:1.6rem 0 .9rem}
+.qa-title h2{font-size:1.05rem;font-weight:700;color:var(--t1);font-family:var(--fd)}
+.qa-title p{color:var(--t2);font-size:.75rem;margin-top:.25rem}
+.qa-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;margin-bottom:1.4rem}
+.qa-card{
+  background:var(--glass);border:1px solid var(--glass-border);border-radius:15px;
+  padding:1.1rem;cursor:pointer;transition:transform .2s,border-color .2s;
+  -webkit-tap-highlight-color:transparent;
+}
+.qa-card:hover{transform:translateY(-3px);border-color:var(--neon-a)}
+.qa-icon{
+  width:42px;height:42px;border-radius:12px;background:var(--neon-a-soft);color:var(--neon-a);
+  display:flex;align-items:center;justify-content:center;font-size:1.05rem;margin-bottom:.8rem;
+}
+.qa-card h3{font-size:.85rem;font-weight:700;color:var(--t1);margin-bottom:.3rem;font-family:var(--fh)}
+.qa-card p{color:var(--t2);font-size:.68rem}
+
+/* ── BUSCA ── */
+.rep-search-row{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1rem;flex-wrap:wrap}
+.search-box{
+  background:var(--glass);border:1px solid var(--glass-border);border-radius:12px;
+  padding:.7rem 1rem;display:flex;gap:.6rem;align-items:center;color:var(--t2);
+  max-width:300px;width:100%;transition:border-color .2s;
+}
+.search-box:focus-within{border-color:var(--neon-a)}
+.search-box input{background:none;border:none;outline:none;color:var(--t1);width:100%;font-size:.85rem;font-family:var(--fh)}
+.search-box input::placeholder{color:var(--t3)}
+
+/* setas de semana dentro do banner */
+.banner-week{display:flex;align-items:center;gap:.5rem;margin:.5rem 0}
+.banner-week h2{margin:0}
+.banner-nav{
+  width:30px;height:30px;border-radius:9px;flex-shrink:0;cursor:pointer;
+  background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:.75rem;transition:background .2s;
+}
+.banner-nav:hover{background:rgba(255,255,255,.32)}
+.inicio-rep-title{margin:.4rem 0 .8rem}
+.inicio-rep-title h2{font-size:1.05rem;font-weight:700;color:var(--t1);font-family:var(--fd);display:flex;align-items:center;gap:.5rem}
+.inicio-rep-title h2 i{color:var(--neon-a)}
+#sec-inicio .qa-title{margin-top:1.8rem}
+
+/* ── NAVEGAÇÃO DE SEÇÕES ── */
+.sec-view{display:none;animation:slideUp .4s cubic-bezier(.22,1,.36,1) both}
+.sec-view.active{display:block}
+.sec-vazio-busca{text-align:center;color:var(--t3);font-style:italic;padding:2rem 1rem;font-size:.85rem}
+
 /* ══ MOBILE ══ */
+/* tablet: sidebar mais estreita */
+@media(max-width:980px){
+  .sidebar{width:216px}
+  .content-area{margin-left:216px;padding:1.4rem 1.3rem 3rem}
+  .qa-grid{grid-template-columns:repeat(2,1fr)}
+}
+/* mobile: sidebar vira drawer */
+@media(max-width:720px){
+  .sidebar{transform:translateX(-100%);width:260px;box-shadow:0 0 40px rgba(0,0,0,.4)}
+  .sidebar.open{transform:translateX(0)}
+  .content-area{margin-left:0;padding:1.1rem .9rem 3.5rem}
+  .topbar-menu-btn{display:flex}
+  .banner{flex-direction:column;align-items:stretch;padding:1.4rem}
+  .banner-info{min-width:0}
+  .qa-grid{grid-template-columns:repeat(2,1fr);gap:.6rem}
+  .qa-card{padding:.9rem}
+}
 @media(max-width:480px){
-  header{padding:0 .9rem}
-  .hd-name{font-size:.88rem}
-  main{padding:1rem .75rem 3.5rem}
+  .content-area{padding:1rem .7rem 3.5rem}
   .esc-grid{grid-template-columns:1fr}
   .hero-title{font-size:1.9rem}
+  .topbar-left h3{font-size:1rem}
+  .banner-main h1{font-size:1.35rem}
 }
-@media(max-width:360px){
-  .hd-date{display:none}
+@media(max-width:380px){
+  .qa-grid{grid-template-columns:1fr 1fr}
+  .search-box{max-width:100%}
 }
 /* ══ MODO AVULSO ══ */
 .avulso-hero{
@@ -929,6 +1130,9 @@ footer i{color:var(--neon-a)}
 }
 .treino-video.oculto-player{opacity:.25}
 
+/* tamanho uniforme das etiquetas na linha da música */
+.rep-meta .tag-bpm,.rep-meta .tag-medley,.rep-meta .tag-treino{padding:.24rem .55rem;font-size:.72rem;border-radius:999px;line-height:1.1}
+.rep-meta .tag-bpm i,.rep-meta .tag-medley i,.rep-meta .tag-treino i{font-size:.66rem}
 </style>
 </head>
 <body>
@@ -938,32 +1142,59 @@ footer i{color:var(--neon-a)}
   <div class="scan"></div>
 </div>
 
-<header>
-  <div class="hd-brand">
-    <div class="hd-gem" aria-hidden="true"><i class="fa-solid fa-music"></i></div>
-    <div class="hd-info">
-      <span class="hd-name">Ministério de Louvor</span>
-      <div class="hd-date">
-        <span class="hd-live"><span class="hd-live-dot"></span>live</span>
-        <span id="headerDate">carregando…</span>
+<div class="app">
+
+  <!-- ══ SIDEBAR ══ -->
+  <div class="sb-backdrop" id="sbBackdrop" onclick="fecharMenu()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-logo">
+      <div class="sb-gem"><i class="fa-solid fa-music"></i></div>
+      <div class="sb-logo-txt">
+        <h2>Ministério<br>de Louvor</h2>
+        <span>Adorando em unidade</span>
       </div>
     </div>
-  </div>
-  <button class="theme-toggle-btn" id="themeToggle" onclick="alternarTema()" title="Alternar tema" aria-label="Alternar tema claro/escuro">
-    <i class="fa-solid fa-moon"></i>
-  </button>
-</header>
+    <div class="sb-label">Menu Principal</div>
+    <nav class="sb-menu">
+      <button class="sb-item active" data-sec="inicio"     onclick="irPara('inicio')"><i class="fa-solid fa-house"></i> Início</button>
+      <button class="sb-item"        data-sec="repertorio" onclick="irPara('repertorio')"><i class="fa-solid fa-list-music"></i> Repertório</button>
+      <button class="sb-item"        data-sec="cultos"     onclick="irPara('cultos')"><i class="fa-regular fa-calendar"></i> Cultos</button>
+      <button class="sb-item"        data-sec="equipe"     onclick="irPara('equipe')"><i class="fa-solid fa-users"></i> Equipe</button>
+      <button class="sb-item"        data-sec="avisos"     onclick="irPara('avisos')"><i class="fa-solid fa-chalkboard"></i> Avisos</button>
+    </nav>
+    <div class="sb-bottom">
+      <i class="fa-solid fa-hands-praying"></i>
+      <p>Servindo a Deus através da música e da adoração.</p>
+    </div>
+  </aside>
 
-<main id="conteudo">
-  <div class="loading">
-    <i class="fa-solid fa-spinner"></i>
-    Carregando programação…
-  </div>
-</main>
+  <!-- ══ CONTEÚDO ══ -->
+  <div class="content-area">
 
-<footer>
-  <i class="fa-solid fa-bolt"></i> Firebase Realtime &nbsp;·&nbsp; <i class="fa-solid fa-heart"></i> Ministério de Louvor
-</footer>
+    <header class="topbar">
+      <div class="topbar-left">
+        <small>
+          <button class="icon-btn topbar-menu-btn" onclick="abrirMenu()" aria-label="Menu" style="margin-right:.2rem"><i class="fa-solid fa-bars"></i></button>
+          <span class="live-chip"><span class="live-dot"></span> live</span>
+          <span id="headerDate">carregando…</span>
+        </small>
+        <h3 id="topbarTitulo">Programação do Culto</h3>
+      </div>
+      <div class="topbar-actions">
+        <button class="icon-btn" id="themeToggle" onclick="alternarTema()" title="Alternar tema" aria-label="Alternar tema claro/escuro"><i class="fa-solid fa-moon"></i></button>
+      </div>
+    </header>
+
+    <main id="conteudo">
+      <div class="loading">
+        <i class="fa-solid fa-spinner"></i>
+        Carregando programação…
+      </div>
+    </main>
+
+  </div><!-- /content-area -->
+
+</div><!-- /app -->
 
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -973,6 +1204,7 @@ var MESES=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto
 var DIAS=['domingo','segunda-feira','terça-feira','quarta-feira','quinta-feira','sexta-feira','sábado'];
 var progs={};
 var semAtual=0;
+var _secAtual='inicio';
 var ano=new Date().getFullYear();
 
 function setTema(t){
@@ -1021,6 +1253,61 @@ function initials(n){var p=(n||'').trim().split(/\s+/);return(p[0][0]+(p[1]?p[1]
 function navSem(d){var n=semAtual+d;if(n<1)n=1;if(n>53)n=53;renderSem(n)}
 window.navegarSemana=navSem;
 
+/* ══ NAVEGAÇÃO DE SEÇÕES (sidebar) ══ */
+var SEC_TITULOS={
+  inicio:'Início',
+  repertorio:'Repertório',
+  cultos:'Programação do Culto',
+  equipe:'Escala de Serviço',
+  avisos:'Quadro de Avisos'
+};
+function setTopbarTitulo(sec){
+  var el=document.getElementById('topbarTitulo');
+  if(el) el.textContent=SEC_TITULOS[sec]||'Ministério de Louvor';
+}
+function irPara(sec){
+  _secAtual=sec;
+  /* ativar view */
+  document.querySelectorAll('.sec-view').forEach(function(v){
+    v.classList.toggle('active', v.id==='sec-'+sec);
+  });
+  /* ativar item do menu */
+  document.querySelectorAll('.sb-item').forEach(function(b){
+    b.classList.toggle('active', b.getAttribute('data-sec')===sec);
+  });
+  setTopbarTitulo(sec);
+  fecharMenu();
+  /* rolar para o topo da área de conteúdo */
+  var ca=document.querySelector('.content-area'); if(ca) ca.scrollIntoView({behavior:'smooth',block:'start'});
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ══ MENU MOBILE (drawer) ══ */
+function abrirMenu(){
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('sbBackdrop').classList.add('show');
+}
+function fecharMenu(){
+  var sb=document.getElementById('sidebar'); if(sb) sb.classList.remove('open');
+  var bk=document.getElementById('sbBackdrop'); if(bk) bk.classList.remove('show');
+}
+
+/* ══ BUSCA DE MÚSICAS ══ */
+function filtrarMusicas(inp){
+  var sec=(inp&&inp.closest('.sec-view'))||document;
+  var q=((inp&&inp.value)||'').trim().toLowerCase();
+  var itens=sec.querySelectorAll('.rep-list .rep-item');
+  var achou=0;
+  itens.forEach(function(it){
+    var txt=it.textContent.toLowerCase();
+    var mostra=!q||txt.indexOf(q)>=0;
+    it.style.display=mostra?'':'none';
+    if(mostra) achou++;
+  });
+  var vazio=sec.querySelector('.sec-vazio-busca');
+  if(vazio) vazio.style.display=(achou===0&&itens.length)?'block':'none';
+}
+
 function setHeaderDate(s){
   var el=document.getElementById('headerDate');
   if(el)el.textContent=s?'Culto · '+fmtData(s):'—';
@@ -1047,7 +1334,7 @@ function renderSem(s){
 /* ══ CONSTRUÇÃO DO CARD DE MÚSICA (layout novo) ══ */
 function escAspas(s){ return String(s||'').replace(/'/g,"\\'").replace(/"/g,'&quot;'); }
 
-function construirSongItem(m, num){
+function construirSongItem(m, num, idx){
   var nome = m.nome || '—';
   var nomeEsc = escAspas(m.nome||'Música');
 
@@ -1086,14 +1373,16 @@ function construirSongItem(m, num){
     medleyMenu+='</div>';
   }
 
+  var play = m.yt ? '<button class="rep-play" onclick="tocarAPartirDe('+(typeof idx==='number'?idx:num-1)+')" title="Tocar a partir desta música" aria-label="Tocar '+nomeEsc+'"><i class="fa-solid fa-play"></i></button>' : '<span></span>';
+
   return '<div class="rep-item">'+
     '<span class="rep-num">'+num+'</span>'+
     '<div class="rep-content">'+
       '<div class="rep-nome">'+nome+'</div>'+
-      (chips?'<div class="rep-tags">'+chips+'</div>':'')+
-      (lnks?'<div class="rep-links">'+lnks+'</div>':'')+
+      ((chips||lnks)?'<div class="rep-meta">'+(chips?'<span class="rep-tags">'+chips+'</span>':'')+(chips&&lnks?'<span class="rep-sep" aria-hidden="true"></span>':'')+(lnks?'<span class="rep-links">'+lnks+'</span>':'')+'</div>':'')+
       medleyMenu+
     '</div>'+
+    play+
   '</div>';
 }
 
@@ -1109,12 +1398,18 @@ function toggleMedleyMenu(btn){
 function render(d){
   var s=d.semana;
   var mesNome=MESES[d.mes]||'';
-  var h='';
   _repertorioAtual = d.repertorio || [];
+  _secAtual = _secAtual || 'inicio';
 
-  /* HERO */
-  h+=
-    '<div class="hero su su1">'+
+  /* atualizar título da topbar conforme seção */
+  setTopbarTitulo(_secAtual);
+
+  /* ---- blocos reutilizáveis ---- */
+  var temVideoRep = (d.repertorio||[]).some(function(m){ return m.yt || (m.partes&&m.partes.some(function(p){return p.yt;})); });
+
+  /* navegação de semana (usada em Cultos e Início) */
+  function navSemanaHtml(){
+    return '<div class="hero su su1">'+
       '<div class="hero-nav">'+
         '<span class="hero-week-label"><i class="fa-solid fa-calendar-week"></i> &nbsp;Sem. '+s+' · '+mesNome+' '+ano+'</span>'+
         '<div class="nav-cluster">'+
@@ -1126,54 +1421,62 @@ function render(d){
       '<div class="hero-title">Programação<br>do Culto</div>'+
       '<div class="hero-date-chip"><i class="fa-regular fa-calendar-check"></i> '+fmtData(s)+'</div>'+
     '</div>';
-
-  /* REPERTÓRIO */
-  var temVideoRep = (d.repertorio||[]).some(function(m){ return m.yt || (m.partes&&m.partes.some(function(p){return p.yt;})); });
-  h+='<div class="sc su su2">'+
-    '<div class="sc-head"><div class="sc-head-icon"><i class="fa-solid fa-list-music"></i></div><span class="sc-head-label">Repertório da Semana</span>'+
-      (temVideoRep?'<button class="btn-tocar-tudo" onclick="tocarRepertorio()"><i class="fa-solid fa-play"></i> Tocar Tudo</button>':'')+
-    '</div>'+
-    '<div class="sc-body">';
-  if(!d.repertorio||!d.repertorio.length){
-    h+='<p style="color:var(--t3);font-style:italic;font-size:.85rem">Nenhuma música cadastrada.</p>';
-  } else {
-    h+='<div class="rep-list">';
-    d.repertorio.forEach(function(m,i){
-      h+=construirSongItem(m, i+1);
-    });
-    h+='</div>';
   }
-  h+='</div></div>';
 
-  /* ESCALA */
-  h+='<div class="sc su su3">'+
-    '<div class="sc-head"><div class="sc-head-icon"><i class="fa-solid fa-users"></i></div><span class="sc-head-label">Escala de Serviço</span></div>'+
-    '<div class="sc-body"><div class="esc-grid">';
-  [
-    {key:'vocal',       icon:'fa-microphone',label:'Vocal'},
-    {key:'instrumental',icon:'fa-guitar',    label:'Instrumental'},
-    {key:'multimidia',  icon:'fa-display',   label:'Multimídia'},
-    {key:'midia',       icon:'fa-video',     label:'Mídia / Som'}
-  ].forEach(function(p){
-    var mbrs=d[p.key]||[];
-    var cnt=!mbrs.length?'<div class="esc-vazio">Não definido</div>':
-      mbrs.map(function(n){
-        return '<div class="esc-membro"><div class="esc-av">'+initials(n)+'</div><span class="esc-nome">'+n+'</span></div>';
-      }).join('');
-    h+='<div class="esc-card"><div class="esc-role"><i class="fa-solid '+p.icon+'"></i> '+p.label+'</div>'+cnt+'</div>';
-  });
-  h+='</div></div></div>';
+  /* card de repertório */
+  function repCardHtml(){
+    var h='<div class="rep-block">'+
+      '<div class="rep-head"><h2><i class="fa-solid fa-music"></i> Repertório</h2>'+
+        '<div class="rep-head-tools">'+searchHtml+
+          (temVideoRep?'<button class="btn-tocar-tudo" onclick="tocarRepertorio()"><i class="fa-solid fa-play"></i> Tocar Tudo</button>':'')+
+        '</div>'+
+      '</div>'+
+      '<div>';
+    if(!d.repertorio||!d.repertorio.length){
+      h+='<p style="color:var(--t3);font-style:italic;font-size:.85rem">Nenhuma música cadastrada.</p>';
+    } else {
+      h+='<div class="rep-list">';
+      d.repertorio.forEach(function(m,i){ h+=construirSongItem(m, i+1, i); });
+      h+='</div>';
+      h+='<div class="sec-vazio-busca" style="display:none">Nenhuma música encontrada.</div>';
+    }
+    h+='</div></div>';
+    return h;
+  }
 
-  /* AVISOS */
-  var avisos=d.avisos||[];
-  if(avisos.length){
+  /* card de escala */
+  function escCardHtml(){
+    var h='<div class="sc">'+
+      '<div class="sc-head"><div class="sc-head-icon"><i class="fa-solid fa-users"></i></div><span class="sc-head-label">Escala de Serviço</span></div>'+
+      '<div class="sc-body"><div class="esc-grid">';
+    [
+      {key:'vocal',       icon:'fa-microphone',label:'Vocal'},
+      {key:'instrumental',icon:'fa-guitar',    label:'Instrumental'},
+      {key:'multimidia',  icon:'fa-display',   label:'Multimídia'},
+      {key:'midia',       icon:'fa-video',     label:'Mídia / Som'}
+    ].forEach(function(p){
+      var mbrs=d[p.key]||[];
+      var cnt=!mbrs.length?'<div class="esc-vazio">Não definido</div>':
+        mbrs.map(function(n){
+          return '<div class="esc-membro"><div class="esc-av">'+initials(n)+'</div><span class="esc-nome">'+n+'</span></div>';
+        }).join('');
+      h+='<div class="esc-card"><div class="esc-role"><i class="fa-solid '+p.icon+'"></i> '+p.label+'</div>'+cnt+'</div>';
+    });
+    h+='</div></div></div>';
+    return h;
+  }
+
+  /* card de avisos */
+  function avisosCardHtml(){
+    var avisos=d.avisos||[];
+    if(!avisos.length) return '';
     var TIPOS={
       comemorativa:{label:'Data Comemorativa',icon:'fa-star'},
       futura:{label:'Música Futura',icon:'fa-music'},
       playlist:{label:'Playlist do Dia',icon:'fa-list-music'},
       geral:{label:'Aviso Geral',icon:'fa-bullhorn'}
     };
-    h+='<div class="sc su su4">'+
+    var h='<div class="sc">'+
       '<div class="sc-head"><div class="sc-head-icon"><i class="fa-solid fa-chalkboard"></i></div><span class="sc-head-label">Quadro de Avisos</span></div>'+
       '<div class="sc-body"><div class="avisos-list">';
     avisos.forEach(function(av){
@@ -1200,11 +1503,79 @@ function render(d){
         '</div>';
     });
     h+='</div></div></div>';
+    return h;
   }
+
+  /* banner do culto */
+  var nMusicas=(d.repertorio||[]).length;
+  var bannerHtml=
+    '<div class="banner su su1">'+
+      '<div class="banner-main">'+
+        '<span class="banner-tag">Ministério de Louvor</span>'+
+        '<h1>Bem-vindo(a)!</h1>'+
+        '<p>Que a presença de Deus nos guie em cada canção.</p>'+
+      '</div>'+
+      '<div class="banner-info">'+
+        '<small><i class="fa-solid fa-calendar-check"></i> Culto da Semana</small>'+
+        '<div class="banner-week">'+
+          '<button class="banner-nav" onclick="navSem(-1)" aria-label="Semana anterior"><i class="fa-solid fa-chevron-left"></i></button>'+
+          '<h2>Semana '+s+'</h2>'+
+          '<button class="banner-nav" onclick="navSem(1)" aria-label="Próxima semana"><i class="fa-solid fa-chevron-right"></i></button>'+
+        '</div>'+
+        '<p><i class="fa-regular fa-calendar"></i> '+fmtData(s)+'</p>'+
+        '<p><i class="fa-solid fa-music"></i> '+nMusicas+' música'+(nMusicas===1?'':'s')+' no repertório</p>'+
+      '</div>'+
+    '</div>';
+
+  /* acesso rápido */
+  var quickHtml=
+    '<div class="qa-title su su2"><h2>Acesso rápido</h2><p>Encontre rapidamente o que precisa.</p></div>'+
+    '<div class="qa-grid su su2">'+
+      '<div class="qa-card" onclick="irPara(\'repertorio\')"><div class="qa-icon"><i class="fa-solid fa-list-music"></i></div><h3>Repertório</h3><p>Consulte as músicas</p></div>'+
+      '<div class="qa-card" onclick="irPara(\'cultos\')"><div class="qa-icon"><i class="fa-regular fa-calendar"></i></div><h3>Cultos</h3><p>Programação e data</p></div>'+
+      '<div class="qa-card" onclick="irPara(\'equipe\')"><div class="qa-icon"><i class="fa-solid fa-users"></i></div><h3>Equipe</h3><p>Escala de serviço</p></div>'+
+      '<div class="qa-card" onclick="irPara(\'avisos\')"><div class="qa-icon"><i class="fa-solid fa-chalkboard"></i></div><h3>Avisos</h3><p>Quadro de avisos</p></div>'+
+    '</div>';
+
+  /* busca no repertório */
+  var searchHtml=
+      '<div class="search-box"><i class="fa-solid fa-magnifying-glass"></i>'+
+        '<input type="text" class="busca-musica" placeholder="Buscar música..." aria-label="Buscar música" oninput="filtrarMusicas(this)">'+
+      '</div>';
+
+  /* ---- montar as seções ---- */
+  var h='';
+
+  /* INÍCIO: banner + repertório (com busca) + acesso rápido */
+  h+='<div class="sec-view'+(_secAtual==='inicio'?' active':'')+'" id="sec-inicio">'+
+       bannerHtml +
+       repCardHtml() +
+       quickHtml +
+     '</div>';
+
+  /* REPERTÓRIO: busca + lista */
+  h+='<div class="sec-view'+(_secAtual==='repertorio'?' active':'')+'" id="sec-repertorio">'+
+       repCardHtml() +
+     '</div>';
+
+  /* CULTOS: nav de semana + hero */
+  h+='<div class="sec-view'+(_secAtual==='cultos'?' active':'')+'" id="sec-cultos">'+
+       navSemanaHtml() +
+     '</div>';
+
+  /* EQUIPE: escala */
+  h+='<div class="sec-view'+(_secAtual==='equipe'?' active':'')+'" id="sec-equipe">'+
+       escCardHtml() +
+     '</div>';
+
+  /* AVISOS */
+  var avHtml=avisosCardHtml();
+  h+='<div class="sec-view'+(_secAtual==='avisos'?' active':'')+'" id="sec-avisos">'+
+       (avHtml || '<div class="empty"><div class="empty-ico"><i class="fa-solid fa-chalkboard"></i></div><h3>Nenhum aviso</h3><p>Não há avisos publicados para esta semana.</p></div>') +
+     '</div>';
 
   document.getElementById('conteudo').innerHTML=h;
 }
-
 
 /* ══ MODO AVULSO ══ */
 function renderErroAvulso(msg){
@@ -1940,9 +2311,11 @@ var _playerTocando = false;
 window.onYouTubeIframeAPIReady = function(){ _ytApiPronta = true; };
 
 /* montar lista a partir do repertório atual e abrir */
-function abrirPlayerSequencial(repertorio){
+function abrirPlayerSequencial(repertorio, inicioMusica){
   _playerLista = [];
-  (repertorio||[]).forEach(function(m){
+  var inicioIdx = -1;
+  (repertorio||[]).forEach(function(m, mi){
+    if(mi === inicioMusica) inicioIdx = _playerLista.length;
     /* música principal */
     var ytId = m.yt ? extrairYtId(m.yt) : null;
     _playerLista.push({ nome:m.nome||'Música', ytId:ytId, sp:m.sp||'', medley:false });
@@ -1958,6 +2331,7 @@ function abrirPlayerSequencial(repertorio){
 
   /* primeiro índice tocável (com vídeo) */
   _playerIdx = _playerLista.findIndex(function(t){ return t.ytId; });
+  if(inicioIdx >= 0 && _playerLista[inicioIdx] && _playerLista[inicioIdx].ytId) _playerIdx = inicioIdx;
   if(_playerIdx < 0) _playerIdx = 0;
 
   document.getElementById('playerOverlay').classList.add('aberto');
@@ -2106,6 +2480,12 @@ function fecharPlayer(e){
 
 /* chamado pelo botão no repertório — usa o repertório da semana/avulso atual */
 var _repertorioAtual = [];
+/* ▶ de uma música: abre o player nela e segue o repertório */
+function tocarAPartirDe(i){
+  if(!_repertorioAtual || !_repertorioAtual[i]) return;
+  abrirPlayerSequencial(_repertorioAtual, i);
+}
+
 function tocarRepertorio(){
   if(!_repertorioAtual || !_repertorioAtual.length){ return; }
   var temVideo = _repertorioAtual.some(function(m){ return m.yt && extrairYtId(m.yt); });
