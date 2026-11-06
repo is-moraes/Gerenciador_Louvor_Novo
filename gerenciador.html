@@ -847,6 +847,19 @@
     .escala-linha.tem-funcao .btn-del-membro{ order:2; }
     .escala-linha.tem-funcao .funcaoSelect,.escala-linha.tem-funcao .funcaoOutro{ order:3; flex:1 1 100%; width:auto; text-align:left; padding-left:.9rem; }
   }
+  /* Cifra em texto */
+  .btn-buscar.ci{ background:rgba(245,166,35,.1); color:#e5a600; border-color:rgba(245,166,35,.3); }
+  .btn-buscar.ci.tem{ background:var(--grad); color:#fff; border-color:transparent; }
+  .ctx-area{ width:100%; min-height:300px; resize:vertical; padding:.8rem; background:var(--bg); border:1.5px solid var(--border); border-radius:var(--radius-sm); color:var(--fg); font-family:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace; font-size:.8rem; line-height:1.5; outline:none; white-space:pre; overflow:auto; }
+  .ctx-area:focus{ border-color:var(--accent); }
+  .ctx-status{ font-size:.78rem; color:var(--fg2); min-height:1.1rem; margin:.3rem 0 .6rem; }
+  .ctx-status.erro{ color:#f87171; font-weight:600; }
+  .cfg-det{ background:var(--surface2); border:1px solid var(--border); border-radius:14px; padding:.8rem 1rem; }
+  .cfg-det summary{ cursor:pointer; font-weight:700; font-size:.88rem; }
+  .cfg-passos{ margin:.8rem 0 .8rem 1.1rem; font-size:.82rem; line-height:1.7; color:var(--fg2); }
+  .cfg-passos code{ background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:.05rem .35rem; font-size:.76rem; color:var(--accent); }
+  .cfg-code{ background:var(--bg); border:1px solid var(--border); border-radius:12px; padding:.8rem; font-size:.74rem; line-height:1.5; overflow:auto; max-height:260px; margin-bottom:.7rem; white-space:pre; }
+  .btn-modal-save{ background:var(--grad); }
 
 </style>
 </head>
@@ -1084,6 +1097,27 @@
       <section class="secao" id="secao-config">
         <div class="secao-titulo"><i class="fa-solid fa-gear"></i> Configuração</div>
   <!-- Cadastro de Contatos -->
+  <div class="wa-card" id="cifraCfgCard">
+    <div class="card-header" style="border:none;margin-bottom:.4rem;"><h2><i class="fa-solid fa-music"></i> Leitor de Google Docs (cifras)</h2></div>
+    <p class="wa-desc">Permite buscar o texto das cifras direto dos seus documentos do Google Docs, para o portal poder trocar o tom. Configuração feita uma única vez.</p>
+    <details class="cfg-det">
+      <summary>Como configurar (3 minutos)</summary>
+      <ol class="cfg-passos">
+        <li>Acesse <b>script.google.com</b> → <b>Novo projeto</b>. Apague o código que vier e cole o script abaixo.</li>
+        <li>Troque <code>TROQUE-POR-UMA-SENHA-SUA</code> por uma senha qualquer, só sua.</li>
+        <li>Clique em <b>Implantar → Nova implantação → App da Web</b>. Em “Executar como” deixe <b>Eu</b> e em “Quem tem acesso” escolha <b>Qualquer pessoa</b>. Implante e autorize o acesso aos documentos.</li>
+        <li>Copie a <b>URL do app da Web</b>, cole no campo abaixo e acrescente no final <code>?t=SUA-SENHA</code>.</li>
+      </ol>
+      <pre class="cfg-code" id="cifraScript"></pre>
+      <button class="btn-copy" onclick="copiarScriptCifra(this)"><i class="fa-solid fa-copy"></i> Copiar script</button>
+    </details>
+    <div class="url-box" style="margin-top:.9rem;">
+      <input type="url" id="cifraProxyUrl" placeholder="https://script.google.com/macros/s/…/exec?t=SUA-SENHA" style="flex:1;background:transparent;border:none;color:var(--fg);outline:none;font-family:var(--font);font-size:.82rem;min-width:0;">
+      <button class="btn-copy" onclick="salvarProxyCifra()"><i class="fa-solid fa-check"></i> Salvar</button>
+    </div>
+    <p class="wa-contatos-hint"><i class="fa-solid fa-circle-info"></i> <span>Fica salvo só neste navegador, por segurança. <span id="cifraProxyMsg" style="color:var(--accent);font-weight:700;"></span></span></p>
+  </div>
+
   <div class="wa-card" id="contatosCard">
     <div class="wa-card-header">
       <h2><i class="fa-solid fa-address-book"></i> Contatos da Equipe</h2>
@@ -1182,6 +1216,25 @@
   </nav>
 </div>
 
+
+<!-- Modal Texto da Cifra -->
+<div class="modal-overlay oculto" id="modalCifraTexto">
+  <div class="modal-box" style="max-width:660px;">
+    <h3 style="margin-bottom:.2rem;"><i class="fa-solid fa-music" style="color:var(--accent)"></i> Texto da cifra</h3>
+    <p class="modal-sub" id="ctxNome"></p>
+    <div class="modal-field">
+      <label>Acordes sobre a letra — é este texto que permite trocar o tom no portal</label>
+      <textarea id="ctxTexto" class="ctx-area" spellcheck="false" placeholder="Cole a cifra aqui ou use “Buscar do Google Docs”…"></textarea>
+    </div>
+    <p class="ctx-status" id="ctxStatus"></p>
+    <div class="modal-btns" style="flex-wrap:wrap;">
+      <button class="btn-modal-cancel" onclick="buscarCifraDocs()"><i class="fa-solid fa-cloud-arrow-down"></i> Buscar do Google Docs</button>
+      <button class="btn-modal-cancel" onclick="limparCifraTexto()">Limpar</button>
+      <button class="btn-modal-cancel" onclick="fecharCifraTexto()">Cancelar</button>
+      <button class="btn-modal-save" onclick="salvarCifraTexto()"><i class="fa-solid fa-check"></i> Salvar</button>
+    </div>
+  </div>
+</div>
 
 <!-- Modal Novo Culto Avulso -->
 <div class="modal-overlay oculto" id="modalNovoAvulso">
@@ -1400,6 +1453,7 @@ function carregarDados(){
     if(!semanaSelecionada) semanaSelecionada=semanaISO(new Date());
     /* carregar avulsos */
     if(data.avulsos) avulsosPorId=data.avulsos;
+    cifrasMap=data.cifras||{};
     renderizarAvulsos();
     /* carregar contatos e grupo WhatsApp */
     document.getElementById('listaContatos').innerHTML='';
@@ -1716,7 +1770,8 @@ function adicionarLinha(dados){
       '</div>'+
       '<div class="m-link-row">'+
         '<div class="link-row-icon cifra"><i class="fa-solid fa-music"></i></div>'+
-        '<input type="url" class="linkCifra" value="'+cifra+'" placeholder="Cifra — cole o link">'+
+        '<input type="url" class="linkCifra" value="'+cifra+'" placeholder="Cifra — cole o link do Google Docs">'+
+        '<button class="btn-buscar ci'+(dados.cifraKey?' tem':'')+'" onclick="abrirCifraTexto(this)" title="Texto da cifra (permite trocar o tom)"><i class="fa-solid fa-pen-to-square"></i></button>'+
       '</div>'+
     '</div>'+
     '<div class="medley-secao">'+
@@ -1726,6 +1781,7 @@ function adicionarLinha(dados){
       '<button class="medley-add-parte" onclick="addMedleyParte(this)"><i class="fa-solid fa-plus"></i> Adicionar parte</button>'+
     '</div>';
   c.appendChild(card);
+  if(dados.cifraKey) card.dataset.cifraKey=dados.cifraKey;
 
   /* preencher partes existentes */
   if(nPartes){
@@ -1773,9 +1829,11 @@ function criarMedleyParte(card, p){
     '</div>'+
     '<div class="m-link-row">'+
       '<div class="link-row-icon cifra"><i class="fa-solid fa-music"></i></div>'+
-      '<input type="url" class="linkCifra" value="'+(p.cifra||'')+'" placeholder="Cifra — cole o link">'+
+      '<input type="url" class="linkCifra" value="'+(p.cifra||'')+'" placeholder="Cifra — cole o link do Google Docs">'+
+      '<button class="btn-buscar ci'+(p.cifraKey?' tem':'')+'" onclick="abrirCifraTexto(this)" title="Texto da cifra (permite trocar o tom)"><i class="fa-solid fa-pen-to-square"></i></button>'+
     '</div>';
   lista.appendChild(div);
+  if(p.cifraKey) div.dataset.cifraKey=p.cifraKey;
   renumerarMedleyPartes(card);
 }
 function addMedleyParte(btn){
@@ -2034,11 +2092,12 @@ function coletarDados(){
       var py = p.querySelector('.linkYt').value.trim();
       var ps = p.querySelector('.linkSp').value.trim();
       var pc = p.querySelector('.linkCifra').value.trim();
-      if(pn||py||ps||pc) partes.push({nome:pn,yt:py,sp:ps,cifra:pc});
+      if(pn||py||ps||pc){ var po={nome:pn,yt:py,sp:ps,cifra:pc}; if(p.dataset.cifraKey) po.cifraKey=p.dataset.cifraKey; partes.push(po); }
     });
     if(nome||tom){
       var m={nome:nome,tom:tom,seq:seq,yt:yt,sp:sp,cifra:cifra};
       if(partes.length) m.partes=partes;
+      if(card.dataset.cifraKey) m.cifraKey=card.dataset.cifraKey;
       rep.push(m);
     }
   });
@@ -2096,7 +2155,7 @@ function publicar(){
   btns.forEach(function(b){ b.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Publicando...'; b.disabled=true; });
   setSyncBadge('salvando');
   var dadosAtual=programacoesPorSemana[chaveS(semanaSelecionada)]||coletarDados();
-  col.doc(ministerioId).update({programacoes:programacoesPorSemana,programacao:dadosAtual,avulsos:avulsosPayload,contatos:contatosPayload,grupoWaLink:grupoLinkPayload})
+  col.doc(ministerioId).update({programacoes:programacoesPorSemana,programacao:dadosAtual,avulsos:avulsosPayload,contatos:contatosPayload,grupoWaLink:grupoLinkPayload,cifras:cifrasMap})
   .then(function(){
     setSyncBadge('ok');
     btns.forEach(function(b){ b.innerHTML='<i class="fa-solid fa-check"></i> Publicado!'; });
@@ -2993,6 +3052,72 @@ function coletarFuncoes(g){
     return lista;
   };
 })();
+
+/* ══ CIFRA EM TEXTO (sincronizada do Google Docs → permite trocar o tom no Front) ══ */
+var cifrasMap={};
+var _ctxAlvo=null;
+var SCRIPT_CIFRA="const TOKEN = 'TROQUE-POR-UMA-SENHA-SUA';\n\nfunction doGet(e) {\n  var out;\n  try {\n    if (e.parameter.t !== TOKEN) throw new Error('senha inválida');\n    var doc = DocumentApp.openById(e.parameter.id);\n    var texto = doc.getBody().getText()\n      .replace(/\\u00a0/g, ' ')\n      .replace(/[\\r\\u000b]/g, '\\n');\n    out = {ok: true, titulo: doc.getName(), texto: texto};\n  } catch (err) {\n    out = {ok: false, erro: String(err)};\n  }\n  return ContentService.createTextOutput(JSON.stringify(out))\n    .setMimeType(ContentService.MimeType.JSON);\n}";
+function proxyCifra(){ try{return localStorage.getItem('mlCifraProxy')||'';}catch(e){return '';} }
+function iniciarConfigCifra(){
+  var i=document.getElementById('cifraProxyUrl'); if(i) i.value=proxyCifra();
+  var p=document.getElementById('cifraScript'); if(p) p.textContent=SCRIPT_CIFRA;
+}
+function salvarProxyCifra(){
+  var v=document.getElementById('cifraProxyUrl').value.trim();
+  try{ localStorage.setItem('mlCifraProxy',v); }catch(e){}
+  var s=document.getElementById('cifraProxyMsg'); s.textContent=v?'Salvo neste navegador ✓':'Removido'; setTimeout(function(){s.textContent='';},2500);
+}
+function copiarScriptCifra(btn){
+  try{ navigator.clipboard.writeText(SCRIPT_CIFRA); }catch(e){}
+  var h=btn.innerHTML; btn.innerHTML='<i class="fa-solid fa-check"></i> Copiado'; setTimeout(function(){btn.innerHTML=h;},2000);
+}
+function idDocGoogle(url){ var m=(url||'').match(/\/document\/d\/([a-zA-Z0-9_-]+)/); return m?m[1]:''; }
+function abrirCifraTexto(btn){
+  var cont=btn.closest('.medley-parte')||btn.closest('.musica-card');
+  var link=cont.querySelector('.linkCifra');
+  var card=btn.closest('.musica-card');
+  var nome=cont.classList.contains('medley-parte') ? (cont.querySelector('.medley-parte-nome').value||'Parte do medley') : (card.querySelector('.nomeMusica').value||'Música');
+  _ctxAlvo={cont:cont,link:link,btn:btn,nome:nome};
+  var k=cont.dataset.cifraKey, c=k&&cifrasMap[k];
+  document.getElementById('ctxNome').textContent=nome;
+  document.getElementById('ctxTexto').value=c?c.texto:'';
+  setCtxStatus(c?'Cifra salva. Edite o texto ou busque novamente do Google Docs.':'');
+  document.getElementById('modalCifraTexto').classList.remove('oculto');
+}
+function setCtxStatus(t,erro){ var s=document.getElementById('ctxStatus'); s.textContent=t||''; s.className='ctx-status'+(erro?' erro':''); }
+function fecharCifraTexto(){ document.getElementById('modalCifraTexto').classList.add('oculto'); _ctxAlvo=null; }
+function buscarCifraDocs(){
+  if(!_ctxAlvo) return;
+  var base=proxyCifra();
+  if(!base){ setCtxStatus('Antes, configure o leitor em Configuração → “Leitor de Google Docs”.',true); return; }
+  var id=idDocGoogle(_ctxAlvo.link.value);
+  if(!id){ setCtxStatus('O link da cifra desta música não é de um Google Docs. Preencha o campo “Cifra” com o link do documento.',true); return; }
+  setCtxStatus('Buscando…');
+  fetch(base+(base.indexOf('?')>-1?'&':'?')+'id='+encodeURIComponent(id))
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(!d.ok) throw new Error(d.erro||'falha ao ler o documento');
+      document.getElementById('ctxTexto').value=d.texto;
+      setCtxStatus('Sincronizado de “'+d.titulo+'”. Revise e clique em Salvar.');
+    })
+    .catch(function(err){ setCtxStatus('Erro: '+err.message+'. Confira a URL do script e se a implantação está como “Qualquer pessoa”.',true); });
+}
+function salvarCifraTexto(){
+  if(!_ctxAlvo) return;
+  var texto=document.getElementById('ctxTexto').value.replace(/\r\n/g,'\n').replace(/\s+$/,'');
+  var cont=_ctxAlvo.cont;
+  if(!texto){ delete cont.dataset.cifraKey; }
+  else {
+    var id=idDocGoogle(_ctxAlvo.link.value);
+    var key=id||cont.dataset.cifraKey||('n_'+Math.random().toString(36).slice(2,8)+Date.now().toString(36));
+    cifrasMap[key]={texto:texto,url:_ctxAlvo.link.value.trim(),em:Date.now()};
+    cont.dataset.cifraKey=key;
+  }
+  _ctxAlvo.btn.classList.toggle('tem',!!texto);
+  fecharCifraTexto();
+}
+function limparCifraTexto(){ document.getElementById('ctxTexto').value=''; setCtxStatus('Texto removido. Clique em Salvar para confirmar.'); }
+document.addEventListener('DOMContentLoaded',iniciarConfigCifra);
 </script>
 
 
