@@ -314,6 +314,35 @@ footer{text-align:center;padding:1rem;font-size:.7rem;color:var(--fg3)}
 footer i{color:var(--accent)}
 .btn-tocar-tudo{margin-left:0 !important}
 
+/* ══ Visualizador de cifra (troca de tom) ══ */
+.cx-overlay{position:fixed;inset:0;z-index:3000;background:rgba(5,7,14,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:1rem}
+.cx-overlay.aberto{display:flex}
+.cx-box{width:100%;max-width:760px;height:min(92vh,880px);display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line2);border-radius:22px;overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.55)}
+.cx-head{display:flex;align-items:center;gap:.5rem;padding:.8rem .9rem .8rem 1.1rem;border-bottom:1px solid var(--line)}
+.cx-tit{flex:1;min-width:0;display:flex;align-items:center;gap:.6rem;font-weight:800;font-size:.98rem}
+.cx-tit i{color:var(--accent)}.cx-tit span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cx-ib{width:36px;height:36px;border-radius:11px;border:1px solid var(--line);background:var(--surface2);color:var(--fg2);display:flex;align-items:center;justify-content:center;cursor:pointer;text-decoration:none;font-size:.85rem;flex-shrink:0}
+.cx-ib:hover{color:var(--fg);border-color:var(--accent)}
+.cx-x{color:#ef4444}
+.cx-bar{display:flex;align-items:center;gap:.7rem;padding:.7rem 1rem;border-bottom:1px solid var(--line);flex-wrap:wrap;background:var(--surface2)}
+.cx-tom{display:flex;align-items:center;gap:.2rem;background:var(--surface);border:1px solid var(--line2);border-radius:16px;padding:.25rem}
+.cx-tom button{width:40px;height:40px;border-radius:12px;border:none;background:var(--accent-soft);color:var(--accent);font-size:1.3rem;font-weight:800;cursor:pointer}
+.cx-tom button:active{transform:scale(.94)}
+.cx-tom div{min-width:64px;text-align:center;line-height:1.1}
+.cx-tom small{display:block;font-size:.58rem;color:var(--fg3);font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.cx-tom b{font-size:1.15rem;font-weight:800;color:var(--fg)}
+.cx-reset{border:1px solid var(--line2);background:var(--surface);color:var(--fg2);font-family:inherit;font-size:.76rem;font-weight:700;padding:.55rem .8rem;border-radius:12px;cursor:pointer;display:flex;align-items:center;gap:.4rem}
+.cx-reset:hover{color:var(--fg)}
+.cx-reset.off{opacity:.45;pointer-events:none}
+.cx-fs{margin-left:auto;display:flex;gap:.3rem}
+.cx-fs button{height:36px;min-width:40px;border-radius:11px;border:1px solid var(--line);background:var(--surface);color:var(--fg2);font-family:inherit;font-weight:800;font-size:.78rem;cursor:pointer}
+.cx-body{flex:1;overflow:auto;padding:1.1rem 1.2rem 2rem;-webkit-overflow-scrolling:touch}
+.cx-body pre{margin:0;font-family:'JetBrains Mono',ui-monospace,Menlo,Consolas,'Courier New',monospace;font-size:var(--cxfs,14px);line-height:1.65;color:var(--fg);white-space:pre;tab-size:4}
+.cx-c{color:var(--accent);font-weight:800}
+.cx-s{display:inline-block;margin:.9rem 0 .15rem;padding:.12rem .6rem;border-radius:8px;background:var(--accent-soft);color:var(--accent);font-weight:800;font-size:.8em}
+.cx-neutro{color:var(--fg3)}
+@media(max-width:620px){.cx-overlay{padding:0}.cx-box{height:100%;max-width:none;border-radius:0;border:none}}
+
 /* ═══ Modais, player, metrônomo, cifra e modo treino (mantidos) ═══ */
 /* ══ MODAL DE VÍDEO YOUTUBE ══ */
 .yt-modal-overlay{
@@ -901,6 +930,27 @@ footer i{color:var(--accent)}
   <button data-nav="config" onclick="irPara('config')"><i class="fa-solid fa-gear"></i>Config</button>
 </nav>
 
+<!-- Visualizador de cifra com troca de tom -->
+<div class="cx-overlay" id="cxOverlay" onclick="fecharCifraTexto(event)">
+  <div class="cx-box">
+    <div class="cx-head">
+      <div class="cx-tit"><i class="fa-solid fa-music"></i><span id="cxTitulo">Cifra</span></div>
+      <a class="cx-ib" id="cxOrig" target="_blank" rel="noopener" title="Abrir documento original"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+      <button class="cx-ib cx-x" onclick="fecharCifraTexto()" aria-label="Fechar"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="cx-bar">
+      <div class="cx-tom">
+        <button onclick="cxTransp(-1)" aria-label="Descer meio tom">−</button>
+        <div><small>Tom</small><b id="cxTomAtual">—</b></div>
+        <button onclick="cxTransp(1)" aria-label="Subir meio tom">+</button>
+      </div>
+      <button class="cx-reset" id="cxReset" onclick="cxTransp(0,true)"><i class="fa-solid fa-rotate-left"></i> Original <span id="cxTomOrig"></span></button>
+      <div class="cx-fs"><button onclick="cxFonte(-1)">A−</button><button onclick="cxFonte(1)">A+</button></div>
+    </div>
+    <div class="cx-body"><pre id="cxPre"></pre></div>
+  </div>
+</div>
+
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 <script>
@@ -1074,7 +1124,7 @@ function songHtml(m,i){
     ibtn('yt','fa-brands fa-youtube','acaoMusica('+i+',\'yt\')',!!m.yt,'YouTube')+
     ibtn('bpm','fa-solid fa-drum','acaoMusica('+i+',\'metro\')',!isNaN(bpm),'Metrônomo'+(m.seq?' ('+m.seq+' BPM)':''))+
     spBtn(m.sp)+
-    ibtn('ci','fa-solid fa-music','acaoMusica('+i+',\'cifra\')',!!m.cifra,'Cifra')+
+    ibtn('ci','fa-solid fa-music','acaoMusica('+i+',\'cifra\')',!!(m.cifra||cifraTxt(m)),'Cifra')+
   '</div><div class="play-grp">'+ibtn('play','fa-solid fa-play','acaoMusica('+i+',\'play\')',podeTocar,'Tocar a partir daqui')+
     '<button class="s-chev" aria-label="Mais opções" onclick="toggleLinks(this)"><i class="fa-solid fa-chevron-down"></i></button></div>';
 
@@ -1085,7 +1135,7 @@ function songHtml(m,i){
       medley+='<div class="mpart"><span class="mp-num">'+(pi+2)+'</span><span class="mp-name">'+esc(p.nome||('Parte '+(pi+2)))+'</span><div class="mp-acts">'+
         ibtn('yt','fa-brands fa-youtube','acaoParte('+i+','+pi+',\'yt\')',!!p.yt,'YouTube',true)+
         spBtn(p.sp,true)+
-        ibtn('ci','fa-solid fa-music','acaoParte('+i+','+pi+',\'cifra\')',!!p.cifra,'Cifra',true)+
+        ibtn('ci','fa-solid fa-music','acaoParte('+i+','+pi+',\'cifra\')',!!(p.cifra||cifraTxt(p)),'Cifra',true)+
       '</div></div>';
     });
     medley+='</div>';
@@ -1129,6 +1179,7 @@ function toggleMedleyMenu(btn){
 function acaoMusica(i,tipo){
   var m=_repertorioAtual[i]; if(!m) return;
   if(tipo==='yt'&&m.yt) abrirYtModal(m.yt,m.nome||'Música');
+  else if(tipo==='cifra'&&cifraTxt(m)) abrirCifraTexto(cifraTxt(m),m.nome||'Cifra',m.tom,m.cifra,m.cifraKey);
   else if(tipo==='cifra'&&m.cifra) abrirCifraModal(m.cifra,m.nome||'Cifra');
   else if(tipo==='metro') abrirMetronomo(m.nome||'Música',m.seq);
   else if(tipo==='treino'&&m.yt&&m.cifra) abrirTreino(m.yt,m.cifra,m.nome||'Treino');
@@ -1139,6 +1190,7 @@ function acaoParte(i,pi,tipo){
   var p=m.partes[pi]; if(!p) return;
   var nome=p.nome||('Parte '+(pi+2));
   if(tipo==='yt'&&p.yt) abrirYtModal(p.yt,nome);
+  else if(tipo==='cifra'&&cifraTxt(p)) abrirCifraTexto(cifraTxt(p),nome,'',p.cifra,p.cifraKey);
   else if(tipo==='cifra'&&p.cifra) abrirCifraModal(p.cifra,nome);
 }
 
@@ -1264,6 +1316,7 @@ function copiarLinkAtual(){
     modoAvulso=true;
     col.doc(id).get().then(function(doc){
       if(!doc.exists){renderErroGeral('fa-star','Culto não encontrado','Ministério não encontrado.');return;}
+      _cifras=doc.data().cifras||{};
       var av=(doc.data().avulsos||{})[avulsoId];
       if(!av){renderErroGeral('fa-star','Culto não encontrado','Culto não encontrado ou removido.');return;}
       renderAvulso(av);
@@ -1275,6 +1328,7 @@ function copiarLinkAtual(){
   col.doc(id).onSnapshot(function(doc){
     if(!doc.exists){renderErroGeral('fa-music','Sem Programação','Seu líder ainda não publicou o repertório.');return;}
     var data=doc.data();
+    _cifras=data.cifras||{};
     if(data.programacoes&&Object.keys(data.programacoes).length){
       progs=data.programacoes;
     }else if(data.programacao){
@@ -1286,6 +1340,103 @@ function copiarLinkAtual(){
   },function(err){renderErroGeral('fa-triangle-exclamation','Erro de Conexão',err.message);});
 })();
 
+
+
+/* ══ CIFRA EM TEXTO + TROCA DE TOM ══ */
+var _cifras={};
+function cifraTxt(o){var k=o&&o.cifraKey,c=k&&_cifras[k];return c&&c.texto?c.texto:'';}
+var NOTAS_S=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+var NOTAS_B=['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B'];
+var NOTA_IDX={'C':0,'C#':1,'Db':1,'D':2,'D#':3,'Eb':3,'E':4,'F':5,'E#':5,'Fb':4,'F#':6,'Gb':6,'G':7,'G#':8,'Ab':8,'A':9,'A#':10,'Bb':10,'B':11,'Cb':11,'B#':0};
+var TONS_BEMOL={'F':1,'Bb':1,'Eb':1,'Ab':1,'Db':1,'Dm':1,'Gm':1,'Cm':1,'Fm':1,'Bbm':1,'Ebm':1};
+var CH_RE=/^([A-G][#b]?)((?:m(?!aj)|min|maj|M|dim|aug|sus|add|º|°|ø|\+|-|\d|#|b|\(|\)|,|\.)*)(?:\/([A-G][#b]?))?$/;
+function ehNeutro(t){return /^\[.*\]$/.test(t)||/^\(?\d+x\)?$/i.test(t)||/^x\d+$/i.test(t)||/^[|\-–—.:()\/]+$/.test(t)||/^[A-Za-zÀ-ÿ]+:$/.test(t);}
+function ehLinhaAcordes(l){
+  var toks=l.trim().split(/\s+/),ch=0;
+  if(!l.trim()) return false;
+  for(var i=0;i<toks.length;i++){
+    if(CH_RE.test(toks[i])) ch++;
+    else if(!ehNeutro(toks[i])) return false;
+  }
+  return ch>0;
+}
+function nomeNota(i,bemol){return (bemol?NOTAS_B:NOTAS_S)[((i%12)+12)%12];}
+function transpAcorde(t,n,bemol){
+  var m=CH_RE.exec(t); if(!m) return t;
+  var r=nomeNota(NOTA_IDX[m[1]]+n,bemol);
+  var b=m[3]?'/'+nomeNota(NOTA_IDX[m[3]]+n,bemol):'';
+  return r+m[2]+b;
+}
+function chaveDe(t){var m=/^([A-G][#b]?)(m(?!aj))?/.exec((t||'').trim());return m?{r:m[1],menor:!!m[2]}:null;}
+function primeiroAcorde(linhas){
+  for(var i=0;i<linhas.length;i++){ if(ehLinhaAcordes(linhas[i])){ var ts=linhas[i].trim().split(/\s+/); for(var k=0;k<ts.length;k++){ if(CH_RE.test(ts[k])) return ts[k]; } } }
+  return '';
+}
+var _cx={linhas:[],n:0,key:'',base:null,fs:14};
+function abrirCifraTexto(texto,titulo,tom,url,key){
+  _cx.linhas=texto.replace(/\r\n?/g,'\n').split('\n');
+  _cx.key='mlTransp:'+(key||titulo);
+  var c=chaveDe(tom)||chaveDe(primeiroAcorde(_cx.linhas));
+  _cx.base=c;
+  var n=0; try{n=parseInt(localStorage.getItem(_cx.key))||0;}catch(e){}
+  _cx.n=n;
+  try{var f=parseInt(localStorage.getItem('mlCxFs'));if(f)_cx.fs=f;}catch(e){}
+  document.getElementById('cxTitulo').textContent=titulo||'Cifra';
+  var a=document.getElementById('cxOrig');
+  if(url){a.href=url;a.style.display='';}else a.style.display='none';
+  document.getElementById('cxOverlay').classList.add('aberto');
+  document.body.style.overflow='hidden';
+  cxRender();
+  document.querySelector('.cx-body').scrollTop=0;
+}
+function fecharCifraTexto(e){
+  if(e&&e.target!==document.getElementById('cxOverlay')) return;
+  document.getElementById('cxOverlay').classList.remove('aberto');
+  document.body.style.overflow='';
+}
+function cxTransp(d,reset){
+  var n=reset?0:_cx.n+d; n=((n%12)+12)%12; if(n>6)n-=12;
+  _cx.n=n; try{localStorage.setItem(_cx.key,String(n));}catch(e){}
+  cxRender();
+}
+function cxFonte(d){
+  _cx.fs=Math.max(10,Math.min(26,_cx.fs+d*1.5)); try{localStorage.setItem('mlCxFs',String(_cx.fs));}catch(e){}
+  cxRender();
+}
+function cxRender(){
+  var n=_cx.n,b=_cx.base,bemol=false,orig='',atual='';
+  if(b){
+    var i0=NOTA_IDX[b.r], origNome=b.r+(b.menor?'m':'');
+    var alvoSus=nomeNota(i0+n,false)+(b.menor?'m':''), alvoBem=nomeNota(i0+n,true)+(b.menor?'m':'');
+    if(n===0){ bemol=/b/.test(b.r); atual=origNome; }
+    else { bemol=!!TONS_BEMOL[alvoBem]; atual=bemol?alvoBem:alvoSus; }
+    orig=origNome;
+  }
+  var h='';
+  _cx.linhas.forEach(function(l){
+    if(/^\s*\[.*\]\s*$/.test(l)){ h+='<span class="cx-s">'+esc(l.trim())+'</span>\n'; return; }
+    if(!ehLinhaAcordes(l)){ h+=esc(l)+'\n'; return; }
+    var re=/(\s*)(\S+)/g,m,saida='';
+    var plano=0;
+    while((m=re.exec(l))){
+      var tok=m[2],novo=CH_RE.test(tok)?(n?transpAcorde(tok,n,bemol):tok):tok;
+      var falta=m.index+m[1].length-plano; if(falta<1&&plano>0) falta=1; if(falta<0) falta=0;
+      saida+=new Array(falta+1).join(' ');
+      saida+=CH_RE.test(tok)?'<span class="cx-c">'+esc(novo)+'</span>':'<span class="cx-neutro">'+esc(tok)+'</span>';
+      plano+=falta+novo.length;
+    }
+    h+=saida+'\n';
+  });
+  document.getElementById('cxPre').innerHTML=h;
+  document.getElementById('cxPre').style.setProperty('--cxfs',_cx.fs+'px');
+  document.getElementById('cxTomAtual').textContent=atual||(n>0?'+'+n:String(n));
+  document.getElementById('cxTomOrig').textContent=orig?'('+orig+')':'';
+  document.getElementById('cxReset').classList.toggle('off',n===0);
+}
+document.addEventListener('keydown',function(e){
+  var o=document.getElementById('cxOverlay');
+  if(o&&o.classList.contains('aberto')){ if(e.key==='Escape') fecharCifraTexto(); else if(e.key==='ArrowUp') cxTransp(1); else if(e.key==='ArrowDown') cxTransp(-1); }
+});
 
 /* ══ METRÔNOMO (som de bambu via Web Audio API) ══ */
 var _metroCtx = null;
