@@ -1907,7 +1907,7 @@ function delMembro(btn){
 }
 function coletarMembros(g){
   var lista=[];
-  document.querySelectorAll('#membros-'+g+' select').forEach(function(sel){ var v=sel.value.trim(); if(v) lista.push(v); });
+  document.querySelectorAll('#membros-'+g+' .membroSelect').forEach(function(sel){ var v=sel.value.trim(); if(v) lista.push(v); });
   return lista;
 }
 /* re-renderizar selects quando contatos mudam */
@@ -2684,7 +2684,7 @@ function coletarEscalados(){
   ];
   var escalados = [];
   grupos.forEach(function(g){
-    document.querySelectorAll('#membros-'+g.key+' select').forEach(function(sel){
+    document.querySelectorAll('#membros-'+g.key+' .membroSelect').forEach(function(sel){
       var nome = sel.value.trim();
       if(nome) escalados.push({nome:nome, funcao:g.label});
     });
