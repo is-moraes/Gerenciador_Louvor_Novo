@@ -834,6 +834,20 @@
   .card-header.clicavel h2{ flex:1; }
   @media(min-width:601px){ .musica-head{ grid-template-columns:auto 1.6fr .7fr .7fr auto auto auto auto auto; } }
 
+  /* Função do escalado */
+  .escala-linha{ gap:.45rem; }
+  .escala-linha .membroSelect{ flex:1; min-width:0; padding:.5rem .75rem; background:var(--bg); border:1.5px solid var(--border); border-radius:var(--radius-sm); color:var(--fg); font-family:var(--font); font-size:.85rem; outline:none; cursor:pointer; }
+  .escala-linha .funcaoSelect,.escala-linha .funcaoOutro{ width:128px; flex-shrink:0; padding:.48rem .6rem; background:color-mix(in srgb,var(--accent) 9%,var(--bg)); border:1.5px solid color-mix(in srgb,var(--accent) 30%,var(--border)); border-radius:20px; color:var(--accent); font-family:var(--font); font-size:.76rem; font-weight:700; outline:none; cursor:pointer; text-align:center; }
+  .escala-linha .funcaoOutro{ cursor:text; color:var(--fg); }
+  .escala-linha .funcaoSelect:focus,.escala-linha .funcaoOutro:focus{ border-color:var(--accent); }
+  .escala-linha .funcaoSelect option{ color:var(--fg); }
+  @media(max-width:600px){
+    .escala-linha.tem-funcao{ flex-wrap:wrap; }
+    .escala-linha.tem-funcao .membroSelect{ flex:1 1 calc(100% - 46px); order:1; }
+    .escala-linha.tem-funcao .btn-del-membro{ order:2; }
+    .escala-linha.tem-funcao .funcaoSelect,.escala-linha.tem-funcao .funcaoOutro{ order:3; flex:1 1 100%; width:auto; text-align:left; padding-left:.9rem; }
+  }
+
 </style>
 </head>
 <body>
@@ -1609,7 +1623,7 @@ function carregarAvulsoLocal(id){
   ['vocal','instrumental','multimidia','midia'].forEach(function(g){
     document.getElementById('membros-'+g).innerHTML='';
     var list=dados[g]||['']; if(!list.length) list=[''];
-    list.forEach(function(n){ addMembro(g, n); });
+    list.forEach(function(n,i){ addMembro(g, n, ((dados.funcoes&&dados.funcoes[g])||[])[i]); });
   });
   document.getElementById('listaAvisos').innerHTML='';
   (dados.avisos||[]).forEach(function(av){ adicionarAviso(av); });
@@ -2059,7 +2073,7 @@ function carregarSemanaLocal(s){
   ['vocal','instrumental','multimidia','midia'].forEach(function(g){
     document.getElementById('membros-'+g).innerHTML='';
     var list=dados[g]||['']; if(!list.length) list=[''];
-    list.forEach(function(n){ addMembro(g, n); });
+    list.forEach(function(n,i){ addMembro(g, n, ((dados.funcoes&&dados.funcoes[g])||[])[i]); });
   });
 
   document.getElementById('listaAvisos').innerHTML='';
@@ -2705,7 +2719,7 @@ function montarMensagemGeral(escalados, info){
   var porFuncao = {};
   escalados.forEach(function(e){
     if(!porFuncao[e.funcao]) porFuncao[e.funcao] = [];
-    porFuncao[e.funcao].push(e.nome);
+    porFuncao[e.funcao].push(e.nome+(e.papel?' ('+e.papel+')':''));
   });
   Object.keys(porFuncao).forEach(function(func){
     linhas.push('• *' + func + ':* ' + porFuncao[func].join(', '));
@@ -2738,7 +2752,7 @@ function prepararAvisos(){
   lista.innerHTML = '';
   escalados.forEach(function(e){
     var tel = acharTelefone(e.nome);
-    var msgIndividual = 'Olá, ' + e.nome + '! 🎵\n\nVocê está escalado(a) como *' + e.funcao + '* para *' + info.titulo + '*' + (info.data ? ' (' + info.data + ')' : '') + '.\n\nContamos com você! 🙏';
+    var msgIndividual = 'Olá, ' + e.nome + '! 🎵\n\nVocê está escalado(a) como *' + e.funcao + (e.papel?' – '+e.papel:'') + '* para *' + info.titulo + '*' + (info.data ? ' (' + info.data + ')' : '') + '.\n\nContamos com você! 🙏';
     var waUrl = tel ? 'https://wa.me/' + tel + '?text=' + encodeURIComponent(msgIndividual) : '#';
 
     var item = document.createElement('div');
@@ -2746,7 +2760,7 @@ function prepararAvisos(){
     item.innerHTML =
       '<div class="wa-escalado-info">'+
         '<div class="wa-escalado-nome">'+e.nome+'</div>'+
-        '<div class="wa-escalado-func">'+e.funcao+
+        '<div class="wa-escalado-func">'+e.funcao+(e.papel?' · '+e.papel:'')+
           (tel ? ' · <span class="wa-escalado-tel">'+tel+'</span>' : ' · <span class="wa-escalado-semtel">sem número cadastrado</span>')+
         '</div>'+
       '</div>'+
@@ -2906,6 +2920,77 @@ function atualizarHero(){
     var av=document.getElementById('topAvatar');
     if(av){ av.textContent=nome.trim().split(/\s+/).slice(0,2).map(function(p){return p.charAt(0).toUpperCase();}).join('')||'L'; av.title=nome; }
     trocarSecao('inicio');
+  };
+})();
+
+/* ══ FUNÇÃO DE CADA ESCALADO (Voz principal, Back, Violão…) ══ */
+var FUNCOES_ESCALA={
+  vocal:['Voz principal','Back','Back/Principal'],
+  instrumental:['Violão','Guitarra','Baixo','Bateria','Teclado']
+};
+function addMembro(grupo, valorInicial, funcaoInicial){
+  var c=document.getElementById('membros-'+grupo);
+  var l=document.createElement('div'); l.className='escala-linha';
+  var lista=FUNCOES_ESCALA[grupo];
+  var html='<select class="membroSelect">'+opcoesContatos(valorInicial||'')+'</select>';
+  if(lista){
+    var f=(funcaoInicial||'').trim();
+    var outro=f && lista.indexOf(f)<0;
+    html+='<select class="funcaoSelect'+(outro?' oculto':'')+'" onchange="mudarFuncao(this)" title="Função">'+
+      '<option value="">Função</option>'+
+      lista.map(function(o){return '<option value="'+o+'"'+(o===f?' selected':'')+'>'+o+'</option>';}).join('')+
+      '<option value="__outro__">Outro…</option></select>'+
+      '<input type="text" class="funcaoOutro'+(outro?'':' oculto')+'" maxlength="24" placeholder="Qual função?" value="'+(outro?f.replace(/"/g,'&quot;'):'')+'" onblur="fecharOutro(this)">';
+    l.className+=' tem-funcao';
+  }
+  html+='<button class="btn-del-membro" onclick="delMembro(this)"><i class="fa-solid fa-xmark"></i></button>';
+  l.innerHTML=html; c.appendChild(l);
+}
+function mudarFuncao(sel){
+  if(sel.value!=='__outro__') return;
+  var inp=sel.parentNode.querySelector('.funcaoOutro');
+  sel.classList.add('oculto'); inp.classList.remove('oculto'); inp.value=''; inp.focus();
+}
+function fecharOutro(inp){
+  if(inp.value.trim()) return;
+  var sel=inp.parentNode.querySelector('.funcaoSelect');
+  inp.classList.add('oculto'); sel.classList.remove('oculto'); sel.value='';
+}
+function funcaoDaLinha(l){
+  var inp=l.querySelector('.funcaoOutro');
+  if(inp && !inp.classList.contains('oculto')) return inp.value.trim();
+  var s=l.querySelector('.funcaoSelect');
+  return (s && s.value!=='__outro__') ? s.value : '';
+}
+function coletarFuncoes(g){
+  var lista=[];
+  document.querySelectorAll('#membros-'+g+' .escala-linha').forEach(function(l){
+    var s=l.querySelector('.membroSelect');
+    if(s && s.value.trim()) lista.push(funcaoDaLinha(l));
+  });
+  return lista;
+}
+(function(){
+  var _cd=coletarDados;
+  coletarDados=function(){
+    var d=_cd.apply(this,arguments);
+    var fn={}, algum=false;
+    ['vocal','instrumental'].forEach(function(g){ fn[g]=coletarFuncoes(g); if(fn[g].some(Boolean)) algum=true; });
+    d.funcoes=fn;
+    return d;
+  };
+  var _ce=coletarEscalados;
+  coletarEscalados=function(){
+    var lista=_ce.apply(this,arguments);
+    var papeis=[];
+    ['vocal','instrumental','multimidia','midia'].forEach(function(g){
+      document.querySelectorAll('#membros-'+g+' .escala-linha').forEach(function(l){
+        var s=l.querySelector('.membroSelect');
+        if(s && s.value.trim()) papeis.push(funcaoDaLinha(l));
+      });
+    });
+    lista.forEach(function(e,i){ e.papel=papeis[i]||''; });
+    return lista;
   };
 })();
 </script>
