@@ -228,7 +228,10 @@ body.modo-avulso .c-nav{display:none}
 .pessoa{display:flex;align-items:center;gap:.75rem;padding:.6rem .6rem;border-radius:13px}
 .pessoa:nth-child(even){background:var(--row-alt)}
 .p-av{width:34px;height:34px;border-radius:50%;background:var(--surface2);border:1px solid var(--line);color:var(--accent);font-weight:800;font-size:.74rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.p-nome{font-weight:700;font-size:.93rem}
+.p-nome{font-weight:700;font-size:.93rem;min-width:0;flex:1;overflow:hidden;text-overflow:ellipsis}
+.p-func{display:inline-flex;align-items:center;gap:.35rem;flex-shrink:0;font-size:.7rem;font-weight:700;padding:.28rem .65rem;border-radius:20px;color:var(--gc,var(--accent));background:color-mix(in srgb,var(--gc,var(--accent)) 14%,transparent);border:1px solid color-mix(in srgb,var(--gc,var(--accent)) 28%,transparent);white-space:nowrap}
+.p-func i{font-size:.68rem}
+.p-func.main{background:var(--gc);color:#fff;border-color:transparent}
 .p-vazio{padding:.8rem .6rem;color:var(--fg3);font-size:.84rem;font-style:italic}
 .resumo-esc{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.9rem}
 
@@ -1146,6 +1149,12 @@ var GRUPOS_ESCALA=[
   {key:'multimidia',   icon:'fa-display',   label:'Multimídia',   cor:'#22b35e'},
   {key:'midia',        icon:'fa-video',     label:'Mídia / Som',  cor:'#ef4444'}
 ];
+var ICONES_FUNCAO={'voz principal':'fa-microphone-lines','back':'fa-user-group','back/principal':'fa-microphone','violão':'fa-guitar','guitarra':'fa-guitar','baixo':'fa-guitar','bateria':'fa-drum','teclado':'fa-keyboard'};
+function funcaoChip(f){
+  f=(f||'').trim(); if(!f) return '';
+  var k=f.toLowerCase(), ic=ICONES_FUNCAO[k];
+  return '<span class="p-func'+(k==='voz principal'?' main':'')+'">'+(ic?'<i class="fa-solid '+ic+'"></i>':'')+esc(f)+'</span>';
+}
 function renderEscala(d,tituloVazio,msgVazio){
   var box=el('escalaBody');
   if(!d){box.innerHTML=emptyHtml('fa-users-slash',tituloVazio||'Sem escala',msgVazio||'A escala ainda não foi publicada.');return;}
@@ -1156,7 +1165,10 @@ function renderEscala(d,tituloVazio,msgVazio){
     var mb=d[g.key]||[];
     h+='<div class="esc-box"><div class="esc-h"><span class="eh-i" style="background:'+g.cor+'"><i class="fa-solid '+g.icon+'"></i></span><b>'+g.label+'</b><span class="count-pill">'+mb.length+'</span></div>';
     if(!mb.length) h+='<div class="p-vazio">Não definido</div>';
-    else mb.forEach(function(n){h+='<div class="pessoa"><span class="p-av">'+esc(initials(n))+'</span><span class="p-nome">'+esc(n)+'</span></div>';});
+    else mb.forEach(function(n,i){
+      var fn=((d.funcoes&&d.funcoes[g.key])||[])[i]||'';
+      h+='<div class="pessoa" style="--gc:'+g.cor+'"><span class="p-av">'+esc(initials(n))+'</span><span class="p-nome">'+esc(n)+'</span>'+funcaoChip(fn)+'</div>';
+    });
     h+='</div>';
   });
   box.innerHTML=h+'</div>';
