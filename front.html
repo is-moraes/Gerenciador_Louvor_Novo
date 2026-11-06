@@ -23,7 +23,7 @@ html{-webkit-tap-highlight-color:transparent;scroll-behavior:smooth}
   --shadow:0 10px 34px rgba(0,0,0,.45);
   --shadow-s:0 4px 18px rgba(0,0,0,.35);
   --chip-bg:rgba(255,255,255,.06);
-  --medley:#b57bef; --medley-soft:rgba(181,123,239,.13); --medley-border:rgba(181,123,239,.35);
+  --title:#b5c8ff; --medley:#b57bef; --medley-soft:rgba(181,123,239,.13); --medley-border:rgba(181,123,239,.35);
   --fd:'Plus Jakarta Sans','Inter',sans-serif; --fh:'Plus Jakarta Sans','Inter',sans-serif;
 }
 /* ══════════ TEMA CLARO ══════════ */
@@ -38,7 +38,7 @@ body[data-theme="claro"]{
   --shadow:0 12px 34px rgba(40,55,120,.12);
   --shadow-s:0 4px 16px rgba(40,55,120,.08);
   --chip-bg:rgba(0,0,0,.04);
-  --medley:#8b3fd4; --medley-soft:rgba(139,63,212,.08); --medley-border:rgba(139,63,212,.3);
+  --title:#2b45b8; --medley:#8b3fd4; --medley-soft:rgba(139,63,212,.08); --medley-border:rgba(139,63,212,.3);
 }
 /* aliases p/ estilos reaproveitados (modais, player, treino, metrônomo) — resolvidos no body */
 body{
@@ -158,7 +158,7 @@ body.modo-avulso .c-nav{display:none}
 .song{display:grid;grid-template-columns:32px minmax(0,1fr) auto;grid-template-areas:"num name acts";align-items:center;gap:.75rem;padding:.7rem .7rem}
 .s-num{grid-area:num;width:30px;height:30px;border-radius:50%;background:var(--surface2);border:1px solid var(--line);color:var(--fg);font-weight:800;font-size:.78rem;display:flex;align-items:center;justify-content:center}
 .s-main{grid-area:name;min-width:0}
-.s-name{font-weight:700;font-size:.98rem;line-height:1.28;word-break:break-word}
+.s-name{color:var(--title);font-weight:700;font-size:.98rem;line-height:1.28;word-break:break-word}
 .s-tags{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.35rem}
 .acts{grid-area:acts;display:flex;align-items:center;gap:.45rem}
 .ibtn{width:32px;height:32px;border-radius:50%;border:none;display:inline-flex;align-items:center;justify-content:center;font-size:.85rem;cursor:pointer;text-decoration:none;flex-shrink:0;transition:transform .15s,box-shadow .2s,opacity .2s}
@@ -172,20 +172,29 @@ body.modo-avulso .c-nav{display:none}
 .ibtn.sm{width:28px;height:28px;font-size:.75rem}
 .ibtn.off{opacity:.2;pointer-events:none;filter:grayscale(.7)}
 .lbl{display:none}
+.s-chev{display:none;width:30px;height:30px;border-radius:50%;border:none;background:none;color:var(--fg2);align-items:center;justify-content:center;font-size:.72rem;cursor:pointer;flex-shrink:0}
+.s-chev i{transition:transform .2s}
+.play-grp{display:contents}
 .links{display:flex;gap:.45rem;align-items:center}
 @media(max-width:620px){
   .wrap{padding-left:.7rem;padding-right:.7rem}
   .panel{padding:.85rem .7rem}
-  .song{grid-template-columns:30px minmax(0,1fr) 46px;grid-template-areas:"num name play" ". links links";gap:.6rem .7rem;padding:.75rem .5rem}
+  .song{grid-template-columns:30px minmax(0,1fr) auto;grid-template-areas:"num name acts" ". links links";gap:.5rem .7rem;padding:.75rem .5rem}
   .acts{display:contents}
-  .ibtn.play{grid-area:play;width:46px;height:46px;font-size:1rem;align-self:center}
-  .links{grid-area:links;display:grid;grid-template-columns:repeat(4,1fr);gap:.45rem}
-  .links .ibtn{width:auto;height:50px;border-radius:14px;flex-direction:column;gap:.2rem;font-size:1rem;padding:.2rem 0}
-  .links .lbl{display:block;font-size:.62rem;font-weight:700;line-height:1}
-  .links .ibtn.yt{background:rgba(255,59,59,.15);color:#ff5252}
-  .links .ibtn.bpm{background:rgba(29,155,240,.16);color:#2aa3f5}
-  .links .ibtn.sp{background:rgba(29,185,84,.16);color:#22c25f}
-  .links .ibtn.ci{background:rgba(251,191,36,.18);color:#e5a600}
+  .play-grp{grid-area:acts;display:flex;align-items:center;gap:.2rem}
+  .ibtn.play{width:42px;height:42px;font-size:.9rem;background:var(--accent-soft);color:var(--accent)}
+  .s-chev{display:flex}
+  .links{grid-area:links;display:none;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--line);border-radius:14px;background:var(--chip-bg);overflow:hidden;margin-top:.15rem}
+  .song-wrap.aberto .links{display:grid;animation:rise .22s ease both}
+  .song-wrap.aberto{background:var(--surface2)}
+  .song-wrap.aberto .s-chev i{transform:rotate(180deg)}
+  .links .ibtn{width:auto;height:50px;border-radius:0;background:none !important;box-shadow:none !important;flex-direction:column;gap:.28rem;font-size:1rem;padding:.2rem 0;transform:none !important}
+  .links .ibtn+.ibtn{border-left:1px solid var(--line)}
+  .links .lbl{display:block;font-size:.62rem;font-weight:600;line-height:1;color:var(--fg2)}
+  .links .ibtn.yt{color:#ff5252}
+  .links .ibtn.bpm{color:#2aa3f5}
+  .links .ibtn.sp{color:#22c25f}
+  .links .ibtn.ci{color:#e5a600}
   .links .ibtn.off{opacity:.3}
   .s-name{font-size:.97rem}
   .legenda{display:none !important}
@@ -1044,6 +1053,7 @@ function spBtn(url,sm){
   if(!u) return '<span class="ibtn sp off'+(sm?' sm':'')+'"><i class="fa-brands fa-spotify"></i>'+l+'</span>';
   return '<a class="ibtn sp'+(sm?' sm':'')+'" href="'+esc(u)+'" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify"><i class="fa-brands fa-spotify"></i>'+l+'</a>';
 }
+function toggleLinks(b){var w=b.closest('.song-wrap');if(w)w.classList.toggle('aberto');}
 function songHtml(m,i){
   var nome=m.nome||'—';
   var partes=m.partes||[];
@@ -1060,7 +1070,8 @@ function songHtml(m,i){
     ibtn('bpm','fa-solid fa-drum','acaoMusica('+i+',\'metro\')',!isNaN(bpm),'Metrônomo'+(m.seq?' ('+m.seq+' BPM)':''))+
     spBtn(m.sp)+
     ibtn('ci','fa-solid fa-music','acaoMusica('+i+',\'cifra\')',!!m.cifra,'Cifra')+
-  '</div>'+ibtn('play','fa-solid fa-play','acaoMusica('+i+',\'play\')',podeTocar,'Tocar a partir daqui');
+  '</div><div class="play-grp">'+ibtn('play','fa-solid fa-play','acaoMusica('+i+',\'play\')',podeTocar,'Tocar a partir daqui')+
+    '<button class="s-chev" aria-label="Mais opções" onclick="toggleLinks(this)"><i class="fa-solid fa-chevron-down"></i></button></div>';
 
   var medley='';
   if(partes.length){
