@@ -183,6 +183,7 @@ body.modo-avulso .c-nav{display:none}
   .acts{display:contents}
   .play-grp{grid-area:acts;display:flex;align-items:center;gap:.2rem}
   .ibtn.play{width:42px;height:42px;font-size:.9rem;background:var(--accent-soft);color:var(--accent)}
+  .song{cursor:pointer;-webkit-tap-highlight-color:transparent}
   .s-chev{display:flex}
   .links{grid-area:links;display:none;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--line);border-radius:14px;background:var(--chip-bg);overflow:hidden;margin-top:.15rem}
   .song-wrap.aberto .links{display:grid;animation:rise .22s ease both}
@@ -1053,6 +1054,7 @@ function spBtn(url,sm){
   if(!u) return '<span class="ibtn sp off'+(sm?' sm':'')+'"><i class="fa-brands fa-spotify"></i>'+l+'</span>';
   return '<a class="ibtn sp'+(sm?' sm':'')+'" href="'+esc(u)+'" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify"><i class="fa-brands fa-spotify"></i>'+l+'</a>';
 }
+function toggleCard(ev,song){if(!window.matchMedia('(max-width:620px)').matches)return;if(ev.target.closest('button,a'))return;var w=song.closest('.song-wrap');if(w)w.classList.toggle('aberto');}
 function toggleLinks(b){var w=b.closest('.song-wrap');if(w)w.classList.toggle('aberto');}
 function songHtml(m,i){
   var nome=m.nome||'—';
@@ -1086,7 +1088,7 @@ function songHtml(m,i){
     medley+='</div>';
   }
   return '<div class="song-wrap" data-nome="'+esc(nome.toLowerCase())+'">'+
-    '<div class="song"><span class="s-num">'+(i+1)+'</span>'+
+    '<div class="song" onclick="toggleCard(event,this)"><span class="s-num">'+(i+1)+'</span>'+
       '<div class="s-main"><div class="s-name">'+esc(nome)+'</div>'+(tags?'<div class="s-tags">'+tags+'</div>':'')+'</div>'+
       '<div class="acts">'+acts+'</div>'+
     '</div>'+medley+'</div>';
