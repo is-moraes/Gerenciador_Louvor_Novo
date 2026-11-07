@@ -3057,13 +3057,14 @@ function coletarFuncoes(g){
 var cifrasMap={};
 var _ctxAlvo=null;
 var SCRIPT_CIFRA="const TOKEN = 'TROQUE-POR-UMA-SENHA-SUA';\n\nfunction doGet(e) {\n  var out;\n  try {\n    if (e.parameter.t !== TOKEN) throw new Error('senha inválida');\n    var doc = DocumentApp.openById(e.parameter.id);\n    var texto = doc.getBody().getText()\n      .replace(/\\u00a0/g, ' ')\n      .replace(/[\\r\\u000b]/g, '\\n');\n    out = {ok: true, titulo: doc.getName(), texto: texto};\n  } catch (err) {\n    out = {ok: false, erro: String(err)};\n  }\n  return ContentService.createTextOutput(JSON.stringify(out))\n    .setMimeType(ContentService.MimeType.JSON);\n}";
-function proxyCifra(){ try{return localStorage.getItem('mlCifraProxy')||'';}catch(e){return '';} }
+function limparProxy(v){ return (v||'').trim().replace(/(\?t=)+/g,'?t='); }
+function proxyCifra(){ try{return limparProxy(localStorage.getItem('mlCifraProxy'));}catch(e){return '';} }
 function iniciarConfigCifra(){
   var i=document.getElementById('cifraProxyUrl'); if(i) i.value=proxyCifra();
   var p=document.getElementById('cifraScript'); if(p) p.textContent=SCRIPT_CIFRA;
 }
 function salvarProxyCifra(){
-  var v=document.getElementById('cifraProxyUrl').value.trim();
+  var v=limparProxy(document.getElementById('cifraProxyUrl').value); document.getElementById('cifraProxyUrl').value=v;
   try{ localStorage.setItem('mlCifraProxy',v); }catch(e){}
   var s=document.getElementById('cifraProxyMsg'); s.textContent=v?'Salvo neste navegador ✓':'Removido'; setTimeout(function(){s.textContent='';},2500);
 }
@@ -3100,7 +3101,7 @@ function buscarCifraDocs(){
       document.getElementById('ctxTexto').value=d.texto;
       setCtxStatus('Sincronizado de “'+d.titulo+'”. Revise e clique em Salvar.');
     })
-    .catch(function(err){ setCtxStatus('Erro: '+err.message+'. Confira a URL do script e se a implantação está como “Qualquer pessoa”.',true); });
+    .catch(function(err){ setCtxStatus('Erro: '+String(err.message).replace(/^Error:\s*/,'')+'. Confira a URL do script e se a implantação está como “Qualquer pessoa”.',true); });
 }
 function salvarCifraTexto(){
   if(!_ctxAlvo) return;
