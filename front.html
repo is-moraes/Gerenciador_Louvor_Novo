@@ -344,6 +344,12 @@ body[data-theme="claro"] .cx-c{color:#e8590c}
 .cx-neutro{color:var(--fg3)}
 @media(max-width:620px){.cx-overlay{padding:0}.cx-box{height:100%;max-width:none;border-radius:0;border:none}}
 
+/* Treino com cifra em texto */
+.treino-txt{position:absolute;inset:0;display:none;flex-direction:column;background:var(--surface);z-index:1}
+.treino-txt .cx-bar{padding:.55rem .8rem;gap:.5rem}
+.treino-txt .cx-tom button{width:36px;height:36px}
+.treino-txt .cx-body{padding-bottom:13rem}
+
 /* ═══ Modais, player, metrônomo, cifra e modo treino (mantidos) ═══ */
 /* ══ MODAL DE VÍDEO YOUTUBE ══ */
 .yt-modal-overlay{
@@ -911,7 +917,7 @@ body[data-theme="claro"] .cx-c{color:#e8590c}
     <div class="panel">
       <details class="faq" open><summary><i class="fa-solid fa-play"></i> Como ouvir as músicas?</summary><p>Toque no botão vermelho para abrir o vídeo, no verde para o Spotify, ou no botão escuro com ▶ para tocar o repertório em sequência a partir daquela música. Em “Tocar Tudo” o repertório inteiro toca em ordem.</p></details>
       <details class="faq"><summary><i class="fa-solid fa-music"></i> Onde ficam as cifras?</summary><p>No botão amarelo de cada música. A cifra abre dentro do portal; se o site não permitir, um botão leva você para uma nova aba.</p></details>
-      <details class="faq"><summary><i class="fa-solid fa-dumbbell"></i> O que é o modo Treinar?</summary><p>Quando a música tem vídeo e cifra, aparece o botão “Treinar”: a cifra ocupa a tela inteira e o vídeo fica em uma janela flutuante que você pode arrastar e redimensionar.</p></details>
+      <details class="faq"><summary><i class="fa-solid fa-dumbbell"></i> O que é o modo Treinar?</summary><p>Quando a música tem vídeo e cifra, aparece o botão “Treinar”: a cifra ocupa a tela inteira e o vídeo fica em uma janela flutuante que você pode arrastar e redimensionar. Se a cifra estiver cadastrada em texto, você também pode trocar o tom ali mesmo.</p></details>
       <details class="faq"><summary><i class="fa-solid fa-drum"></i> Como usar o metrônomo?</summary><p>Toque no botão azul da música para abrir o metrônomo já ajustado no BPM dela. Você pode alterar o andamento, o compasso ou usar o “Tap” para marcar no ritmo.</p></details>
       <details class="faq"><summary><i class="fa-solid fa-layer-group"></i> O que é um Medley?</summary><p>É uma música com várias partes. Toque na etiqueta “Medley” para ver e abrir cada parte separadamente.</p></details>
       <details class="faq"><summary><i class="fa-regular fa-calendar"></i> Como ver outra semana?</summary><p>Use as setas no cartão do culto ou abra o menu “Cultos” para escolher entre as semanas com programação publicada.</p></details>
@@ -1117,7 +1123,7 @@ function songHtml(m,i){
   if(m.tom) tags+='<span class="chip chip-tom">Tom '+esc(m.tom)+'</span>';
   if(m.seq) tags+='<span class="chip"><i class="fa-solid fa-drum"></i> '+esc(m.seq)+' BPM</span>';
   if(partes.length) tags+='<button class="tag-medley" onclick="toggleMedleyMenu(this)"><i class="fa-solid fa-layer-group"></i> Medley ('+(partes.length+1)+') <i class="fa-solid fa-chevron-down"></i></button>';
-  if(m.yt&&m.cifra) tags+='<button class="tag-treino" onclick="acaoMusica('+i+',\'treino\')"><i class="fa-solid fa-dumbbell"></i> Treinar</button>';
+  if(m.yt&&(m.cifra||cifraTxt(m))) tags+='<button class="tag-treino" onclick="acaoMusica('+i+',\'treino\')"><i class="fa-solid fa-dumbbell"></i> Treinar</button>';
 
   var bpm=parseInt(m.seq);
   var podeTocar=temYt(m)||partes.some(function(p){return p.yt&&extrairYtId(p.yt);});
@@ -1183,7 +1189,7 @@ function acaoMusica(i,tipo){
   else if(tipo==='cifra'&&cifraTxt(m)) abrirCifraTexto(cifraTxt(m),m.nome||'Cifra',m.tom,m.cifra,cifraKeyDe(m));
   else if(tipo==='cifra'&&m.cifra) abrirCifraModal(m.cifra,m.nome||'Cifra');
   else if(tipo==='metro') abrirMetronomo(m.nome||'Música',m.seq);
-  else if(tipo==='treino'&&m.yt&&m.cifra) abrirTreino(m.yt,m.cifra,m.nome||'Treino');
+  else if(tipo==='treino'&&m.yt&&(m.cifra||cifraTxt(m))) abrirTreino(m.yt,m.cifra||'',m.nome||'Treino',m);
   else if(tipo==='play') abrirPlayerSequencial(_repertorioAtual,i);
 }
 function acaoParte(i,pi,tipo){
@@ -1391,21 +1397,23 @@ function primeiroAcorde(linhas){
   return '';
 }
 var _cx={linhas:[],n:0,key:'',base:null,fs:14};
-function abrirCifraTexto(texto,titulo,tom,url,key){
+function cxPreparar(texto,titulo,tom,url,key){
   _cx.linhas=limparTextoCifra(texto).split('\n');
   _cx.key='mlTransp:'+(key||titulo);
-  var c=chaveDe(tom)||chaveDe(primeiroAcorde(_cx.linhas));
-  _cx.base=c;
+  _cx.base=chaveDe(tom)||chaveDe(primeiroAcorde(_cx.linhas));
   var n=0; try{n=parseInt(localStorage.getItem(_cx.key))||0;}catch(e){}
   _cx.n=n;
   try{var f=parseInt(localStorage.getItem('mlCxFs'));if(f)_cx.fs=f;}catch(e){}
+}
+function abrirCifraTexto(texto,titulo,tom,url,key){
+  cxPreparar(texto,titulo,tom,url,key);
   document.getElementById('cxTitulo').textContent=titulo||'Cifra';
   var a=document.getElementById('cxOrig');
   if(url){a.href=url;a.style.display='';}else a.style.display='none';
   document.getElementById('cxOverlay').classList.add('aberto');
   document.body.style.overflow='hidden';
   cxRender();
-  document.querySelector('.cx-body').scrollTop=0;
+  document.querySelector('#cxOverlay .cx-body').scrollTop=0;
 }
 function fecharCifraTexto(e){
   if(e&&e.target!==document.getElementById('cxOverlay')) return;
@@ -1422,6 +1430,9 @@ function cxFonte(d){
   cxRender();
 }
 function cxRender(){
+  ['cx','tr'].forEach(function(p){ if(document.getElementById(p+'Pre')) cxRenderEm(p); });
+}
+function cxRenderEm(p){
   var n=_cx.n,b=_cx.base,bemol=false,orig='',atual='';
   if(b){
     var i0=NOTA_IDX[b.r], origNome=b.r+(b.menor?'m':'');
@@ -1446,11 +1457,11 @@ function cxRender(){
     }
     h+=saida+'\n';
   });
-  document.getElementById('cxPre').innerHTML=h;
-  document.getElementById('cxPre').style.setProperty('--cxfs',_cx.fs+'px');
-  document.getElementById('cxTomAtual').textContent=atual||(n>0?'+'+n:String(n));
-  document.getElementById('cxTomOrig').textContent=orig?'('+orig+')':'';
-  document.getElementById('cxReset').classList.toggle('off',n===0);
+  document.getElementById(p+'Pre').innerHTML=h;
+  document.getElementById(p+'Pre').style.setProperty('--cxfs',_cx.fs+'px');
+  document.getElementById(p+'TomAtual').textContent=atual||(n>0?'+'+n:String(n));
+  document.getElementById(p+'TomOrig').textContent=orig?'('+orig+')':'';
+  document.getElementById(p+'Reset').classList.toggle('off',n===0);
 }
 document.addEventListener('keydown',function(e){
   var o=document.getElementById('cxOverlay');
@@ -1634,15 +1645,29 @@ document.addEventListener('keydown', function(e){
 var _treinoYtPlayer = null;
 var _treinoVideoVisivel = true;
 
-function abrirTreino(ytUrl, cifraUrl, titulo){
+function abrirTreino(ytUrl, cifraUrl, titulo, m){
   document.getElementById('treinoTitulo').textContent = titulo || 'Treino';
-  document.getElementById('treinoCifraExt').href = cifraUrl;
-  document.getElementById('treinoCifraFallbackBtn').href = cifraUrl;
+  document.getElementById('treinoCifraExt').href = cifraUrl || '#';
+  document.getElementById('treinoCifraExt').style.display = cifraUrl ? '' : 'none';
+  document.getElementById('treinoCifraFallbackBtn').href = cifraUrl || '#';
 
   var overlay = document.getElementById('treinoOverlay');
   overlay.classList.add('aberto');
   document.body.style.overflow = 'hidden';
 
+  /* ── CIFRA em TEXTO (troca de tom) ou, se não houver, a cifra por link ── */
+  var _txtT = m ? cifraTxt(m) : '';
+  var _tp = document.getElementById('treinoTxt');
+  if(_tp) _tp.style.display = _txtT ? 'flex' : 'none';
+  if(_txtT){
+    cxPreparar(_txtT, titulo, m.tom, cifraUrl, cifraKeyDe(m));
+    cxRender();
+    var _cb = document.querySelector('#treinoTxt .cx-body'); if(_cb) _cb.scrollTop = 0;
+    clearTimeout(_treinoCifraTimeout);
+    var _if0 = document.getElementById('treinoCifraIframe'); _if0.src=''; _if0.style.display='none';
+    document.getElementById('treinoCifraLoading').style.display='none';
+    document.getElementById('treinoCifraFallback').classList.remove('mostrar');
+  } else {
   /* ── CIFRA (reusa a lógica de prepararUrlCifra) ── */
   var info = prepararUrlCifra(cifraUrl);
   var iframe = document.getElementById('treinoCifraIframe');
@@ -1662,6 +1687,7 @@ function abrirTreino(ytUrl, cifraUrl, titulo){
       fallback.classList.add('mostrar');
     }
   }, tempoLimite);
+  }
 
   /* ── VÍDEO flutuante (YouTube IFrame API, COM som) ── */
   _treinoVideoVisivel = true;
@@ -1720,6 +1746,7 @@ function treinoFecharVideo(){
 
 function fecharTreino(){
   clearTimeout(_treinoCifraTimeout);
+  var _tpf = document.getElementById('treinoTxt'); if(_tpf) _tpf.style.display='none';
   var iframe = document.getElementById('treinoCifraIframe');
   iframe.src='';iframe.style.display='none';
   if(_treinoYtPlayer && _treinoYtPlayer.destroy){ try{_treinoYtPlayer.destroy();}catch(e){} _treinoYtPlayer=null; }
@@ -2346,6 +2373,18 @@ document.addEventListener('keydown', function(e){
       <a id="treinoCifraFallbackBtn" href="#" target="_blank" rel="noopener"><i class="fa-solid fa-music"></i> Abrir Cifra</a>
     </div>
     <iframe id="treinoCifraIframe" src="" style="display:none;"></iframe>
+    <div class="treino-txt" id="treinoTxt">
+      <div class="cx-bar">
+        <div class="cx-tom">
+          <button onclick="cxTransp(-1)" aria-label="Descer meio tom">−</button>
+          <div><small>Tom</small><b id="trTomAtual">—</b></div>
+          <button onclick="cxTransp(1)" aria-label="Subir meio tom">+</button>
+        </div>
+        <button class="cx-reset" id="trReset" onclick="cxTransp(0,true)"><i class="fa-solid fa-rotate-left"></i> Original <span id="trTomOrig"></span></button>
+        <div class="cx-fs"><button onclick="cxFonte(-1)">A−</button><button onclick="cxFonte(1)">A+</button></div>
+      </div>
+      <div class="cx-body"><pre id="trPre"></pre></div>
+    </div>
 
     <!-- vídeo flutuante -->
     <div class="treino-video" id="treinoVideo">
