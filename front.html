@@ -1180,7 +1180,7 @@ function toggleMedleyMenu(btn){
 function acaoMusica(i,tipo){
   var m=_repertorioAtual[i]; if(!m) return;
   if(tipo==='yt'&&m.yt) abrirYtModal(m.yt,m.nome||'Música');
-  else if(tipo==='cifra'&&cifraTxt(m)) abrirCifraTexto(cifraTxt(m),m.nome||'Cifra',m.tom,m.cifra,m.cifraKey);
+  else if(tipo==='cifra'&&cifraTxt(m)) abrirCifraTexto(cifraTxt(m),m.nome||'Cifra',m.tom,m.cifra,cifraKeyDe(m));
   else if(tipo==='cifra'&&m.cifra) abrirCifraModal(m.cifra,m.nome||'Cifra');
   else if(tipo==='metro') abrirMetronomo(m.nome||'Música',m.seq);
   else if(tipo==='treino'&&m.yt&&m.cifra) abrirTreino(m.yt,m.cifra,m.nome||'Treino');
@@ -1191,7 +1191,7 @@ function acaoParte(i,pi,tipo){
   var p=m.partes[pi]; if(!p) return;
   var nome=p.nome||('Parte '+(pi+2));
   if(tipo==='yt'&&p.yt) abrirYtModal(p.yt,nome);
-  else if(tipo==='cifra'&&cifraTxt(p)) abrirCifraTexto(cifraTxt(p),nome,'',p.cifra,p.cifraKey);
+  else if(tipo==='cifra'&&cifraTxt(p)) abrirCifraTexto(cifraTxt(p),nome,'',p.cifra,cifraKeyDe(p));
   else if(tipo==='cifra'&&p.cifra) abrirCifraModal(p.cifra,nome);
 }
 
@@ -1345,7 +1345,9 @@ function copiarLinkAtual(){
 
 /* ══ CIFRA EM TEXTO + TROCA DE TOM ══ */
 var _cifras={};
-function cifraTxt(o){var k=o&&o.cifraKey,c=k&&_cifras[k];return c&&c.texto?c.texto:'';}
+function idDocCifra(u){var m=(u||'').match(/\/document\/d\/([a-zA-Z0-9_-]+)/);return m?m[1]:'';}
+function cifraKeyDe(o){if(!o)return '';if(o.cifraKey&&_cifras[o.cifraKey])return o.cifraKey;var id=idDocCifra(o.cifra);return id&&_cifras[id]?id:'';}
+function cifraTxt(o){var k=cifraKeyDe(o),c=k&&_cifras[k];return c&&c.texto?c.texto:'';}
 var NOTAS_S=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
 var NOTAS_B=['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B'];
 var NOTA_IDX={'C':0,'C#':1,'Db':1,'D':2,'D#':3,'Eb':3,'E':4,'F':5,'E#':5,'Fb':4,'F#':6,'Gb':6,'G':7,'G#':8,'Ab':8,'A':9,'A#':10,'Bb':10,'B':11,'Cb':11,'B#':0};
