@@ -1354,11 +1354,26 @@ var NOTA_IDX={'C':0,'C#':1,'Db':1,'D':2,'D#':3,'Eb':3,'E':4,'F':5,'E#':5,'Fb':4,
 var TONS_BEMOL={'F':1,'Bb':1,'Eb':1,'Ab':1,'Db':1,'Dm':1,'Gm':1,'Cm':1,'Fm':1,'Bbm':1,'Ebm':1};
 var CH_RE=/^([A-G][#b]?)((?:m(?!aj)|min|maj|M|dim|aug|sus|add|º|°|ø|\+|-|\d|#|b|\(|\)|,|\.)*)(?:\/([A-G][#b]?))?$/;
 function ehNeutro(t){return /^\[.*\]$/.test(t)||/^\(?\d+x\)?$/i.test(t)||/^x\d+$/i.test(t)||/^[|\-–—.:()\/]+$/.test(t)||/^[A-Za-zÀ-ÿ]+:$/.test(t);}
+function _cc(l){return l.map(function(c){return String.fromCharCode(c);}).join('');}
+var _RE_INVIS=new RegExp('['+_cc([0x200b,0x200c,0x200d,0x200e,0x200f,0x202a,0x202b,0x202c,0x202d,0x202e,0x2060,0x2061,0x2062,0x2063,0x2064,0xfeff,0xad,0x34f])+']','g');
+var _RE_QUEBRA=new RegExp('['+_cc([0x2028,0x2029,0x85,0x0b,0x0c])+']','g');
+function limparTextoCifra(t){
+  return String(t||'')
+    .replace(_RE_INVIS,'')
+    .replace(_RE_QUEBRA,'\n')
+    .replace(/\r\n?/g,'\n')
+    .replace(/\t/g,'    ')
+    .replace(/[^\S\n]/g,' ')
+    .split(String.fromCharCode(0x266d)).join('b')
+    .split(String.fromCharCode(0x266f)).join('#');
+}
+function sepTok(t){var m=/^([(\[|]*)(.+?)([)\]|,.;:]*)$/.exec(t);return m?{pre:m[1],core:m[2],pos:m[3]}:{pre:'',core:t,pos:''};}
+function ehAcordeTok(t){return CH_RE.test(sepTok(t).core);}
 function ehLinhaAcordes(l){
   var toks=l.trim().split(/\s+/),ch=0;
   if(!l.trim()) return false;
   for(var i=0;i<toks.length;i++){
-    if(CH_RE.test(toks[i])) ch++;
+    if(ehAcordeTok(toks[i])) ch++;
     else if(!ehNeutro(toks[i])) return false;
   }
   return ch>0;
@@ -1372,12 +1387,12 @@ function transpAcorde(t,n,bemol){
 }
 function chaveDe(t){var m=/^([A-G][#b]?)(m(?!aj))?/.exec((t||'').trim());return m?{r:m[1],menor:!!m[2]}:null;}
 function primeiroAcorde(linhas){
-  for(var i=0;i<linhas.length;i++){ if(ehLinhaAcordes(linhas[i])){ var ts=linhas[i].trim().split(/\s+/); for(var k=0;k<ts.length;k++){ if(CH_RE.test(ts[k])) return ts[k]; } } }
+  for(var i=0;i<linhas.length;i++){ if(ehLinhaAcordes(linhas[i])){ var ts=linhas[i].trim().split(/\s+/); for(var k=0;k<ts.length;k++){ if(ehAcordeTok(ts[k])) return sepTok(ts[k]).core; } } }
   return '';
 }
 var _cx={linhas:[],n:0,key:'',base:null,fs:14};
 function abrirCifraTexto(texto,titulo,tom,url,key){
-  _cx.linhas=texto.replace(/\r\n?/g,'\n').split('\n');
+  _cx.linhas=limparTextoCifra(texto).split('\n');
   _cx.key='mlTransp:'+(key||titulo);
   var c=chaveDe(tom)||chaveDe(primeiroAcorde(_cx.linhas));
   _cx.base=c;
@@ -1422,10 +1437,11 @@ function cxRender(){
     var re=/(\s*)(\S+)/g,m,saida='';
     var plano=0;
     while((m=re.exec(l))){
-      var tok=m[2],novo=CH_RE.test(tok)?(n?transpAcorde(tok,n,bemol):tok):tok;
+      var tok=m[2],sp=sepTok(tok),ac=CH_RE.test(sp.core);
+      var novo=ac?(sp.pre+(n?transpAcorde(sp.core,n,bemol):sp.core)+sp.pos):tok;
       var falta=m.index+m[1].length-plano; if(falta<1&&plano>0) falta=1; if(falta<0) falta=0;
       saida+=new Array(falta+1).join(' ');
-      saida+=CH_RE.test(tok)?'<span class="cx-c">'+esc(novo)+'</span>':'<span class="cx-neutro">'+esc(tok)+'</span>';
+      saida+=ac?'<span class="cx-c">'+esc(novo)+'</span>':'<span class="cx-neutro">'+esc(tok)+'</span>';
       plano+=falta+novo.length;
     }
     h+=saida+'\n';
