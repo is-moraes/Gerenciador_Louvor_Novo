@@ -752,6 +752,89 @@ body[data-theme="claro"] .cx-c{color:#e8590c}
   filter:drop-shadow(0 0 2px rgba(0,0,0,.5));
 }
 .treino-video.oculto-player{opacity:.25}
+
+/* ══════════ PALETA GRAFITE (confortável) — sobrepõe as anteriores ══════════ */
+:root{
+  --bg:#111214; --surface:#191b1f; --surface2:#212429; --surface3:#272b31;
+  --line:#2b2f36; --line2:#3a3f48;
+  --fg:#eceef2; --fg2:#a6abb6; --fg3:#707682;
+  --accent:#9db0d6; --accent2:#a99fd0; --accent-soft:rgba(157,176,214,.13); --accent-bg:#566a9c;
+  --card-grad:linear-gradient(135deg,#2c3039 0%,#1f2228 58%,#181a1e 100%);
+  --play-bg:#2d3138; --play-fg:#eceef2;
+  --row-alt:transparent;
+  --chip-bg:rgba(255,255,255,.055);
+  --title:#ead9ae;
+  --shadow:0 10px 30px rgba(0,0,0,.42); --shadow-s:0 2px 12px rgba(0,0,0,.3);
+}
+body[data-theme="claro"]{
+  --bg:#eceef1; --surface:#ffffff; --surface2:#f4f5f7; --surface3:#eceef2;
+  --line:#e0e3e8; --line2:#ccd1d9;
+  --fg:#1c1f24; --fg2:#575d69; --fg3:#8b919c;
+  --accent:#4a5f8f; --accent2:#7a6aa8; --accent-soft:rgba(74,95,143,.1); --accent-bg:#4a5f8f;
+  --card-grad:linear-gradient(135deg,#3c414d 0%,#2a2e37 100%);
+  --play-bg:#2a2e37; --play-fg:#fff;
+  --chip-bg:rgba(0,0,0,.045);
+  --title:#7a5a1e;
+  --shadow:0 10px 28px rgba(30,35,45,.12); --shadow-s:0 2px 10px rgba(30,35,45,.07);
+}
+body{--neon-a-glow:rgba(157,176,214,.22);--neon-c-glow:rgba(169,159,208,.2)}
+.culto::after{background:radial-gradient(circle,rgba(255,255,255,.08),transparent 70%)}
+.c-sub,.c-badge{color:#d3d7e0}.c-data{color:#e4e7ee}
+.avatar{background:var(--accent-bg)}
+.filtro.ativo{background:var(--accent-bg);border-color:var(--accent-bg)}
+.sem-row.atual .s-num{background:var(--accent-bg)}
+.q:hover span.q-i{box-shadow:0 8px 18px rgba(0,0,0,.2)}
+.t-esc i:nth-child(1){background:#191b1f}.t-esc i:nth-child(2){background:#9db0d6}
+.t-cla i:nth-child(1){background:#fff}.t-cla i:nth-child(2){background:#4a5f8f}
+.btn-tocar-tudo{background:var(--accent-bg);box-shadow:none;border-radius:14px;padding:.55rem 1rem}
+.btn-tocar-tudo:hover{box-shadow:0 4px 14px rgba(0,0,0,.28)}
+.tag-treino{background:var(--accent-soft) !important;color:var(--accent) !important;border:1px solid color-mix(in srgb,var(--accent) 32%,transparent) !important;box-shadow:none !important}
+.tag-treino:hover{box-shadow:none !important;background:color-mix(in srgb,var(--accent) 22%,transparent) !important}
+
+/* ── cartões de música bem separados ── */
+#repList{display:flex;flex-direction:column;gap:.7rem}
+.song-wrap,.song-wrap:nth-child(odd){background:var(--surface2);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-s);transition:border-color .2s,background .2s}
+.song-wrap:hover{background:var(--surface2);border-color:var(--line2)}
+.song{padding:.85rem .8rem}
+.s-num{width:32px;height:32px;border-radius:10px;background:var(--surface);border:1px solid var(--line2);color:var(--accent);font-size:.8rem}
+.s-name{font-size:1rem;font-weight:700;letter-spacing:.005em}
+.s-tags{margin-top:.45rem;gap:.4rem}
+.chip{border-radius:7px}
+.chip-tom{background:var(--accent-soft);color:var(--accent)}
+.medley-box{margin:0 .8rem .8rem 4rem}
+@media(max-width:620px){
+  #repList{gap:.65rem}
+  .song{padding:.85rem .65rem}
+  .song-wrap.aberto{background:var(--surface2);border-color:var(--line2)}
+  .ibtn.play{background:var(--accent-soft);color:var(--accent)}
+  .links{background:var(--surface)}
+}
+#repSemResultado{margin:0}
+.panel{box-shadow:none}
+
+/* ── Ordem do culto ── */
+.home-grid{grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr)}
+@media(max-width:719px){.home-grid{grid-template-columns:1fr}}
+.setlist{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:1rem .9rem .8rem;box-shadow:var(--shadow-s);display:flex;flex-direction:column;min-width:0}
+.sl-h{display:flex;align-items:center;justify-content:space-between;gap:.6rem;margin-bottom:.55rem;padding:0 .2rem}
+.sl-h h3{font-size:1.02rem;font-weight:800;display:flex;align-items:center;gap:.55rem}
+.sl-h h3 i{color:var(--accent);font-size:.95rem}
+.sl-list{list-style:none;display:flex;flex-direction:column}
+.sl-list li{display:flex;align-items:center;gap:.7rem;padding:.6rem .35rem;border-top:1px solid var(--line);cursor:pointer;border-radius:10px;transition:background .15s}
+.sl-list li:first-child{border-top:none}
+.sl-list li:hover{background:var(--surface2)}
+.sl-list li:active{background:var(--surface3)}
+.sl-n{flex:0 0 26px;height:26px;border-radius:8px;background:var(--surface2);border:1px solid var(--line2);color:var(--accent);font-size:.72rem;font-weight:800;display:flex;align-items:center;justify-content:center}
+.sl-t{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.25}
+.sl-t b{font-size:.9rem;font-weight:700;color:var(--fg);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sl-t small{font-size:.7rem;color:var(--fg3);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sl-t em{font-style:normal;font-size:.66rem;color:var(--medley);font-weight:700}
+.sl-tom{flex:0 0 auto;font-size:.72rem;font-weight:800;color:var(--accent);background:var(--accent-soft);padding:.2rem .5rem;border-radius:7px}
+.sl-vazio{color:var(--fg3);font-size:.84rem;font-style:italic;padding:.8rem .3rem !important;cursor:default !important}
+.song-wrap.destaque{animation:slflash 1.4s ease}
+@keyframes slflash{0%,35%{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}100%{}}
+.quick-fim{margin-top:1rem;box-shadow:none}
+
 </style>
 </head>
 <body>
@@ -761,7 +844,7 @@ body[data-theme="claro"] .cx-c{color:#e8590c}
   <div class="topbar-in">
     <button class="brand" onclick="irPara('home')" aria-label="Início">
       <svg viewBox="0 0 40 40" aria-hidden="true">
-        <defs><linearGradient id="lgWave" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4f7cff"/><stop offset="1" stop-color="#7c5cff"/></linearGradient></defs>
+        <defs><linearGradient id="lgWave" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d9c79a"/><stop offset="1" stop-color="#93a8d4"/></linearGradient></defs>
         <g fill="url(#lgWave)">
           <rect x="3" y="15" width="3.4" height="10" rx="1.7"/><rect x="9" y="9" width="3.4" height="22" rx="1.7"/>
           <rect x="15" y="3" width="3.4" height="34" rx="1.7"/><rect x="21" y="11" width="3.4" height="18" rx="1.7"/>
@@ -840,16 +923,9 @@ body[data-theme="claro"] .cx-c{color:#e8590c}
         <button class="btn-gold" onclick="irRepertorio()">Ver Programação <i class="fa-solid fa-arrow-right"></i></button>
       </div>
 
-      <div class="quick">
-        <h3>Acesso Rápido</h3>
-        <div class="q-grid">
-          <button class="q" onclick="irRepertorio()"><span class="q-i"><i class="fa-solid fa-music"></i></span>Repertório</button>
-          <button class="q" onclick="irPara('escala')"><span class="q-i"><i class="fa-solid fa-users"></i></span>Escala</button>
-          <button class="q" onclick="irPara('avisos')"><span class="q-i"><i class="fa-solid fa-bullhorn"></i></span>Avisos</button>
-          <button class="q nav-cultos" onclick="irPara('cultos')"><span class="q-i"><i class="fa-regular fa-calendar"></i></span>Cultos</button>
-          <button class="q" onclick="irPara('config')"><span class="q-i"><i class="fa-solid fa-gear"></i></span>Configurações</button>
-          <button class="q" onclick="irPara('ajuda')"><span class="q-i"><i class="fa-solid fa-circle-question"></i></span>Ajuda</button>
-        </div>
+      <div class="setlist" id="setlistBox">
+        <div class="sl-h"><h3><i class="fa-solid fa-list-ol"></i> Ordem do culto</h3><span class="count-pill" id="slCount" style="display:none"></span></div>
+        <ol class="sl-list" id="setlist"><li class="sl-vazio">Carregando…</li></ol>
       </div>
     </div>
 
@@ -871,6 +947,18 @@ body[data-theme="claro"] .cx-c{color:#e8590c}
         <span><i class="ibtn sm sp" style="pointer-events:none"><i class="fa-brands fa-spotify"></i></i> Spotify</span>
         <span><i class="ibtn sm ci" style="pointer-events:none"><i class="fa-solid fa-music"></i></i> Cifra</span>
         <span><i class="ibtn sm play" style="pointer-events:none"><i class="fa-solid fa-play"></i></i> Tocar a partir daqui</span>
+      </div>
+    </div>
+
+    <div class="quick quick-fim">
+      <h3>Acesso Rápido</h3>
+      <div class="q-grid">
+        <button class="q" onclick="irRepertorio()"><span class="q-i"><i class="fa-solid fa-music"></i></span>Repertório</button>
+        <button class="q" onclick="irPara('escala')"><span class="q-i"><i class="fa-solid fa-users"></i></span>Escala</button>
+        <button class="q" onclick="irPara('avisos')"><span class="q-i"><i class="fa-solid fa-bullhorn"></i></span>Avisos</button>
+        <button class="q nav-cultos" onclick="irPara('cultos')"><span class="q-i"><i class="fa-regular fa-calendar"></i></span>Cultos</button>
+        <button class="q" onclick="irPara('config')"><span class="q-i"><i class="fa-solid fa-gear"></i></span>Configurações</button>
+        <button class="q" onclick="irPara('ajuda')"><span class="q-i"><i class="fa-solid fa-circle-question"></i></span>Ajuda</button>
       </div>
     </div>
   </section>
@@ -1163,9 +1251,30 @@ function renderRepertorio(tituloVazio,msgVazio){
   el('buscaRep').value='';
   if(!rep.length){
     el('repList').innerHTML=emptyHtml('fa-calendar-xmark',tituloVazio||'Sem programação',msgVazio||'Nenhuma música cadastrada.');
+    renderSetlist();
     return;
   }
   el('repList').innerHTML=rep.map(songHtml).join('')+'<div class="empty" id="repSemResultado" style="display:none;padding:1.4rem"><p>Nenhuma música encontrada.</p></div>';
+  renderSetlist();
+}
+function renderSetlist(){
+  var rep=_repertorioAtual||[], ul=el('setlist'), c=el('slCount');
+  if(!ul) return;
+  if(c){c.style.display=rep.length?'':'none';c.textContent=rep.length+(rep.length===1?' música':' músicas');}
+  if(!rep.length){ul.innerHTML='<li class="sl-vazio">Nenhuma música na programação.</li>';return;}
+  ul.innerHTML=rep.map(function(m,i){
+    var n=String(m.nome||'—'), p=n.indexOf(' - '), t=p>0?n.slice(0,p):n, art=p>0?n.slice(p+3):'';
+    var ps=(m.partes||[]).length?'<em>Medley · '+((m.partes||[]).length+1)+' músicas</em>':'';
+    return '<li onclick="irMusica('+i+')"><span class="sl-n">'+(i+1)+'</span><span class="sl-t"><b>'+esc(t)+'</b>'+(art?'<small>'+esc(art)+'</small>':'')+ps+'</span>'+(m.tom?'<span class="sl-tom">'+esc(m.tom)+'</span>':'')+'</li>';
+  }).join('');
+}
+function irMusica(i){
+  var q=el('buscaRep'); if(q&&q.value){q.value='';filtrarMusicas('');}
+  var ws=document.querySelectorAll('#repList .song-wrap'), w=ws[i]; if(!w) return;
+  w.scrollIntoView({behavior:'smooth',block:'center'});
+  w.classList.remove('destaque'); void w.offsetWidth; w.classList.add('destaque');
+  if(window.matchMedia('(max-width:620px)').matches) w.classList.add('aberto');
+  setTimeout(function(){w.classList.remove('destaque');},1500);
 }
 function filtrarMusicas(q){
   q=(q||'').toLowerCase().trim();
