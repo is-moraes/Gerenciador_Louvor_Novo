@@ -835,6 +835,36 @@ body{--neon-a-glow:rgba(157,176,214,.22);--neon-c-glow:rgba(169,159,208,.2)}
 @keyframes slflash{0%,35%{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}100%{}}
 .quick-fim{margin-top:1rem;box-shadow:none}
 
+/* ── Cartões de culto (semanal / avulso) ── */
+.culto-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:1rem;margin-top:1rem}
+.alt-wrap{display:contents}
+.culto-alt{position:relative;display:flex;flex-direction:column;justify-content:space-between;gap:.7rem;min-height:196px;padding:1.15rem;border-radius:22px;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-s);color:var(--fg);text-decoration:none;overflow:hidden;transition:transform .18s,border-color .2s,background .2s}
+.culto-alt:hover{transform:translateY(-2px);border-color:var(--line2);background:var(--surface2)}
+.culto-alt:active{transform:scale(.985)}
+.culto-alt::before{content:'';position:absolute;left:0;top:18px;bottom:18px;width:4px;border-radius:0 4px 4px 0;background:var(--gold)}
+.culto-alt.sem::before{background:var(--accent)}
+.ca-ico{width:42px;height:42px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:1rem;background:color-mix(in srgb,var(--gold) 16%,transparent);color:var(--gold)}
+.culto-alt.sem .ca-ico{background:var(--accent-soft);color:var(--accent)}
+body[data-theme="claro"] .culto-alt.esp .ca-ico{color:#a8741a}
+.ca-txt{display:flex;flex-direction:column;gap:.25rem;min-width:0}
+.ca-txt small{font-size:.74rem;font-weight:700;color:var(--fg2);letter-spacing:.02em}
+.ca-txt b{font-size:clamp(1.25rem,4.4vw,1.6rem);font-weight:800;line-height:1.1;text-transform:uppercase;word-break:break-word}
+.ca-data{font-size:.8rem;color:var(--fg2);font-weight:500;display:flex;align-items:center;gap:.4rem}
+.ca-go{align-self:flex-start;display:inline-flex;align-items:center;gap:.5rem;padding:.55rem .95rem;border-radius:12px;border:1px solid var(--line2);font-weight:800;font-size:.8rem;background:var(--surface2);color:var(--fg)}
+.culto-alt:hover .ca-go{border-color:var(--accent);color:var(--accent)}
+@media(min-width:620px){.culto-row{grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr))}}
+.setlist{margin-top:1rem}
+@media(min-width:900px){
+  .sl-list{display:grid;grid-template-columns:1fr 1fr;column-gap:1.4rem}
+  .sl-list li,.sl-list li:first-child{border-top:none;border-bottom:1px solid var(--line)}
+}
+@media(max-width:619px){
+  .culto-row{gap:.7rem}
+  .culto-alt{min-height:0;display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-areas:"ico txt" "go go";align-items:center;column-gap:.85rem;row-gap:.8rem;padding:1rem 1rem 1rem 1.15rem}
+  .ca-ico{grid-area:ico}.ca-txt{grid-area:txt}.ca-go{grid-area:go}
+  .ca-txt b{font-size:1.2rem}
+}
+
 </style>
 </head>
 <body>
@@ -910,7 +940,7 @@ body{--neon-a-glow:rgba(157,176,214,.22);--neon-c-glow:rgba(169,159,208,.2)}
       </div>
     </div>
 
-    <div class="home-grid">
+    <div class="culto-row" id="cultoRow">
       <div class="culto">
         <div class="c-nav">
           <button onclick="navSem(-1)" aria-label="Semana anterior"><i class="fa-solid fa-chevron-left"></i></button>
@@ -922,12 +952,13 @@ body{--neon-a-glow:rgba(157,176,214,.22);--neon-c-glow:rgba(169,159,208,.2)}
         <div class="c-data"><i class="fa-regular fa-calendar-check"></i> <span id="cultoData">—</span></div>
         <button class="btn-gold" onclick="irRepertorio()">Ver Programação <i class="fa-solid fa-arrow-right"></i></button>
       </div>
+      <div class="alt-wrap" id="cultoAlt"></div>
+    </div>
 
-      <div class="setlist" id="setlistBox">
+    <div class="setlist" id="setlistBox">
         <div class="sl-h"><h3><i class="fa-solid fa-list-ol"></i> Ordem do culto</h3><span class="count-pill" id="slCount" style="display:none"></span></div>
         <ol class="sl-list" id="setlist"><li class="sl-vazio">Carregando…</li></ol>
       </div>
-    </div>
 
     <div class="panel" id="secRepertorio">
       <div class="sec-h">
@@ -1146,6 +1177,36 @@ function aplicarContexto(c){
   var ref=c.titulo+(c.data?' · '+c.data:'');
   el('escalaSub').textContent=ref;
   el('avisosSub').textContent=ref;
+}
+
+/* ── Cartões de navegação entre culto semanal e culto avulso ── */
+var _idMin='';
+function urlCulto(avId){return window.location.pathname+'?id='+encodeURIComponent(_idMin)+(avId?'&avulso='+encodeURIComponent(avId):'');}
+function renderAlt(cards){
+  var box=el('cultoAlt'); if(!box) return;
+  box.innerHTML=cards.map(function(c){
+    return '<a class="culto-alt '+c.tipo+'" href="'+esc(c.href)+'">'+
+      '<span class="ca-ico"><i class="fa-solid '+c.icone+'"></i></span>'+
+      '<span class="ca-txt"><small>'+esc(c.label)+'</small><b>'+esc(c.titulo)+'</b>'+(c.data?'<span class="ca-data"><i class="fa-regular fa-calendar-check"></i> '+esc(c.data)+'</span>':'')+'</span>'+
+      '<span class="ca-go">'+esc(c.cta)+' <i class="fa-solid fa-arrow-right"></i></span></a>';
+  }).join('');
+  box.style.display=cards.length?'contents':'none';
+}
+function altAvulsos(avs){
+  var ids=Object.keys(avs||{}).filter(function(k){var a=avs[k];return a&&a.programacao;});
+  var hoje=new Date().toISOString().slice(0,10);
+  ids.sort(function(x,y){
+    var dx=avs[x].data||'9999',dy=avs[y].data||'9999',fx=dx>=hoje?0:1,fy=dy>=hoje?0:1;
+    return fx!==fy?fx-fy:(fx?dy.localeCompare(dx):dx.localeCompare(dy));
+  });
+  renderAlt(ids.map(function(k){
+    var a=avs[k],d=a.data?new Date(a.data+'T12:00'):null;
+    return {tipo:'esp',href:urlCulto(k),icone:'fa-star',label:'Culto Especial',titulo:a.nome||'Culto Especial',data:d?fmtDataCurta(d):'',cta:'Abrir'};
+  }));
+}
+function altSemanal(){
+  var s=semISO(),dom=domingoISO(ano,s);
+  renderAlt([{tipo:'sem',href:urlCulto(''),icone:'fa-church',label:'Culto de Domingo',titulo:'Programação da semana',data:fmtDataCurta(dom),cta:'Ir para o culto semanal'}]);
 }
 
 /* ── Semana normal ── */
@@ -1425,6 +1486,7 @@ function copiarLinkAtual(){
   var id=params.get('id');
   var avulsoId=params.get('avulso');
 
+  _idMin=id||'';
   if(!id){renderErroGeral('fa-link-slash','Link Inválido','Solicite o link correto ao seu líder.');return;}
 
   /* MODO AVULSO: link isolado */
@@ -1436,6 +1498,7 @@ function copiarLinkAtual(){
       var av=(doc.data().avulsos||{})[avulsoId];
       if(!av){renderErroGeral('fa-star','Culto não encontrado','Culto não encontrado ou removido.');return;}
       renderAvulso(av);
+      altSemanal();
     }).catch(function(err){renderErroGeral('fa-triangle-exclamation','Erro de Conexão',err.message);});
     return;
   }
@@ -1453,6 +1516,7 @@ function copiarLinkAtual(){
     }
     if(!semAtual){semAtual=(data.programacao||{}).semana||semISO();}
     renderSem(semAtual);
+    altAvulsos(data.avulsos);
   },function(err){renderErroGeral('fa-triangle-exclamation','Erro de Conexão',err.message);});
 })();
 
