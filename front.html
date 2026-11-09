@@ -835,34 +835,41 @@ body{--neon-a-glow:rgba(157,176,214,.22);--neon-c-glow:rgba(169,159,208,.2)}
 @keyframes slflash{0%,35%{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}100%{}}
 .quick-fim{margin-top:1rem;box-shadow:none}
 
-/* ── Cartões de culto (semanal / avulso) ── */
+/* ── Cartões de culto (semanal / avulso) — cores por tipo ── */
 .culto-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:1rem;margin-top:1rem}
+.culto-row:not(.tem-alt){grid-template-columns:1fr}
 .alt-wrap{display:contents}
-.culto-alt{position:relative;display:flex;flex-direction:column;justify-content:space-between;gap:.7rem;min-height:196px;padding:1.15rem;border-radius:22px;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-s);color:var(--fg);text-decoration:none;overflow:hidden;transition:transform .18s,border-color .2s,background .2s}
-.culto-alt:hover{transform:translateY(-2px);border-color:var(--line2);background:var(--surface2)}
+/* semanal = ardósia (azul-acinzentado) | especial = bronze */
+.culto,.culto-alt.sem{background:linear-gradient(135deg,#36445f 0%,#252d40 58%,#1b212e 100%);border-color:rgba(150,175,225,.18)}
+.culto-alt.esp,body.modo-avulso .culto:not(.culto-alt){background:linear-gradient(135deg,#5e4826 0%,#3d2f1a 58%,#2b2113 100%);border-color:rgba(235,190,110,.22)}
+.culto-alt{text-decoration:none;cursor:pointer;transition:transform .18s,filter .2s}
+.culto-alt:hover{transform:translateY(-2px);filter:brightness(1.08)}
 .culto-alt:active{transform:scale(.985)}
-.culto-alt::before{content:'';position:absolute;left:0;top:18px;bottom:18px;width:4px;border-radius:0 4px 4px 0;background:var(--gold)}
-.culto-alt.sem::before{background:var(--accent)}
-.ca-ico{width:42px;height:42px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:1rem;background:color-mix(in srgb,var(--gold) 16%,transparent);color:var(--gold)}
-.culto-alt.sem .ca-ico{background:var(--accent-soft);color:var(--accent)}
-body[data-theme="claro"] .culto-alt.esp .ca-ico{color:#a8741a}
-.ca-txt{display:flex;flex-direction:column;gap:.25rem;min-width:0}
-.ca-txt small{font-size:.74rem;font-weight:700;color:var(--fg2);letter-spacing:.02em}
-.ca-txt b{font-size:clamp(1.25rem,4.4vw,1.6rem);font-weight:800;line-height:1.1;text-transform:uppercase;word-break:break-word}
-.ca-data{font-size:.8rem;color:var(--fg2);font-weight:500;display:flex;align-items:center;gap:.4rem}
-.ca-go{align-self:flex-start;display:inline-flex;align-items:center;gap:.5rem;padding:.55rem .95rem;border-radius:12px;border:1px solid var(--line2);font-weight:800;font-size:.8rem;background:var(--surface2);color:var(--fg)}
-.culto-alt:hover .ca-go{border-color:var(--accent);color:var(--accent)}
-@media(min-width:620px){.culto-row{grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr))}}
+.culto-alt .c-badge{padding-right:0}
+.culto-alt .btn-gold{background:rgba(255,255,255,.13);color:#fff;border:1px solid rgba(255,255,255,.26);box-shadow:none}
+.culto-alt:hover .btn-gold{background:rgba(255,255,255,.2);transform:none}
+.culto-alt.esp .c-badge i{color:#f3c76b}
+.culto-alt.sem .c-badge i{color:#a9bde8}
+body:not(.modo-avulso) .culto:not(.culto-alt) .c-badge i{color:#a9bde8}
+body.modo-avulso .culto:not(.culto-alt) .c-badge i{color:#f3c76b}
 .setlist{margin-top:1rem}
 @media(min-width:900px){
   .sl-list{display:grid;grid-template-columns:1fr 1fr;column-gap:1.4rem}
   .sl-list li,.sl-list li:first-child{border-top:none;border-bottom:1px solid var(--line)}
 }
+/* mobile: cartões lado a lado, compactos */
 @media(max-width:619px){
-  .culto-row{gap:.7rem}
-  .culto-alt{min-height:0;display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-areas:"ico txt" "go go";align-items:center;column-gap:.85rem;row-gap:.8rem;padding:1rem 1rem 1rem 1.15rem}
-  .ca-ico{grid-area:ico}.ca-txt{grid-area:txt}.ca-go{grid-area:go}
-  .ca-txt b{font-size:1.2rem}
+  .culto-row.tem-alt{grid-template-columns:1fr 1fr;gap:.65rem}
+  .culto-row.tem-alt .culto-alt.full{grid-column:1/-1}
+  .culto-row.tem-alt .culto{min-height:0;padding:.9rem .85rem;gap:.35rem;border-radius:18px}
+  .culto-row.tem-alt .c-badge{font-size:.7rem;padding-right:0}
+  .culto-row.tem-alt .c-title{font-size:1.28rem}
+  .culto-row.tem-alt .c-sub{font-size:.68rem}
+  .culto-row.tem-alt .c-data{font-size:.7rem;align-items:flex-start}
+  .culto-row.tem-alt .c-nav{position:static;order:5;margin-top:.3rem}
+  .culto-row.tem-alt .c-nav button{width:30px;height:28px}
+  .culto-row.tem-alt .btn-gold{order:6;align-self:stretch;justify-content:center;margin-top:auto;padding:.55rem .5rem;font-size:.74rem;gap:.4rem}
+  .culto-row.tem-alt .culto-alt .btn-gold{margin-top:auto}
 }
 
 </style>
@@ -1183,14 +1190,16 @@ function aplicarContexto(c){
 var _idMin='';
 function urlCulto(avId){return window.location.pathname+'?id='+encodeURIComponent(_idMin)+(avId?'&avulso='+encodeURIComponent(avId):'');}
 function renderAlt(cards){
-  var box=el('cultoAlt'); if(!box) return;
-  box.innerHTML=cards.map(function(c){
-    return '<a class="culto-alt '+c.tipo+'" href="'+esc(c.href)+'">'+
-      '<span class="ca-ico"><i class="fa-solid '+c.icone+'"></i></span>'+
-      '<span class="ca-txt"><small>'+esc(c.label)+'</small><b>'+esc(c.titulo)+'</b>'+(c.data?'<span class="ca-data"><i class="fa-regular fa-calendar-check"></i> '+esc(c.data)+'</span>':'')+'</span>'+
-      '<span class="ca-go">'+esc(c.cta)+' <i class="fa-solid fa-arrow-right"></i></span></a>';
+  var box=el('cultoAlt'), row=el('cultoRow'); if(!box) return;
+  box.innerHTML=cards.map(function(c,k){
+    var full=(cards.length%2===0&&k===cards.length-1)?' full':'';
+    return '<a class="culto culto-alt '+c.tipo+full+'" href="'+esc(c.href)+'">'+
+      '<div class="c-badge"><i class="fa-solid '+c.icone+'"></i> <span>'+esc(c.label)+'</span></div>'+
+      '<div class="c-title">'+esc(c.titulo)+'</div>'+
+      (c.data?'<div class="c-data"><i class="fa-regular fa-calendar-check"></i> <span>'+esc(c.data)+'</span></div>':'')+
+      '<span class="btn-gold">'+esc(c.cta)+' <i class="fa-solid fa-arrow-right"></i></span></a>';
   }).join('');
-  box.style.display=cards.length?'contents':'none';
+  if(row) row.classList.toggle('tem-alt',cards.length>0);
 }
 function altAvulsos(avs){
   var ids=Object.keys(avs||{}).filter(function(k){var a=avs[k];return a&&a.programacao;});
@@ -1201,12 +1210,12 @@ function altAvulsos(avs){
   });
   renderAlt(ids.map(function(k){
     var a=avs[k],d=a.data?new Date(a.data+'T12:00'):null;
-    return {tipo:'esp',href:urlCulto(k),icone:'fa-star',label:'Culto Especial',titulo:a.nome||'Culto Especial',data:d?fmtDataCurta(d):'',cta:'Abrir'};
+    return {tipo:'esp',href:urlCulto(k),icone:'fa-star',label:'Culto Especial',titulo:a.nome||'Culto Especial',data:d?fmtDataCurta(d):'',cta:'Abrir culto'};
   }));
 }
 function altSemanal(){
   var s=semISO(),dom=domingoISO(ano,s);
-  renderAlt([{tipo:'sem',href:urlCulto(''),icone:'fa-church',label:'Culto de Domingo',titulo:'Programação da semana',data:fmtDataCurta(dom),cta:'Ir para o culto semanal'}]);
+  renderAlt([{tipo:'sem',href:urlCulto(''),icone:'fa-church',label:'Culto de Domingo',titulo:'Semana '+s,data:fmtDataCurta(dom),cta:'Culto semanal'}]);
 }
 
 /* ── Semana normal ── */
