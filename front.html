@@ -871,6 +871,39 @@ body.modo-avulso .culto:not(.culto-alt) .c-badge i{color:#f3c76b}
   .culto-row.tem-alt .btn-gold{order:6;align-self:stretch;justify-content:center;margin-top:auto;padding:.55rem .5rem;font-size:.74rem;gap:.4rem}
   .culto-row.tem-alt .culto-alt .btn-gold{margin-top:auto}
 }
+/* ══ MODO AVULSO: identidade dourada ══ */
+body.modo-avulso{
+  --accent:#e3b75c; --accent2:#c9953a; --accent-soft:rgba(227,183,92,.14); --accent-bg:#a8792a;
+  --title:#f1d491;
+}
+body[data-theme="claro"].modo-avulso{--accent:#9a6a14;--accent-soft:rgba(154,106,20,.1);--accent-bg:#9a6a14;--title:#7a5310}
+body.modo-avulso .topbar-in{border-color:rgba(227,183,92,.35);box-shadow:0 0 0 1px rgba(227,183,92,.08),0 6px 22px rgba(160,110,30,.18)}
+body.modo-avulso .panel,body.modo-avulso .setlist,body.modo-avulso .quick{border-color:rgba(227,183,92,.22);position:relative}
+body.modo-avulso .panel::before,body.modo-avulso .setlist::before{content:'';position:absolute;left:22px;right:22px;top:-1px;height:2px;border-radius:2px;background:linear-gradient(90deg,transparent,#e3b75c,transparent)}
+body.modo-avulso .song-wrap{border-color:rgba(227,183,92,.2)}
+body.modo-avulso .s-num,body.modo-avulso .sl-n{border-color:rgba(227,183,92,.45);color:#e3b75c}
+body.modo-avulso .btn-tocar-tudo{background:linear-gradient(135deg,#f0c766,#c9953a);color:#2a1c00}
+body.modo-avulso .bnav{border-top-color:rgba(227,183,92,.35)}
+body.modo-avulso .hero::after{content:'★ CULTO ESPECIAL';position:absolute;top:14px;right:14px;padding:.3rem .7rem;border-radius:20px;background:linear-gradient(135deg,#f0c766,#c9953a);color:#2a1c00;font-size:.66rem;font-weight:800;letter-spacing:.08em;z-index:3}
+/* v2: mais dourado — superfícies bronze e rótulos dourados */
+body.modo-avulso{
+  --bg:#13110d; --surface:#1e1a13; --surface2:#272016; --surface3:#2f271b;
+  --line:#3b3121; --line2:#54442a; --fg2:#bcb09a; --fg3:#857a66;
+  --chip-bg:rgba(227,183,92,.07); --gold-lbl:#f0cf86;
+}
+body[data-theme="claro"].modo-avulso{
+  --bg:#f4eee2; --surface:#fffdf7; --surface2:#fbf3e3; --surface3:#f5e9d2;
+  --line:#ecdcbc; --line2:#dfc796; --fg2:#6d5f47; --fg3:#9c8d72;
+  --chip-bg:rgba(154,106,20,.06); --gold-lbl:#8a5e12;
+}
+body.modo-avulso .setlist,body.modo-avulso .panel,body.modo-avulso .quick{background:linear-gradient(160deg,color-mix(in srgb,#c9953a 13%,var(--surface)) 0%,var(--surface) 55%);border-color:color-mix(in srgb,#e3b75c 38%,transparent)}
+body.modo-avulso .song-wrap,body.modo-avulso .song-wrap:nth-child(odd){background:linear-gradient(135deg,color-mix(in srgb,#c9953a 12%,var(--surface2)),var(--surface2));border-color:color-mix(in srgb,#e3b75c 30%,transparent)}
+body.modo-avulso .sl-h h3,body.modo-avulso .sec-h h2,body.modo-avulso .quick h3,body.modo-avulso .page-title h1{color:var(--gold-lbl)}
+body.modo-avulso .sl-t b{color:var(--gold-lbl)}
+body.modo-avulso .count-pill,body.modo-avulso .sl-tom,body.modo-avulso .chip-tom{background:color-mix(in srgb,#e3b75c 18%,transparent);color:var(--gold-lbl)}
+body.modo-avulso .bnav button.ativo,body.modo-avulso .dnav button.ativo{color:var(--gold-lbl)}
+body.modo-avulso .s-name{color:var(--gold-lbl)}
+body.modo-avulso .brand-t,body.modo-avulso .topbar-in b{color:var(--gold-lbl)}
 
 </style>
 </head>
