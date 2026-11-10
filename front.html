@@ -905,6 +905,12 @@ body.modo-avulso .bnav button.ativo,body.modo-avulso .dnav button.ativo{color:va
 body.modo-avulso .s-name{color:var(--gold-lbl)}
 body.modo-avulso .brand-t,body.modo-avulso .topbar-in b{color:var(--gold-lbl)}
 
+/* banner personalizado pelo gerenciador */
+.hero.com-foto{background-size:cover;background-repeat:no-repeat}
+.hero.com-foto::before{background:linear-gradient(90deg,rgba(5,7,22,var(--bn-ov,.55)) 0%,rgba(5,7,22,calc(var(--bn-ov,.55) * .55)) 55%,rgba(5,7,22,calc(var(--bn-ov,.55) * .2)) 100%)}
+.hero.com-foto h1,.hero.com-foto p{text-shadow:0 2px 14px rgba(0,0,0,.4)}
+.hero h1{word-break:break-word}
+
 </style>
 </head>
 <body>
@@ -974,8 +980,8 @@ body.modo-avulso .brand-t,body.modo-avulso .topbar-in b{color:var(--gold-lbl)}
         <g fill="#16121f"><rect x="606" y="118" width="9" height="114" rx="1.5"/><rect x="581" y="146" width="59" height="9" rx="1.5"/></g>
       </svg>
       <div class="hero-txt">
-        <h1>Bem-vindo(a)!</h1>
-        <p>Que a presença de Deus nos guie em cada canção.</p>
+        <h1 id="heroH1">Bem-vindo(a)!</h1>
+        <p id="heroP">Que a presença de Deus nos guie em cada canção.</p>
         <div class="hero-bar"></div>
       </div>
     </div>
@@ -1145,11 +1151,27 @@ function emptyHtml(icon,titulo,msg){
 }
 
 /* ── Tema ── */
+var _bannerCfg=null;
+function bnImgOk(u){u=String(u||'').trim();return (/^https:\/\//i.test(u)||/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+\/=]+$/.test(u))?u:'';}
 function aplicarBanner(t){
   var hero=el('heroBanner'); if(!hero) return;
-  var url=urlOk(t==='claro'?BANNER_CLARO:BANNER_ESCURO);
-  if(url){hero.style.backgroundImage='url("'+url+'")';hero.classList.add('com-foto');}
-  else{hero.style.backgroundImage='';hero.classList.remove('com-foto');}
+  t=t||(document.body.getAttribute('data-theme')==='claro'?'claro':'escuro');
+  var c=_bannerCfg||{};
+  var url=bnImgOk(c.img)||urlOk(t==='claro'?BANNER_CLARO:BANNER_ESCURO);
+  if(url){
+    hero.style.backgroundImage='url("'+url.replace(/["\\\n\r]/g,'')+'")';
+    hero.style.backgroundPosition=c.pos||'center center';
+    hero.style.setProperty('--bn-ov',String((c.ov==null?55:c.ov)/100));
+    hero.classList.add('com-foto');
+  } else {hero.style.backgroundImage='';hero.style.backgroundPosition='';hero.classList.remove('com-foto');}
+  var h=el('heroH1'),p=el('heroP');
+  if(h) h.textContent=c.titulo||'Bem-vindo(a)!';
+  if(p) p.textContent=c.msg||'Que a presença de Deus nos guie em cada canção.';
+}
+function setBannerCfg(b){
+  var novo=JSON.stringify(b||null); if(novo===JSON.stringify(_bannerCfg)) return;
+  _bannerCfg=b||null; aplicarBanner();
+  try{ if(_idMin){ if(_bannerCfg) localStorage.setItem('mlBanner:'+_idMin,novo); else localStorage.removeItem('mlBanner:'+_idMin); } }catch(e){}
 }
 function setTema(t){
   if(t!=='claro'&&t!=='escuro') t='escuro';
@@ -1529,6 +1551,7 @@ function copiarLinkAtual(){
   var avulsoId=params.get('avulso');
 
   _idMin=id||'';
+  try{ var _bc=id&&localStorage.getItem('mlBanner:'+id); if(_bc){ _bannerCfg=JSON.parse(_bc); aplicarBanner(); } }catch(e){}
   if(!id){renderErroGeral('fa-link-slash','Link Inválido','Solicite o link correto ao seu líder.');return;}
 
   /* MODO AVULSO: link isolado */
@@ -1536,7 +1559,7 @@ function copiarLinkAtual(){
     modoAvulso=true;
     col.doc(id).get().then(function(doc){
       if(!doc.exists){renderErroGeral('fa-star','Culto não encontrado','Ministério não encontrado.');return;}
-      _cifras=doc.data().cifras||{};
+      _cifras=doc.data().cifras||{}; setBannerCfg(doc.data().banner);
       var av=(doc.data().avulsos||{})[avulsoId];
       if(!av){renderErroGeral('fa-star','Culto não encontrado','Culto não encontrado ou removido.');return;}
       renderAvulso(av);
@@ -1549,7 +1572,7 @@ function copiarLinkAtual(){
   col.doc(id).onSnapshot(function(doc){
     if(!doc.exists){renderErroGeral('fa-music','Sem Programação','Seu líder ainda não publicou o repertório.');return;}
     var data=doc.data();
-    _cifras=data.cifras||{};
+    _cifras=data.cifras||{}; setBannerCfg(data.banner);
     if(data.programacoes&&Object.keys(data.programacoes).length){
       progs=data.programacoes;
     }else if(data.programacao){
