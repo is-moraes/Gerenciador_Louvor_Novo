@@ -900,6 +900,41 @@
     #painelDomingos .meses-grid{ grid-template-columns:repeat(6,minmax(0,1fr)); }
   }
 
+  /* ══ Banner personalizado ══ */
+  .hero.com-foto{ background-image:var(--bn-img) !important; background-size:cover !important; background-position:var(--bn-pos,center) !important; }
+  .hero.com-foto::before{ background:linear-gradient(90deg,rgba(5,7,22,var(--bn-ov,.55)) 0%,rgba(5,7,22,calc(var(--bn-ov,.55) * .55)) 55%,rgba(5,7,22,calc(var(--bn-ov,.55) * .2)) 100%) !important; }
+  .hero.com-foto .hero-txt h1,.hero.com-foto .hero-txt p{ color:#fff !important; text-shadow:0 2px 14px rgba(0,0,0,.4); }
+  .bn-prev{ position:relative; height:170px; border-radius:18px; overflow:hidden; background:var(--banner-hero) center/cover no-repeat; border:1px solid var(--border); display:flex; align-items:center; padding:1.1rem 1.3rem; margin:.4rem 0 1rem; isolation:isolate; }
+  .bn-prev::before{ content:''; position:absolute; inset:0; z-index:-1; background:var(--hero-ov); }
+  .bn-prev.com-foto{ background-image:var(--bn-img); background-position:var(--bn-pos,center); }
+  .bn-prev.com-foto::before{ background:linear-gradient(90deg,rgba(5,7,22,var(--bn-ov,.55)) 0%,rgba(5,7,22,calc(var(--bn-ov,.55) * .55)) 55%,rgba(5,7,22,calc(var(--bn-ov,.55) * .2)) 100%); }
+  .bn-prev-txt{ display:flex; flex-direction:column; gap:.35rem; max-width:62%; color:var(--hero-fg); }
+  .bn-prev.com-foto .bn-prev-txt{ color:#fff; }
+  .bn-prev-txt b{ font-size:1.7rem; font-weight:800; line-height:1.05; word-break:break-word; }
+  .bn-prev-txt span{ font-size:.85rem; font-weight:600; opacity:.92; line-height:1.4; }
+  .bn-prev-bar{ display:block; width:46px; height:3px; border-radius:3px; background:#f5b83d; margin-top:.3rem; }
+  .bn-prev-tag{ position:absolute; top:.7rem; right:.7rem; font-size:.66rem; font-weight:700; padding:.25rem .6rem; border-radius:20px; background:rgba(0,0,0,.45); color:#fff; letter-spacing:.04em; }
+  .bn-grid{ display:grid; grid-template-columns:1fr 1fr; gap:.8rem 1rem; }
+  .bn-full{ grid-column:1/-1; }
+  .bn-campo{ display:flex; flex-direction:column; gap:.4rem; min-width:0; }
+  .bn-campo > label{ font-size:.76rem; font-weight:700; color:var(--fg2); }
+  .bn-campo > label b{ color:var(--accent); }
+  .bn-input{ width:100%; padding:.68rem .85rem; border-radius:12px; border:1.5px solid var(--border); background:var(--surface2); color:var(--fg); font-family:var(--font); font-size:.86rem; outline:none; }
+  .bn-input:focus{ border-color:var(--accent); }
+  .bn-img-acoes{ display:flex; align-items:center; gap:.6rem; flex-wrap:wrap; }
+  .bn-img-acoes .bn-input{ flex:1; min-width:200px; }
+  .bn-file{ position:relative; overflow:hidden; cursor:pointer; display:inline-flex; align-items:center; gap:.45rem; color:#fff; font-size:.84rem; }
+  .bn-file input{ position:absolute; inset:0; opacity:0; cursor:pointer; }
+  .bn-ou{ font-size:.75rem; color:var(--fg2); font-weight:600; }
+  .bn-dica{ font-size:.72rem; color:var(--fg2); line-height:1.4; }
+  #bnOv{ accent-color:var(--accent); width:100%; margin-top:.35rem; }
+  .bn-acoes{ display:flex; align-items:center; gap:.7rem; flex-wrap:wrap; margin-top:1.1rem; }
+  .bn-acoes .btn-add{ display:inline-flex; align-items:center; gap:.45rem; color:#fff; border:none; cursor:pointer; font-family:var(--font); font-size:.86rem; }
+  .bn-reset{ color:var(--fg2) !important; border-color:var(--border) !important; }
+  .bn-msg{ font-size:.8rem; font-weight:700; color:var(--accent); }
+  .bn-msg.erro{ color:#ff6b6b; }
+  @media(max-width:700px){ .bn-grid{ grid-template-columns:1fr; } .bn-prev{ height:150px; } .bn-prev-txt{ max-width:85%; } .bn-prev-txt b{ font-size:1.4rem; } }
+
 </style>
 </head>
 <body>
@@ -1149,6 +1184,54 @@
       <section class="secao" id="secao-config">
         <div class="secao-titulo"><i class="fa-solid fa-gear"></i> Configuração</div>
   <!-- Cadastro de Contatos -->
+  <div class="wa-card" id="bannerCfgCard">
+    <div class="card-header" style="border:none;margin-bottom:.4rem;"><h2><i class="fa-solid fa-image"></i> Banner principal</h2></div>
+    <p class="wa-desc">Personalize o banner de boas-vindas com uma foto da sua igreja e uma mensagem própria. Ele aparece no portal dos membros e no início deste gerenciador.</p>
+
+    <div class="bn-prev" id="bnPrev">
+      <div class="bn-prev-txt"><b id="bnPrevH">Bem-vindo(a)!</b><span id="bnPrevP">Que a presença de Deus nos guie em cada canção.</span><i class="bn-prev-bar"></i></div>
+      <span class="bn-prev-tag" id="bnPrevTag">Pré-visualização</span>
+    </div>
+
+    <div class="bn-grid">
+      <div class="bn-campo bn-full">
+        <label>Imagem</label>
+        <div class="bn-img-acoes">
+          <label class="btn-add bn-file"><i class="fa-solid fa-upload"></i> Enviar foto<input type="file" id="bnArquivo" accept="image/*" onchange="bnEscolherArquivo(this)"></label>
+          <span class="bn-ou">ou</span>
+          <input type="url" id="bnUrl" class="bn-input" placeholder="cole o link de uma imagem (https://…)" oninput="bnUsarUrl(this.value)">
+        </div>
+        <small class="bn-dica" id="bnImgInfo">Dica: use uma foto horizontal (ex.: 1600 × 600). Enviada por aqui, ela é otimizada automaticamente.</small>
+      </div>
+      <div class="bn-campo">
+        <label for="bnTitulo">Título</label>
+        <input type="text" id="bnTitulo" class="bn-input" maxlength="40" placeholder="Bem-vindo(a)!" oninput="bnPreview()">
+      </div>
+      <div class="bn-campo">
+        <label for="bnMsg">Mensagem</label>
+        <input type="text" id="bnMsg" class="bn-input" maxlength="110" placeholder="Que a presença de Deus nos guie em cada canção." oninput="bnPreview()">
+      </div>
+      <div class="bn-campo">
+        <label for="bnPos">Enquadramento da foto</label>
+        <select id="bnPos" class="bn-input" onchange="bnPreview()">
+          <option value="center top">Mostrar a parte de cima</option>
+          <option value="center center" selected>Centralizado</option>
+          <option value="center bottom">Mostrar a parte de baixo</option>
+        </select>
+      </div>
+      <div class="bn-campo">
+        <label for="bnOv">Escurecer a foto (legibilidade do texto): <b id="bnOvVal">55%</b></label>
+        <input type="range" id="bnOv" min="0" max="85" value="55" oninput="bnPreview()">
+      </div>
+    </div>
+
+    <div class="bn-acoes">
+      <button class="btn-add" id="bnSalvar" onclick="bnSalvar()"><i class="fa-solid fa-floppy-disk"></i> Salvar banner</button>
+      <button class="btn-wa outline bn-reset" onclick="bnRestaurar()"><i class="fa-solid fa-rotate-left"></i> Voltar ao padrão</button>
+      <span class="bn-msg" id="bnMsgStatus"></span>
+    </div>
+  </div>
+
   <div class="wa-card" id="cifraCfgCard">
     <div class="card-header" style="border:none;margin-bottom:.4rem;"><h2><i class="fa-solid fa-music"></i> Leitor de Google Docs (cifras)</h2></div>
     <p class="wa-desc">Permite buscar o texto das cifras direto dos seus documentos do Google Docs, para o portal poder trocar o tom. Configuração feita uma única vez.</p>
@@ -1506,6 +1589,7 @@ function carregarDados(){
     /* carregar avulsos */
     if(data.avulsos) avulsosPorId=data.avulsos;
     cifrasMap=data.cifras||{};
+    bannerCfg=data.banner||null; if(typeof aplicarBannerG==='function') aplicarBannerG();
     renderizarAvulsos();
     /* carregar contatos e grupo WhatsApp */
     document.getElementById('listaContatos').innerHTML='';
@@ -3188,6 +3272,113 @@ function mudarMes(d){
   var _rm=renderizarMeses;
   renderizarMeses=function(){ var r=_rm.apply(this,arguments); atualizarBannerMes(); return r; };
 })();
+
+/* ══ Banner principal personalizado (salvo no Firestore em "banner") ══ */
+var bannerCfg=null, _bnImg='';
+var BN_TIT_PADRAO='Bem-vindo(a)!', BN_MSG_PADRAO='Que a presença de Deus nos guie em cada canção.';
+function bnImgOk(u){ u=String(u||'').trim(); return (/^https:\/\//i.test(u)||/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+\/=]+$/.test(u))?u:''; }
+function bnCssUrl(u){ return 'url("'+u.replace(/["\\\n\r]/g,'')+'")'; }
+function bnAplicarEm(elm,cfg){
+  if(!elm) return;
+  var img=cfg?bnImgOk(cfg.img):'';
+  if(img){
+    elm.style.setProperty('--bn-img',bnCssUrl(img));
+    elm.style.setProperty('--bn-pos',cfg.pos||'center center');
+    elm.style.setProperty('--bn-ov',String((cfg.ov==null?55:cfg.ov)/100));
+    elm.classList.add('com-foto');
+  } else {
+    elm.style.removeProperty('--bn-img'); elm.classList.remove('com-foto');
+  }
+}
+function aplicarBannerG(){
+  var hero=document.querySelector('#secao-inicio .hero')||document.querySelector('.hero');
+  bnAplicarEm(hero,bannerCfg);
+  if(hero){
+    var h=hero.querySelector('.hero-txt h1'), p=hero.querySelector('.hero-txt p');
+    if(h) h.textContent=(bannerCfg&&bannerCfg.titulo)||BN_TIT_PADRAO;
+    if(p) p.textContent=(bannerCfg&&bannerCfg.msg)||BN_MSG_PADRAO;
+  }
+  bnPreencherForm();
+}
+function bnPreencherForm(){
+  var c=bannerCfg||{};
+  if(!document.getElementById('bnTitulo')) return;
+  _bnImg=bnImgOk(c.img);
+  document.getElementById('bnTitulo').value=c.titulo||'';
+  document.getElementById('bnMsg').value=c.msg||'';
+  document.getElementById('bnPos').value=c.pos||'center center';
+  document.getElementById('bnOv').value=c.ov==null?55:c.ov;
+  document.getElementById('bnUrl').value=/^https:/i.test(_bnImg)?_bnImg:'';
+  document.getElementById('bnImgInfo').textContent=_bnImg?(/^data:/.test(_bnImg)?'Foto enviada ('+Math.round(_bnImg.length*0.75/1024)+' KB).':'Usando a imagem do link.'):'Dica: use uma foto horizontal (ex.: 1600 × 600). Enviada por aqui, ela é otimizada automaticamente.';
+  bnPreview();
+}
+function bnColetar(){
+  return {img:_bnImg,
+    titulo:document.getElementById('bnTitulo').value.trim(),
+    msg:document.getElementById('bnMsg').value.trim(),
+    pos:document.getElementById('bnPos').value,
+    ov:parseInt(document.getElementById('bnOv').value,10)||0};
+}
+function bnPreview(){
+  var c=bnColetar();
+  document.getElementById('bnOvVal').textContent=c.ov+'%';
+  document.getElementById('bnPrevH').textContent=c.titulo||BN_TIT_PADRAO;
+  document.getElementById('bnPrevP').textContent=c.msg||BN_MSG_PADRAO;
+  bnAplicarEm(document.getElementById('bnPrev'),c);
+}
+function bnStatus(t,erro){ var m=document.getElementById('bnMsgStatus'); m.textContent=t; m.classList.toggle('erro',!!erro); }
+function bnUsarUrl(v){
+  v=String(v||'').trim();
+  if(!v){ if(!/^data:/.test(_bnImg)) _bnImg=''; bnPreview(); return; }
+  if(!/^https:\/\//i.test(v)){ bnStatus('O link precisa começar com https://',true); return; }
+  bnStatus(''); _bnImg=v;
+  document.getElementById('bnImgInfo').textContent='Usando a imagem do link.';
+  bnPreview();
+}
+function bnEscolherArquivo(inp){
+  var f=inp.files&&inp.files[0]; inp.value=''; if(!f) return;
+  if(!/^image\//.test(f.type)){ bnStatus('Escolha um arquivo de imagem.',true); return; }
+  bnStatus('Otimizando a foto…');
+  var fr=new FileReader();
+  fr.onload=function(){
+    var im=new Image();
+    im.onload=function(){
+      var maxW=1600, w=im.width, h=im.height;
+      if(w>maxW){ h=Math.round(h*maxW/w); w=maxW; }
+      if(h>900){ w=Math.round(w*900/h); h=900; }
+      var cv=document.createElement('canvas'); cv.width=w; cv.height=h;
+      cv.getContext('2d').drawImage(im,0,0,w,h);
+      var q=.82, url=cv.toDataURL('image/jpeg',q);
+      while(url.length>260000 && q>.4){ q-=.08; url=cv.toDataURL('image/jpeg',q); }
+      while(url.length>260000 && w>700){ w=Math.round(w*.8); h=Math.round(h*.8); cv.width=w; cv.height=h; cv.getContext('2d').drawImage(im,0,0,w,h); url=cv.toDataURL('image/jpeg',.7); }
+      _bnImg=url; document.getElementById('bnUrl').value='';
+      document.getElementById('bnImgInfo').textContent='Foto otimizada: '+w+' × '+h+' px, '+Math.round(url.length*0.75/1024)+' KB.';
+      bnStatus('Foto pronta. Clique em “Salvar banner”.'); bnPreview();
+    };
+    im.onerror=function(){ bnStatus('Não foi possível ler esta imagem.',true); };
+    im.src=fr.result;
+  };
+  fr.readAsDataURL(f);
+}
+function bnGravar(valor,okMsg){
+  if(!ministerioId){ bnStatus('Faça login novamente.',true); return; }
+  var b=document.getElementById('bnSalvar'); b.disabled=true;
+  bnStatus('Salvando…');
+  col.doc(ministerioId).update({banner:valor}).then(function(){
+    bannerCfg=valor; aplicarBannerG(); bnStatus(okMsg);
+  }).catch(function(e){
+    bnStatus('Erro ao salvar: '+(e&&e.message?e.message:e),true);
+  }).then(function(){ b.disabled=false; });
+}
+function bnSalvar(){
+  var c=bnColetar(); c.em=Date.now();
+  if(!c.img && !c.titulo && !c.msg){ bnStatus('Escolha uma foto ou escreva um título/mensagem.',true); return; }
+  bnGravar(c,'Banner salvo! Já aparece para os membros.');
+}
+function bnRestaurar(){
+  if(!confirm('Voltar ao banner padrão?')) return;
+  bnGravar(null,'Banner padrão restaurado.');
+}
 </script>
 
 
