@@ -107,8 +107,48 @@
     .user-table tr { display:block; border:1px solid var(--border); border-radius:var(--radius-sm); margin-bottom:.5rem; overflow:hidden; }
   }
   .oculto { display:none !important; }
+  .migra-card { display:flex; align-items:center; gap:1rem; flex-wrap:wrap; border-color:#f59e0b66; background:linear-gradient(135deg,#f59e0b10,var(--surface)); }
+  .migra-card .mi-ic { width:42px; height:42px; border-radius:12px; background:#f59e0b; color:#fff; display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; }
+  .migra-card .mi-txt { flex:1; min-width:220px; font-size:.86rem; color:var(--fg2); line-height:1.5; }
+  .migra-card .mi-txt b { color:var(--fg); }
+  .btn-migrar { color:#b45309; border-color:#f59e0b; background:transparent; }
+  .btn-migrar:hover { background:#f59e0b; color:#fff; }
+  .tag-legado { display:inline-block; margin-top:.25rem; font-size:.66rem; font-weight:700; color:#b45309; background:#f59e0b18; border:1px solid #f59e0b45; border-radius:6px; padding:.05rem .4rem; }
+
+  /* ── Planos e recursos ── */
+  .plano-badge { display:inline-flex; align-items:center; gap:.3rem; padding:.2rem .65rem; border-radius:20px; font-size:.72rem; font-weight:700; border:1.5px solid; white-space:nowrap; }
+  .plano-essencial { background:#64748b18; color:#475569; border-color:#64748b40; }
+  .plano-playlists { background:#0ea5e918; color:#0369a1; border-color:#0ea5e940; }
+  .plano-completo  { background:#7c3aed18; color:#6d28d9; border-color:#7c3aed45; }
+  .plano-personalizado { background:#f59e0b18; color:#b45309; border-color:#f59e0b45; }
+  .plano-legado { background:transparent; color:var(--fg2); border-color:var(--border); border-style:dashed; }
+  .rec-icons { display:flex; gap:.3rem; margin-top:.35rem; }
+  .rec-ic { width:22px; height:22px; border-radius:6px; display:inline-flex; align-items:center; justify-content:center; font-size:.68rem; background:var(--bg); color:#c4c9d6; border:1px solid var(--border); }
+  .rec-ic.on.separador { background:#7c3aed; color:#fff; border-color:#7c3aed; }
+  .rec-ic.on.playlistYt { background:#ff0000; color:#fff; border-color:#ff0000; }
+  .rec-ic.on.playlistSp { background:#1db954; color:#fff; border-color:#1db954; }
+  .btn-recursos { color:#7c3aed; border-color:#7c3aed; background:transparent; }
+  .btn-recursos:hover { background:#7c3aed; color:#fff; }
+  .rec-lista { display:flex; flex-direction:column; gap:.55rem; margin-top:.4rem; }
+  .rec-item { display:flex; align-items:center; gap:.8rem; padding:.7rem .85rem; border:1.5px solid var(--border); border-radius:var(--radius-sm); cursor:pointer; transition:border-color .2s, background .2s; }
+  .rec-item:hover { border-color:var(--accent); }
+  .rec-item.on { border-color:var(--accent); background:rgba(79,70,229,.05); }
+  .rec-item .ri-ic { width:34px; height:34px; border-radius:9px; display:flex; align-items:center; justify-content:center; color:#fff; flex-shrink:0; }
+  .rec-item .ri-txt { flex:1; min-width:0; }
+  .rec-item .ri-txt b { display:block; font-size:.9rem; }
+  .rec-item .ri-txt small { font-size:.75rem; color:var(--fg2); }
+  .switch { position:relative; width:40px; height:22px; flex-shrink:0; }
+  .switch input { opacity:0; width:0; height:0; position:absolute; }
+  .switch span { position:absolute; inset:0; border-radius:22px; background:#cbd5e1; transition:background .2s; }
+  .switch span::after { content:''; position:absolute; top:3px; left:3px; width:16px; height:16px; border-radius:50%; background:#fff; transition:transform .2s; box-shadow:0 1px 3px rgba(0,0,0,.2); }
+  .switch input:checked + span { background:var(--accent); }
+  .switch input:checked + span::after { transform:translateX(18px); }
+  .sel-plano { width:100%; padding:.65rem .9rem; background:var(--bg); border:1.5px solid var(--border); border-radius:var(--radius-sm); color:var(--fg); font-family:var(--font); font-size:.9rem; outline:none; }
+  .sel-plano:focus { border-color:var(--accent); }
+  .novo-grid { grid-template-columns:1.5fr 1fr 1fr 1fr; }
+  .novo-grid select { padding:.6rem .9rem; background:var(--bg); border:1.5px solid var(--border); border-radius:var(--radius-sm); color:var(--fg); font-family:var(--font); font-size:.88rem; outline:none; width:100%; }
+  @media(max-width:600px){ .novo-grid{grid-template-columns:1fr;} }
 </style>
- <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 </head>
 <body>
 
@@ -155,13 +195,22 @@
     <div class="novo-grid">
       <input type="email" id="novoEmail" placeholder="E-mail do líder">
       <input type="text"  id="novoNome"  placeholder="Nome do líder">
-      <input type="text"  id="novaSenha" placeholder="Senha de acesso">
+      <input type="text"  id="novaSenha" placeholder="Senha inicial (mín. 6)" autocomplete="off">
+      <select id="novoPlano" title="Plano contratado"></select>
     </div>
     <div style="display:flex;gap:.8rem;align-items:center;flex-wrap:wrap;">
       <button class="btn-add" id="btnCadastrar"><i class="fa-solid fa-plus"></i> Cadastrar</button>
       <span style="font-size:.8rem;color:var(--fg2);">Validade: <strong>30 dias</strong> a partir de hoje</span>
     </div>
     <p class="msg-feedback" id="msgNovoUser"></p>
+  </div>
+
+  <div class="card migra-card oculto" id="cardMigrar">
+    <span class="mi-ic"><i class="fa-solid fa-shield-halved"></i></span>
+    <div class="mi-txt"><b id="migraQtd">—</b> ainda usa(m) o login antigo, com a senha gravada junto dos dados públicos.
+      Migrar cria a conta de login segura de cada líder <b>com a mesma senha que ele já usa</b> (senhas com menos de 6 caracteres recebem um e-mail para criar uma nova).</div>
+    <button class="btn-add" id="btnMigrarTodos" onclick="migrarTodos()"><i class="fa-solid fa-arrows-rotate"></i> Migrar todos</button>
+    <p class="msg-feedback" id="msgMigrar" style="flex-basis:100%;margin:0;"></p>
   </div>
 
   <div class="card">
@@ -174,7 +223,7 @@
     <div style="overflow-x:auto;">
       <table class="user-table oculto" id="tabelaMinisterios">
         <thead>
-          <tr><th>Líder</th><th>E-mail</th><th>Status</th><th>Validade</th><th>Ações</th></tr>
+          <tr><th>Líder</th><th>E-mail</th><th>Plano</th><th>Status</th><th>Validade</th><th>Ações</th></tr>
         </thead>
         <tbody id="corpoTabela"></tbody>
       </table>
@@ -187,16 +236,30 @@
 <!-- MODAL SENHA -->
 <div class="overlay oculto" id="modalSenha">
   <div class="modal">
-    <h3><i class="fa-solid fa-key"></i> Alterar Senha</h3>
-    <p style="font-size:.85rem;color:var(--fg2);margin-bottom:1rem;">Líder: <strong id="modalSenhaNome">—</strong></p>
-    <div class="field">
-      <label>Nova Senha</label>
-      <i class="fa-solid fa-lock ico"></i>
-      <input type="text" id="novaSenhaModal" placeholder="Nova senha...">
-    </div>
+    <h3><i class="fa-solid fa-key"></i> Redefinir senha</h3>
+    <p style="font-size:.88rem;color:var(--fg2);line-height:1.55;">Líder: <strong id="modalSenhaNome">—</strong><br>
+      Vamos enviar para <strong id="modalSenhaEmail">—</strong> um e-mail com um link para ele criar uma nova senha.
+      Por segurança, nem você nem o sistema ficam sabendo a senha nova.</p>
+    <p class="msg-feedback" id="msgSenha"></p>
     <div class="modal-footer">
       <button class="btn-cancel" onclick="fecharModal('modalSenha')">Cancelar</button>
-      <button class="btn-confirm" id="btnConfirmarSenha"><i class="fa-solid fa-check"></i> Salvar</button>
+      <button class="btn-confirm" id="btnConfirmarSenha"><i class="fa-solid fa-paper-plane"></i> Enviar e-mail</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL RECURSOS / PLANO -->
+<div class="overlay oculto" id="modalRecursos">
+  <div class="modal" style="max-width:480px;">
+    <h3><i class="fa-solid fa-layer-group"></i> Plano e recursos</h3>
+    <p style="font-size:.85rem;color:var(--fg2);margin-bottom:1rem;">Ministério: <strong id="modalRecNome">—</strong></p>
+    <label style="display:block;font-size:.78rem;font-weight:700;color:var(--fg2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.4rem;">Plano</label>
+    <select id="recPlano" class="sel-plano" onchange="recEscolherPlano(this.value)"></select>
+    <div class="rec-lista" id="recLista"></div>
+    <p style="font-size:.75rem;color:var(--fg2);margin-top:.8rem;line-height:1.5;"><i class="fa-solid fa-circle-info" style="color:var(--accent);"></i> Ligar ou desligar um recurso fora do pacote transforma o plano em <b>Personalizado</b>. A mudança vale na próxima vez que o líder abrir o gerenciador e para os membros na hora.</p>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="fecharModal('modalRecursos')">Cancelar</button>
+      <button class="btn-confirm" id="btnSalvarRecursos"><i class="fa-solid fa-check"></i> Salvar</button>
     </div>
   </div>
 </div>
@@ -207,7 +270,8 @@
     <h3><i class="fa-solid fa-trash"></i> Excluir Ministério</h3>
     <p style="font-size:.88rem;color:var(--fg2);margin-bottom:1.5rem;">
       Excluir <strong id="modalExcluirNome">—</strong>?<br>
-      <span style="color:var(--danger);">Todos os dados serão apagados permanentemente.</span>
+      <span style="color:var(--danger);">Todos os dados serão apagados permanentemente.</span><br>
+      <span style="font-size:.78rem;">A conta de login do líder continua existindo no Firebase (Authentication), mas sem acesso a nada. Se quiser, apague-a por lá.</span>
     </p>
     <div class="modal-footer">
       <button class="btn-cancel" onclick="fecharModal('modalExcluir')">Cancelar</button>
@@ -224,7 +288,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 <script>
   /* ============================================================
-     🔥 COLE AQUI O SEU firebaseConfig
+     🔥 firebaseConfig
   ============================================================ */
   var firebaseConfig = {
   apiKey:            "AIzaSyASRX7kZJUmp7jfx_C7buYnLfpz0reby4E",
@@ -236,39 +300,137 @@
 };
 
   firebase.initializeApp(firebaseConfig);
- var auth = firebase.auth();
-  var db  = firebase.firestore();
-  var col = db.collection('ministerios');
+  var auth   = firebase.auth();
+  var db     = firebase.firestore();
+  var col    = db.collection('ministerios');
+  var colLid = db.collection('lideres');
+  var FV     = firebase.firestore.FieldValue;
 
-  /* ============================================================
-     CONFIGURAÇÃO — mude a senha master aqui
-  ============================================================ */
+  /* E-mail(s) de administrador — use o MESMO que está nas regras do Firestore */
+  var ADMIN_EMAILS = ['zeisrael@gmail.com'];
+  function ehAdminEmail(e){
+    var lista = ADMIN_EMAILS.filter(function(x){ return x.indexOf('@exemplo.com') < 0; });
+    return !lista.length || lista.indexOf(String(e||'').toLowerCase()) >= 0;
+  }
+
+  /* Segunda instância do Firebase, só para CRIAR contas de líder
+     (criar conta no app principal desconectaria o administrador). */
+  var appCriar  = firebase.initializeApp(firebaseConfig, 'criarLider');
+  var authCriar = appCriar.auth();
+  authCriar.setPersistence(firebase.auth.Auth.Persistence.NONE);
+
   var UID_ATIVO = null;
   var listaCache = [];
-  
-  /* ===== Firebase Auth Login ===== */
-  var auth = firebase.auth();
-  
+  var lideresPorUid = {};
+
+  /* ============================================================
+     PLANOS E RECURSOS — edite nomes e pacotes aqui
+  ============================================================ */
+  var RECURSOS = [
+    { k:'separador',  nome:'Separador (Multitrack)', icone:'fa-solid fa-sliders',   cor:'#7c3aed', desc:'Faixas separadas (voz, bateria, baixo…) no portal dos membros' },
+    { k:'playlistYt', nome:'Lista YouTube',          icone:'fa-brands fa-youtube',  cor:'#ff0000', desc:'Gerar playlist da semana no YouTube' },
+    { k:'playlistSp', nome:'Lista Spotify',          icone:'fa-brands fa-spotify',  cor:'#1db954', desc:'Gerar playlist da semana no Spotify' }
+  ];
+  var PLANOS = {
+    essencial: { nome:'Essencial', recursos:{} },
+    playlists: { nome:'Playlists', recursos:{ playlistYt:true, playlistSp:true } },
+    completo:  { nome:'Completo',  recursos:{ separador:true, playlistYt:true, playlistSp:true } }
+  };
+  var PLANO_PADRAO = 'essencial';
+  /* Ministérios cadastrados antes dos planos: mantêm as playlists que já usavam */
+  var RECURSOS_LEGADO = { separador:false, playlistYt:true, playlistSp:true };
+
+  function recursosDe(u){
+    var r = u && u.recursos ? u.recursos : RECURSOS_LEGADO, o = {};
+    RECURSOS.forEach(function(x){ o[x.k] = !!r[x.k]; });
+    return o;
+  }
+  function recursosDoPlano(p){
+    var o = {}, r = (PLANOS[p] || {}).recursos || {};
+    RECURSOS.forEach(function(x){ o[x.k] = !!r[x.k]; });
+    return o;
+  }
+  function planoQueBate(rec){
+    var achou = 'personalizado';
+    Object.keys(PLANOS).forEach(function(p){
+      var pr = recursosDoPlano(p);
+      if (RECURSOS.every(function(x){ return pr[x.k] === !!rec[x.k]; })) achou = p;
+    });
+    return achou;
+  }
+  function planoDe(u){ return (u && u.recursos) ? (u.plano || planoQueBate(u.recursos)) : 'legado'; }
+  function nomePlano(p){ return p==='personalizado' ? 'Personalizado' : p==='legado' ? 'Sem plano' : ((PLANOS[p]||{}).nome || p); }
+  function opcoesPlano(sel, comPersonalizado){
+    var h = Object.keys(PLANOS).map(function(p){ return '<option value="'+p+'"'+(p===sel?' selected':'')+'>'+PLANOS[p].nome+'</option>'; }).join('');
+    if (comPersonalizado) h += '<option value="personalizado"'+(sel==='personalizado'?' selected':'')+'>Personalizado</option>';
+    return h;
+  }
+  function badgePlano(u){
+    var p = planoDe(u), rec = recursosDe(u);
+    var cls = PLANOS[p] ? 'plano-'+p : (p==='legado' ? 'plano-legado' : 'plano-personalizado');
+    var ics = RECURSOS.map(function(x){
+      return '<span class="rec-ic '+x.k+(rec[x.k]?' on':'')+'" title="'+x.nome+(rec[x.k]?' — ativo':' — não incluído')+'"><i class="'+x.icone+'"></i></span>';
+    }).join('');
+    return '<span class="plano-badge '+cls+'">'+nomePlano(p)+'</span><div class="rec-icons">'+ics+'</div>';
+  }
+  function escH(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+  document.getElementById('novoPlano').innerHTML = opcoesPlano(PLANO_PADRAO, false);
+
+  /* Dados do líder: contas novas ficam em "lideres/{uid}"; antigas ainda no próprio ministério */
+  function ehLegado(u){ return !u.liderUid; }
+  function liderDe(u){
+    if (ehLegado(u)) return { nome:u.liderNome||'', email:u.liderEmail||'' };
+    var l = lideresPorUid[u.liderUid] || {};
+    return { nome:l.nome||'', email:l.email||'' };
+  }
+
+  /* Mensagens de erro do Firebase Authentication em português */
+  function msgAuth(err){
+    var c = (err && err.code) || '';
+    if (c==='auth/email-already-in-use')  return 'Já existe uma conta de login com este e-mail.';
+    if (c==='auth/weak-password')         return 'A senha precisa ter pelo menos 6 caracteres.';
+    if (c==='auth/invalid-email')         return 'E-mail inválido.';
+    if (c==='auth/invalid-credential' || c==='auth/wrong-password' || c==='auth/user-not-found' || c==='auth/invalid-login-credentials') return 'E-mail ou senha incorretos.';
+    if (c==='auth/too-many-requests')     return 'Muitas tentativas. Aguarde alguns minutos.';
+    if (c==='auth/network-request-failed') return 'Sem conexão com a internet.';
+    if (c==='permission-denied')          return 'Sem permissão (confira o e-mail de administrador nas regras do Firestore).';
+    return (err && err.message) || String(err);
+  }
+  function senhaAleatoria(){
+    var a = new Uint8Array(18); crypto.getRandomValues(a);
+    return btoa(String.fromCharCode.apply(null, a)) + 'Aa1!';
+  }
+  /* Cria a conta de login do líder sem desconectar o administrador; devolve o uid */
+  function criarContaLider(email, senha){
+    return authCriar.createUserWithEmailAndPassword(email, senha).then(function(c){
+      var uid = c.user.uid;
+      return authCriar.signOut().then(function(){ return uid; });
+    });
+  }
+
+  /* ===== Login do administrador ===== */
   auth.onAuthStateChanged(function(user) {
-    if (user) {
+    if (user && ehAdminEmail(user.email)) {
       abrirPainel();
     } else {
       document.getElementById('telaLoginAdm').classList.remove('oculto');
       document.getElementById('painelAdm').classList.add('oculto');
       document.getElementById('btnLogoutAdm').classList.add('oculto');
+      if (user) document.getElementById('msgErroAdm').textContent = 'A conta '+user.email+' não é de administrador.';
     }
   });
-  
+
   document.getElementById('btnEntrarAdm').addEventListener('click', loginAdm);
   document.getElementById('senhaAdm').addEventListener('keydown', function(e){
     if(e.key==='Enter') loginAdm();
   });
-  
+
   function loginAdm() {
     var email = document.getElementById('emailAdm').value.trim();
     var senha = document.getElementById('senhaAdm').value.trim();
     var msg = document.getElementById('msgErroAdm');
     if (!email || !senha) { msg.textContent = 'Preencha e-mail e senha.'; return; }
+    if (!ehAdminEmail(email)) { msg.textContent = 'Este e-mail não é de administrador.'; return; }
     msg.textContent = '';
     document.getElementById('btnEntrarAdm').innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Entrando...';
     auth.signInWithEmailAndPassword(email, senha)
@@ -277,72 +439,148 @@
       })
       .catch(function(err) {
         document.getElementById('btnEntrarAdm').innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Entrar';
-        msg.textContent = 'E-mail ou senha incorretos.';
+        msg.textContent = msgAuth(err);
         document.getElementById('senhaAdm').value = '';
       });
   }
-  
+
+  var _painelAberto = false;
   function abrirPainel() {
     document.getElementById('telaLoginAdm').classList.add('oculto');
     document.getElementById('painelAdm').classList.remove('oculto');
     document.getElementById('btnLogoutAdm').classList.remove('oculto');
-    carregarMinisterios();
+    if (!_painelAberto) { _painelAberto = true; carregarMinisterios(); }
   }
-  
-  function logoutAdm() {
-    auth.signOut();
+
+  function logoutAdm() { auth.signOut().then(function(){ location.reload(); }); }
+
+  /* ===== Firestore: ministérios + líderes em tempo real ===== */
+  function redesenhar(){
+    renderizarTabela(listaCache, document.getElementById('buscarUser').value.trim() || undefined);
+    atualizarStats(listaCache);
+    var leg = listaCache.filter(ehLegado);
+    document.getElementById('cardMigrar').classList.toggle('oculto', !leg.length);
+    document.getElementById('migraQtd').textContent = leg.length + (leg.length===1 ? ' ministério' : ' ministérios');
   }
-  
-  /* ===== Firestore: escutar ministérios em tempo real ===== */
   function carregarMinisterios() {
     col.orderBy('criadoEm', 'desc').onSnapshot(function(snapshot) {
       listaCache = [];
-      snapshot.forEach(function(doc) {
-        listaCache.push(Object.assign({ id: doc.id }, doc.data()));
-      });
+      snapshot.forEach(function(doc) { listaCache.push(Object.assign({ id: doc.id }, doc.data())); });
       document.getElementById('loadingTabela').classList.add('oculto');
       document.getElementById('tabelaMinisterios').classList.remove('oculto');
-      renderizarTabela(listaCache);
-      atualizarStats(listaCache);
+      redesenhar();
     }, function(err) {
-      document.getElementById('loadingTabela').innerHTML = '<span style="color:var(--danger);">Erro ao conectar com Firebase: ' + err.message + '</span>';
+      document.getElementById('loadingTabela').innerHTML = '<span style="color:var(--danger);">Erro ao conectar com Firebase: ' + msgAuth(err) + '</span>';
     });
+    colLid.onSnapshot(function(snap){
+      lideresPorUid = {};
+      snap.forEach(function(d){ lideresPorUid[d.id] = d.data(); });
+      redesenhar();
+    }, function(){});
   }
 
-  /* ===== Cadastrar novo ===== */
+  /* ===== Cadastrar novo (cria a conta de login do líder) ===== */
   document.getElementById('btnCadastrar').addEventListener('click', function() {
     var email = document.getElementById('novoEmail').value.trim().toLowerCase();
     var nome  = document.getElementById('novoNome').value.trim();
     var senha = document.getElementById('novaSenha').value.trim();
+    var plano = document.getElementById('novoPlano').value;
     var msg   = document.getElementById('msgNovoUser');
+    var btn   = document.getElementById('btnCadastrar');
+    function erro(t){ msg.className='msg-feedback err'; msg.textContent='⚠ '+t; }
 
-    if (!email || !senha) { msg.className='msg-feedback err'; msg.textContent='⚠ E-mail e senha são obrigatórios.'; return; }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { msg.className='msg-feedback err'; msg.textContent='⚠ E-mail inválido.'; return; }
-    if (listaCache.find(function(u){ return u.liderEmail===email; })) { msg.className='msg-feedback err'; msg.textContent='⚠ E-mail já cadastrado.'; return; }
+    if (!email || !senha) return erro('E-mail e senha são obrigatórios.');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return erro('E-mail inválido.');
+    if (senha.length < 6) return erro('A senha precisa ter pelo menos 6 caracteres.');
+    if (listaCache.some(function(u){ return liderDe(u).email.toLowerCase()===email; })) return erro('E-mail já cadastrado.');
 
-    document.getElementById('btnCadastrar').innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Salvando...';
-
-    col.add({
-      liderNome:  nome,
-      liderEmail: email,
-      liderSenha: senha,
-      ativo:      true,
-      expiracao:  Date.now() + 30*24*60*60*1000,
-      criadoEm:   Date.now(),
-      programacao: null
-    }).then(function(docRef) {
-      document.getElementById('btnCadastrar').innerHTML = '<i class="fa-solid fa-plus"></i> Cadastrar';
-      document.getElementById('novoEmail').value = '';
-      document.getElementById('novoNome').value  = '';
-      document.getElementById('novaSenha').value = '';
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Salvando...';
+    var ref = col.doc();
+    criarContaLider(email, senha).then(function(uid){
+      var b = db.batch();
+      b.set(ref, {
+        liderUid:   uid,
+        ativo:      true,
+        plano:      plano,
+        recursos:   recursosDoPlano(plano),
+        expiracao:  Date.now() + 30*24*60*60*1000,
+        criadoEm:   Date.now(),
+        programacao: null
+      });
+      b.set(colLid.doc(uid), { email:email, nome:nome, ministerioId:ref.id, criadoEm:Date.now() });
+      return b.commit();
+    }).then(function() {
+      btn.innerHTML = '<i class="fa-solid fa-plus"></i> Cadastrar';
+      ['novoEmail','novoNome','novaSenha'].forEach(function(i){ document.getElementById(i).value=''; });
       msg.className = 'msg-feedback ok';
-      msg.textContent = '✓ Cadastrado! ID do ministério: ' + docRef.id;
-      setTimeout(function(){ msg.textContent=''; }, 5000);
+      msg.textContent = '✓ Cadastrado! O líder já pode entrar no gerenciador com este e-mail e senha.';
+      setTimeout(function(){ msg.textContent=''; }, 6000);
     }).catch(function(err) {
-      document.getElementById('btnCadastrar').innerHTML = '<i class="fa-solid fa-plus"></i> Cadastrar';
-      msg.className='msg-feedback err'; msg.textContent='⚠ Erro: ' + err.message;
+      btn.innerHTML = '<i class="fa-solid fa-plus"></i> Cadastrar';
+      erro(msgAuth(err));
     });
   });
+
+  /* ===== Migração do login antigo ===== */
+  function migrar(u){
+    var email = String(u.liderEmail||'').trim().toLowerCase();
+    var senha = String(u.liderSenha||'');
+    if (!email) return Promise.reject(new Error('ministério sem e-mail de líder'));
+    var fraca = senha.length < 6;
+    return criarContaLider(email, fraca ? senhaAleatoria() : senha).catch(function(err){
+      /* conta já existe (ex.: migração interrompida): entra com a senha antiga só para descobrir o uid */
+      if (err && err.code==='auth/email-already-in-use' && !fraca) {
+        return authCriar.signInWithEmailAndPassword(email, senha).then(function(c){
+          var uid = c.user.uid; return authCriar.signOut().then(function(){ return uid; });
+        }).catch(function(){ throw new Error('já existe uma conta de login com '+email+' e a senha não confere. Apague essa conta no Firebase (Authentication) e migre de novo.'); });
+      }
+      throw err;
+    }).then(function(uid){
+      var b = db.batch();
+      b.set(colLid.doc(uid), { email:email, nome:u.liderNome||'', ministerioId:u.id, criadoEm:Date.now() });
+      b.set(col.doc(u.id).collection('privado').doc('equipe'), { contatos:u.contatos||[], grupoWaLink:u.grupoWaLink||'' });
+      b.update(col.doc(u.id), {
+        liderUid: uid,
+        liderSenha: FV.delete(), liderEmail: FV.delete(), liderNome: FV.delete(),
+        contatos: FV.delete(), grupoWaLink: FV.delete()
+      });
+      return b.commit();
+    }).then(function(){
+      if (!fraca) return 'ok';
+      return auth.sendPasswordResetEmail(email).then(function(){ return 'reset'; });
+    });
+  }
+  function migrarUm(id, btn){
+    var u = listaCache.find(function(x){ return x.id===id; }); if (!u) return;
+    var orig = btn.innerHTML;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>'; btn.disabled = true;
+    migrar(u).then(function(r){
+      alert(r==='reset'
+        ? 'Migrado! A senha antiga era curta demais; '+u.liderEmail+' recebeu um e-mail para criar uma nova.'
+        : 'Migrado! '+(u.liderNome||u.liderEmail)+' continua entrando com a mesma senha.');
+    }).catch(function(err){
+      btn.innerHTML = orig; btn.disabled = false;
+      alert('Não foi possível migrar: '+msgAuth(err));
+    });
+  }
+  function migrarTodos(){
+    var leg = listaCache.filter(ehLegado), msg = document.getElementById('msgMigrar'), btn = document.getElementById('btnMigrarTodos');
+    if (!leg.length) return;
+    btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Migrando...';
+    var ok = 0, reset = [], falhas = [];
+    leg.reduce(function(p, u){
+      return p.then(function(){
+        return migrar(u).then(function(r){ ok++; if (r==='reset') reset.push(u.liderEmail); })
+          .catch(function(err){ falhas.push((u.liderEmail||u.id)+': '+msgAuth(err)); });
+      });
+    }, Promise.resolve()).then(function(){
+      btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-arrows-rotate"></i> Migrar todos';
+      msg.className = 'msg-feedback ' + (falhas.length ? 'err' : 'ok');
+      msg.innerHTML = '✓ '+ok+' migrado(s).' +
+        (reset.length ? ' E-mail para criar nova senha enviado a: '+escH(reset.join(', '))+'.' : '') +
+        (falhas.length ? '<br>⚠ '+escH(falhas.join(' | ')) : '');
+    });
+  }
 
   /* ===== Utilitários ===== */
   function statusMin(u) {
@@ -364,14 +602,14 @@
     tbody.innerHTML = '';
 
     var filtrados = filtro
-      ? lista.filter(function(u){ var q=filtro.toLowerCase(); return (u.liderEmail||'').toLowerCase().includes(q)||(u.liderNome||'').toLowerCase().includes(q); })
+      ? lista.filter(function(u){ var q=filtro.toLowerCase(), l=liderDe(u); return l.email.toLowerCase().includes(q)||l.nome.toLowerCase().includes(q); })
       : lista;
 
     if (filtrados.length === 0) { msgTab.style.display='block'; return; }
     msgTab.style.display = 'none';
 
     filtrados.forEach(function(u) {
-      var st  = statusMin(u);
+      var st  = statusMin(u), l = liderDe(u), leg = ehLegado(u);
       var badge = st==='ativo'
         ? '<span class="badge badge-ativo"><i class="fa-solid fa-circle-check"></i> Ativo</span>'
         : st==='expirado'
@@ -383,20 +621,24 @@
 
       var tr = document.createElement('tr');
       tr.innerHTML =
-        '<td><strong>' + (u.liderNome||'—') + '</strong></td>' +
-        '<td style="color:var(--fg2);font-size:.82rem;">' + u.liderEmail + '</td>' +
+        '<td><strong>' + escH(l.nome||'—') + '</strong>' + (leg ? '<br><span class="tag-legado" title="Ainda usa o login antigo">login antigo</span>' : '') + '</td>' +
+        '<td style="color:var(--fg2);font-size:.82rem;">' + escH(l.email||'—') + '</td>' +
+        '<td>' + badgePlano(u) + '</td>' +
         '<td>' + badge + '</td>' +
         '<td style="font-size:.82rem;">' + fmtData(u.expiracao) +
           (st==='ativo' ? ' <span style="color:var(--success);font-weight:700;">(' + dias + 'd)</span>' : '') +
         '</td>' +
         '<td><div style="display:flex;gap:.3rem;flex-wrap:wrap;">' +
-          '<button class="btn-sm btn-renovar"  onclick="renovar(\''    + u.id + '\')"><i class="fa-solid fa-calendar-plus"></i> +30d</button>' +
+          '<button class="btn-sm btn-renovar"  onclick="renovar(\'' + u.id + '\')"><i class="fa-solid fa-calendar-plus"></i> +30d</button>' +
           (u.ativo
             ? '<button class="btn-sm btn-bloquear" onclick="bloquear(\'' + u.id + '\')"><i class="fa-solid fa-ban"></i> Bloquear</button>'
             : '<button class="btn-sm btn-ativar"   onclick="ativar(\''   + u.id + '\')"><i class="fa-solid fa-unlock"></i> Ativar</button>') +
-          '<button class="btn-sm btn-senha"   onclick="abrirModalSenha(\'' + u.id + '\',\'' + (u.liderNome||'').replace(/'/g,'') + '\')"><i class="fa-solid fa-key"></i> Senha</button>' +
+          '<button class="btn-sm btn-recursos" onclick="abrirModalRecursos(\'' + u.id + '\')"><i class="fa-solid fa-layer-group"></i> Plano</button>' +
+          (leg
+            ? '<button class="btn-sm btn-migrar" onclick="migrarUm(\'' + u.id + '\',this)"><i class="fa-solid fa-arrows-rotate"></i> Migrar login</button>'
+            : '<button class="btn-sm btn-senha"  onclick="abrirModalSenha(\'' + u.id + '\')"><i class="fa-solid fa-key"></i> Senha</button>') +
           '<button class="btn-sm btn-url"     onclick="copiarUrl(\''   + urlFront + '\',this)"><i class="fa-solid fa-link"></i> URL Front</button>' +
-          '<button class="btn-sm btn-excluir" onclick="abrirModalExcluir(\'' + u.id + '\',\'' + (u.liderNome||'').replace(/'/g,'') + '\')"><i class="fa-solid fa-trash"></i></button>' +
+          '<button class="btn-sm btn-excluir" onclick="abrirModalExcluir(\'' + u.id + '\')"><i class="fa-solid fa-trash"></i></button>' +
         '</div></td>';
       tbody.appendChild(tr);
     });
@@ -439,28 +681,90 @@
     }).catch(function(){ alert('URL: ' + url); });
   }
 
-  /* ===== Modal Senha ===== */
-  function abrirModalSenha(id, nome) {
+  /* ===== Modal Senha (envia e-mail de redefinição) ===== */
+  function abrirModalSenha(id) {
+    var u = listaCache.find(function(x){ return x.id===id; }); if (!u) return;
+    var l = liderDe(u);
     UID_ATIVO = id;
-    document.getElementById('modalSenhaNome').textContent = nome || id;
-    document.getElementById('novaSenhaModal').value = '';
+    document.getElementById('modalSenhaNome').textContent = l.nome || '—';
+    document.getElementById('modalSenhaEmail').textContent = l.email || '—';
+    document.getElementById('msgSenha').textContent = '';
     document.getElementById('modalSenha').classList.remove('oculto');
-    setTimeout(function(){ document.getElementById('novaSenhaModal').focus(); }, 100);
   }
   document.getElementById('btnConfirmarSenha').addEventListener('click', function() {
-    var nova = document.getElementById('novaSenhaModal').value.trim();
-    if (!nova) { alert('Informe a nova senha.'); return; }
-    col.doc(UID_ATIVO).update({ liderSenha: nova }).then(function(){ fecharModal('modalSenha'); });
+    var u = listaCache.find(function(x){ return x.id===UID_ATIVO; }); if (!u) return;
+    var email = liderDe(u).email, btn = this, msg = document.getElementById('msgSenha');
+    if (!email) { msg.className='msg-feedback err'; msg.textContent='⚠ Líder sem e-mail cadastrado.'; return; }
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando...';
+    auth.sendPasswordResetEmail(email).then(function(){
+      btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Enviar e-mail';
+      msg.className='msg-feedback ok'; msg.textContent='✓ E-mail enviado para '+email+' (peça para conferir o spam).';
+      setTimeout(function(){ fecharModal('modalSenha'); }, 2500);
+    }).catch(function(err){
+      btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Enviar e-mail';
+      msg.className='msg-feedback err'; msg.textContent='⚠ '+msgAuth(err);
+    });
+  });
+
+  /* ===== Modal Plano / Recursos ===== */
+  var _recEdit = null;
+  function abrirModalRecursos(id){
+    var u = listaCache.find(function(x){ return x.id===id; }); if(!u) return;
+    UID_ATIVO = id;
+    _recEdit = recursosDe(u);
+    var p = planoDe(u); if (p==='legado') p = planoQueBate(_recEdit);
+    document.getElementById('modalRecNome').textContent = liderDe(u).nome || liderDe(u).email || id;
+    document.getElementById('recPlano').innerHTML = opcoesPlano(p, true);
+    recRender();
+    document.getElementById('modalRecursos').classList.remove('oculto');
+  }
+  function recRender(){
+    document.getElementById('recLista').innerHTML = RECURSOS.map(function(x){
+      var on = !!_recEdit[x.k];
+      return '<label class="rec-item'+(on?' on':'')+'">'+
+        '<span class="ri-ic" style="background:'+x.cor+'"><i class="'+x.icone+'"></i></span>'+
+        '<span class="ri-txt"><b>'+x.nome+'</b><small>'+x.desc+'</small></span>'+
+        '<span class="switch"><input type="checkbox" data-rec="'+x.k+'"'+(on?' checked':'')+' onchange="recAlternar(this)"><span></span></span>'+
+      '</label>';
+    }).join('');
+  }
+  function recEscolherPlano(p){
+    if (p==='personalizado') return;
+    _recEdit = recursosDoPlano(p); recRender();
+  }
+  function recAlternar(inp){
+    _recEdit[inp.getAttribute('data-rec')] = inp.checked;
+    inp.closest('.rec-item').classList.toggle('on', inp.checked);
+    document.getElementById('recPlano').value = planoQueBate(_recEdit);
+  }
+  document.getElementById('btnSalvarRecursos').addEventListener('click', function(){
+    if (!UID_ATIVO) return;
+    var btn = this, plano = document.getElementById('recPlano').value;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Salvando...';
+    col.doc(UID_ATIVO).update({ plano: plano, recursos: _recEdit }).then(function(){
+      btn.innerHTML = '<i class="fa-solid fa-check"></i> Salvar';
+      fecharModal('modalRecursos');
+    }).catch(function(err){
+      btn.innerHTML = '<i class="fa-solid fa-check"></i> Salvar';
+      alert('Erro ao salvar: ' + msgAuth(err));
+    });
   });
 
   /* ===== Modal Excluir ===== */
-  function abrirModalExcluir(id, nome) {
+  function abrirModalExcluir(id) {
+    var u = listaCache.find(function(x){ return x.id===id; }); if (!u) return;
     UID_ATIVO = id;
-    document.getElementById('modalExcluirNome').textContent = nome || id;
+    document.getElementById('modalExcluirNome').textContent = liderDe(u).nome || liderDe(u).email || id;
     document.getElementById('modalExcluir').classList.remove('oculto');
   }
   document.getElementById('btnConfirmarExcluir').addEventListener('click', function() {
-    col.doc(UID_ATIVO).delete().then(function(){ fecharModal('modalExcluir'); });
+    var u = listaCache.find(function(x){ return x.id===UID_ATIVO; }); if (!u) return;
+    var b = db.batch();
+    b.delete(col.doc(u.id).collection('privado').doc('equipe'));
+    if (u.liderUid) b.delete(colLid.doc(u.liderUid));
+    b.delete(col.doc(u.id));
+    b.commit().then(function(){ fecharModal('modalExcluir'); })
+      .catch(function(err){ alert('Erro ao excluir: ' + msgAuth(err)); });
   });
 
   function fecharModal(id) { document.getElementById(id).classList.add('oculto'); UID_ATIVO = null; }
