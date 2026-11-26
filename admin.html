@@ -299,9 +299,11 @@
   appId:             "1:319307727923:web:845608da8aa866ac7ecf46"
 };
 
-  firebase.initializeApp(firebaseConfig);
-  var auth   = firebase.auth();
-  var db     = firebase.firestore();
+  /* App com nome próprio: a sessão do admin fica separada da do gerenciador
+     (no mesmo site, um logout no gerenciador não derruba mais o admin). */
+  var appAdm = firebase.initializeApp(firebaseConfig, 'admin');
+  var auth   = appAdm.auth();
+  var db     = appAdm.firestore();
   var col    = db.collection('ministerios');
   var colLid = db.collection('lideres');
   var FV     = firebase.firestore.FieldValue;
@@ -526,8 +528,11 @@
     var email = String(u.liderEmail||'').trim().toLowerCase();
     var senha = String(u.liderSenha||'');
     if (!email) return Promise.reject(new Error('ministério sem e-mail de líder'));
-    var fraca = senha.length < 6;
-    return criarContaLider(email, fraca ? senhaAleatoria() : senha).catch(function(err){
+    /* O próprio administrador também é líder deste ministério: usa a conta dele, sem criar outra */
+    var proprio = !!(auth.currentUser && String(auth.currentUser.email||'').toLowerCase() === email);
+    var fraca = !proprio && senha.length < 6;
+    var obterUid = proprio ? Promise.resolve(auth.currentUser.uid) :
+    criarContaLider(email, fraca ? senhaAleatoria() : senha).catch(function(err){
       /* conta já existe (ex.: migração interrompida): entra com a senha antiga só para descobrir o uid */
       if (err && err.code==='auth/email-already-in-use' && !fraca) {
         return authCriar.signInWithEmailAndPassword(email, senha).then(function(c){
@@ -535,7 +540,8 @@
         }).catch(function(){ throw new Error('já existe uma conta de login com '+email+' e a senha não confere. Apague essa conta no Firebase (Authentication) e migre de novo.'); });
       }
       throw err;
-    }).then(function(uid){
+    });
+    return obterUid.then(function(uid){
       var b = db.batch();
       b.set(colLid.doc(uid), { email:email, nome:u.liderNome||'', ministerioId:u.id, criadoEm:Date.now() });
       b.set(col.doc(u.id).collection('privado').doc('equipe'), { contatos:u.contatos||[], grupoWaLink:u.grupoWaLink||'' });
