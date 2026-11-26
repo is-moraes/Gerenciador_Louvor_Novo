@@ -922,6 +922,23 @@ body[data-theme="claro"]{--lg-p:#2c2f36;--lg-c1:#c8924f;--lg-c2:#7a4f2e}
 .brand-s{font-family:'USC Josefin',sans-serif;letter-spacing:.14em;text-transform:uppercase;font-size:.6rem;margin-top:.12rem}
 footer .usc-wm{color:var(--fg2)}
 
+/* ══ Multitrack (recurso Separador) ══ */
+.tag-mt{display:inline-flex;align-items:center;gap:.3rem;padding:.22rem .55rem;border-radius:8px;font-size:.7rem;font-weight:700;font-family:inherit;line-height:1.1;cursor:pointer;
+  background:color-mix(in srgb,#8b5cf6 14%,transparent);color:#a78bfa;border:1px solid color-mix(in srgb,#8b5cf6 34%,transparent);transition:background .2s}
+.tag-mt:hover{background:color-mix(in srgb,#8b5cf6 26%,transparent)}
+body[data-theme="claro"] .tag-mt{color:#6d3fd4}
+.mt-ov{position:fixed;inset:0;z-index:3100;background:rgba(5,7,14,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:1rem}
+.mt-ov.aberto{display:flex}
+.mt-box{width:100%;max-width:640px;max-height:92vh;overflow:auto;background:var(--surface);border:1px solid var(--line2);border-radius:22px;box-shadow:0 24px 70px rgba(0,0,0,.55)}
+.mt-head{display:flex;align-items:center;gap:.6rem;padding:.8rem .9rem .8rem 1.1rem;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--surface);z-index:2}
+.mt-head .mt-tit{flex:1;min-width:0;font-weight:800;font-size:.98rem;display:flex;align-items:center;gap:.55rem}
+.mt-head .mt-tit i{color:#8b5cf6}.mt-head .mt-tit span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mt-dica{font-size:.74rem;color:var(--fg3);padding:.7rem 1.1rem 0}
+.mt-ov .mtusc{--mt-bg:transparent;--mt-card:var(--surface2);--mt-fg:var(--fg);--mt-sub:var(--fg2);--mt-borda:var(--line);--mt-acc:#8b5cf6;--mt-acc2:var(--accent);
+  max-width:none;border-radius:0;padding:.9rem 1.1rem 1.1rem;font-family:inherit}
+.mt-ov .mtusc-topo{display:none}
+@media(max-width:620px){.mt-ov{padding:0}.mt-box{max-height:100%;height:100%;max-width:none;border-radius:0;border:none}}
+
 </style>
 </head>
 <body>
@@ -1087,6 +1104,7 @@ footer .usc-wm{color:var(--fg2)}
       <details class="faq" open><summary><i class="fa-solid fa-play"></i> Como ouvir as músicas?</summary><p>Toque no botão vermelho para abrir o vídeo, no verde para o Spotify, ou no botão escuro com ▶ para tocar o repertório em sequência a partir daquela música. Em “Tocar Tudo” o repertório inteiro toca em ordem.</p></details>
       <details class="faq"><summary><i class="fa-solid fa-music"></i> Onde ficam as cifras?</summary><p>No botão amarelo de cada música. A cifra abre dentro do portal; se o site não permitir, um botão leva você para uma nova aba.</p></details>
       <details class="faq"><summary><i class="fa-solid fa-dumbbell"></i> O que é o modo Treinar?</summary><p>Quando a música tem vídeo e cifra, aparece o botão “Treinar”: a cifra ocupa a tela inteira e o vídeo fica em uma janela flutuante que você pode arrastar e redimensionar. Se a cifra estiver cadastrada em texto, você também pode trocar o tom ali mesmo.</p></details>
+      <details class="faq" id="faqMt" style="display:none"><summary><i class="fa-solid fa-sliders"></i> O que é o Multitrack?</summary><p>Nas músicas com a etiqueta “Multitrack” você ouve cada parte separada (voz, bateria, baixo, outros). Use M para silenciar uma faixa e S para ouvir só ela — ótimo para tirar a sua parte e tocar junto. Na primeira vez as faixas são baixadas; depois abrem na hora.</p></details>
       <details class="faq"><summary><i class="fa-solid fa-drum"></i> Como usar o metrônomo?</summary><p>Toque no botão azul da música para abrir o metrônomo já ajustado no BPM dela. Você pode alterar o andamento, o compasso ou usar o “Tap” para marcar no ritmo.</p></details>
       <details class="faq"><summary><i class="fa-solid fa-layer-group"></i> O que é um Medley?</summary><p>É uma música com várias partes. Toque na etiqueta “Medley” para ver e abrir cada parte separadamente.</p></details>
       <details class="faq"><summary><i class="fa-regular fa-calendar"></i> Como ver outra semana?</summary><p>Use as setas no cartão do culto ou abra o menu “Cultos” para escolher entre as semanas com programação publicada.</p></details>
@@ -1105,6 +1123,18 @@ footer .usc-wm{color:var(--fg2)}
   <button data-nav="cultos" class="nav-cultos" onclick="irPara('cultos')"><i class="fa-regular fa-calendar"></i>Cultos</button>
   <button data-nav="config" onclick="irPara('config')"><i class="fa-solid fa-gear"></i>Config</button>
 </nav>
+
+<!-- Multitrack (faixas separadas) -->
+<div class="mt-ov" id="mtOverlay" onclick="fecharMultitrack(event)">
+  <div class="mt-box">
+    <div class="mt-head">
+      <div class="mt-tit"><i class="fa-solid fa-sliders"></i><span id="mtTitulo">Multitrack</span></div>
+      <button class="cx-ib cx-x" onclick="fecharMultitrack()" aria-label="Fechar"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <p class="mt-dica">M = mudo · S = solo. Sua mixagem fica salva neste aparelho para a próxima vez.</p>
+    <div id="mtPlayer"></div>
+  </div>
+</div>
 
 <!-- Visualizador de cifra com troca de tom -->
 <div class="cx-overlay" id="cxOverlay" onclick="fecharCifraTexto(event)">
@@ -1127,6 +1157,384 @@ footer .usc-wm{color:var(--fg2)}
   </div>
 </div>
 
+<script>
+/*!
+ * Um Só Corpo — Player Multitrack
+ * Toca as faixas separadas (voz, bateria, baixo...) sincronizadas, com volume,
+ * mudo e solo por faixa. As faixas vêm do Google Drive (via Apps Script) ou de
+ * arquivos locais. Guarda as faixas no aparelho para abrir rápido na próxima vez.
+ *
+ * Uso:
+ *   <link rel="stylesheet" href="multitrack-player.css">  (opcional: estilo já vem embutido)
+ *   <script src="multitrack-player.js"><\/script>
+ *
+ *   const drive  = MultitrackUSC.drive({ url: 'https://script.google.com/macros/s/.../exec', token: '...' });
+ *   const lista  = await drive.listar();                       // [{ musica, faixas:[{faixa,id,...}], processando }]
+ *   const player = new MultitrackUSC.Player(document.querySelector('#mt'));
+ *   await player.carregarDoDrive(lista[0], drive);             // ou player.carregarArquivos(input.files)
+ *   new MultitrackUSC.Player(el, { aoMudar: (mix) => ... })    // chamado quando o usuário muda M/S/volume
+ *
+ * Cores: sobrescreva as variáveis --mt-* no elemento pai (veja ESTILO abaixo).
+ */
+(function (global) {
+  'use strict';
+
+  // ------------------------------------------------------------------ fonte: Drive
+  function drive(cfg) {
+    const base = String(cfg.url || '').trim();
+    const token = cfg.token || '';
+    if (!base) throw new Error('Informe a URL do Apps Script (termina em /exec).');
+
+    async function chamar(params) {
+      const q = new URLSearchParams(Object.assign({ token: token }, params));
+      const r = await fetch(base + (base.includes('?') ? '&' : '?') + q.toString());
+      if (!r.ok) throw new Error('Apps Script respondeu HTTP ' + r.status);
+      const dados = await r.json();
+      if (dados.erro) throw new Error(dados.erro);
+      return dados;
+    }
+
+    const CACHE = 'usc-multitracks-v1';
+    const chaveCache = (f) => 'https://cache.umsocorpo.app.br/faixa/' + f.id + '?v=' +
+      encodeURIComponent(f.atualizado || f.tamanho || '');
+    const temCache = () => { try { return !!global.caches && global.isSecureContext; } catch (e) { return false; } };
+
+    return {
+      tipo: 'drive',
+      ping: () => chamar({ acao: 'ping' }),
+      listar: async () => (await chamar({ acao: 'listar' })).musicas || [],
+      /** Baixa uma faixa e devolve um Blob de áudio (usa o cache do aparelho). */
+      baixar: async function (faixa) {
+        if (temCache()) {
+          try {
+            const c = await caches.open(CACHE);
+            const hit = await c.match(chaveCache(faixa));
+            if (hit) return await hit.blob();
+          } catch (e) { /* cache indisponível: segue baixando */ }
+        }
+        const d = await chamar({ acao: 'audio', id: faixa.id });
+        const blob = await (await fetch('data:' + (d.mime || 'audio/mpeg') + ';base64,' + d.base64)).blob();
+        if (temCache()) {
+          try {
+            const c = await caches.open(CACHE);
+            await c.put(chaveCache(faixa), new Response(blob, { headers: { 'Content-Type': blob.type } }));
+          } catch (e) { /* sem espaço ou bloqueado: tudo bem */ }
+        }
+        return blob;
+      },
+      limparCache: async () => { if (temCache()) await caches.delete(CACHE); }
+    };
+  }
+
+  // ------------------------------------------------------------------ utilidades
+  const ICONE = {
+    voz: '🎤', back: '🎙️', bateria: '🥁', baixo: '🎸', guitarra: '🎸', 'violão': '🪕',
+    piano: '🎹', teclado: '🎹', outros: '🎶', instrumental: '🎼'
+  };
+  const fmt = (s) => {
+    s = Math.max(0, s || 0);
+    const m = Math.floor(s / 60), r = Math.floor(s % 60);
+    return m + ':' + String(r).padStart(2, '0');
+  };
+  const el = (tag, attrs, ...filhos) => {
+    const e = document.createElement(tag);
+    for (const k in (attrs || {})) {
+      if (k === 'class') e.className = attrs[k];
+      else if (k.startsWith('on')) e.addEventListener(k.slice(2), attrs[k]);
+      else e.setAttribute(k, attrs[k]);
+    }
+    filhos.flat().forEach((f) => e.append(f && f.nodeType ? f : document.createTextNode(f ?? '')));
+    return e;
+  };
+  // "Grande é o Senhor - voz.mp3" -> "voz"
+  const nomeFaixa = (arquivo) => {
+    const base = arquivo.replace(/\.[^.]+$/, '');
+    const i = base.lastIndexOf(' - ');
+    return i >= 0 ? base.slice(i + 3) : base;
+  };
+  const ORDEM = ['voz', 'back', 'guitarra', 'violão', 'piano', 'teclado', 'outros', 'baixo', 'bateria', 'instrumental'];
+  const ordem = (n) => { const i = ORDEM.indexOf(String(n).toLowerCase()); return i < 0 ? 50 : i; };
+  const nomeMusica = (arquivo) => {
+    const base = arquivo.replace(/\.[^.]+$/, '');
+    const i = base.lastIndexOf(' - ');
+    return i >= 0 ? base.slice(0, i) : '';
+  };
+
+  const ESTILO = `
+  .mtusc{--mt-bg:#151a2e;--mt-card:#1d2340;--mt-fg:#e8ebff;--mt-sub:#9aa3c7;--mt-acc:#7c6cff;
+    --mt-acc2:#4fa3ff;--mt-mute:#ff6b6b;--mt-solo:#ffc94d;--mt-borda:#2b3360;
+    background:var(--mt-bg);color:var(--mt-fg);border-radius:16px;padding:16px;
+    font:14px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;max-width:720px}
+  .mtusc *{box-sizing:border-box}
+  .mtusc-topo{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+  .mtusc-titulo{font-weight:700;font-size:16px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .mtusc-status{color:var(--mt-sub);font-size:12px}
+  .mtusc-trans{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+  .mtusc-btn{background:var(--mt-card);color:var(--mt-fg);border:1px solid var(--mt-borda);
+    border-radius:10px;padding:8px 10px;cursor:pointer;font:inherit;min-width:40px}
+  .mtusc-btn:disabled{opacity:.4;cursor:default}
+  .mtusc-play{background:linear-gradient(135deg,var(--mt-acc),var(--mt-acc2));border:0;
+    width:48px;height:48px;border-radius:50%;font-size:18px;color:#fff}
+  .mtusc-tempo{font-variant-numeric:tabular-nums;color:var(--mt-sub);font-size:12px;min-width:84px;text-align:center}
+  .mtusc input[type=range]{accent-color:var(--mt-acc);width:100%}
+  .mtusc-seek{flex:1}
+  .mtusc-faixas{display:flex;flex-direction:column;gap:6px}
+  .mtusc-faixa{display:grid;grid-template-columns:1fr auto auto 38%;gap:6px;align-items:center;
+    background:var(--mt-card);border:1px solid var(--mt-borda);border-radius:12px;padding:8px 10px}
+  .mtusc-faixa.silencio{opacity:.45}
+  .mtusc-nome{font-weight:600;text-transform:capitalize;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .mtusc-m.on{background:var(--mt-mute);border-color:var(--mt-mute);color:#fff}
+  .mtusc-s.on{background:var(--mt-solo);border-color:var(--mt-solo);color:#222}
+  .mtusc-m,.mtusc-s{padding:6px 0;width:34px;font-weight:700}
+  .mtusc-geral{display:flex;align-items:center;gap:8px;margin-top:10px;color:var(--mt-sub);font-size:12px}
+  .mtusc-geral input{max-width:180px}
+  .mtusc-vazio{color:var(--mt-sub);text-align:center;padding:24px 8px}
+  @media (max-width:480px){.mtusc-trans{flex-wrap:wrap}.mtusc-seek{order:5;flex-basis:100%}
+    .mtusc-tempo{margin-left:auto}.mtusc-faixa{grid-template-columns:1fr auto auto;}
+    .mtusc-faixa input[type=range]{grid-column:1/-1}}
+  `;
+  function injetarEstilo() {
+    if (document.getElementById('mtusc-estilo')) return;
+    const s = document.createElement('style');
+    s.id = 'mtusc-estilo';
+    s.textContent = ESTILO;
+    document.head.appendChild(s);
+  }
+
+  // ------------------------------------------------------------------ Player
+  class Player {
+    constructor(container, opcoes) {
+      injetarEstilo();
+      this.op = Object.assign({ toleranciaSync: 0.06 }, opcoes || {});
+      this.raiz = container;
+      this.faixas = [];         // { nome, audio, gain, vol, mudo, solo, url, linha }
+      this.tocando = false;
+      this.ctx = null;
+      this._montar();
+      this._loop = this._loop.bind(this);
+    }
+
+    // ---------- carregamento
+    async carregarDoDrive(musica, fonte) {
+      try { await this._carregarDoDrive(musica, fonte); }
+      catch (e) { this._vazio('Erro ao carregar: ' + e.message); throw e; }
+    }
+
+    async carregarArquivos(lista) {
+      try { await this._carregarArquivos(lista); }
+      catch (e) { this._vazio('Erro ao carregar: ' + e.message); throw e; }
+    }
+
+    async _carregarDoDrive(musica, fonte) {
+      this.descarregar();
+      this._estado('Baixando faixas...');
+      this._titulo(musica.musica);
+      if (musica.processando) {
+        this._vazio('Essa música ainda está sendo separada. Tente de novo em alguns minutos.');
+        return;
+      }
+      if (!musica.faixas || !musica.faixas.length) {
+        this._vazio('Nenhuma faixa encontrada para essa música.');
+        return;
+      }
+      let prontas = 0;
+      const blobs = await Promise.all(musica.faixas.map(async (f) => {
+        const b = await fonte.baixar(f);
+        this._estado('Baixando faixas... ' + (++prontas) + '/' + musica.faixas.length);
+        return { nome: f.faixa, blob: b };
+      }));
+      await this._preparar(blobs);
+    }
+
+    async _carregarArquivos(lista) {
+      const arquivos = Array.from(lista || []).filter((f) => /^audio\/|\.mp3$|\.wav$|\.m4a$|\.ogg$/i.test(f.type || f.name));
+      if (!arquivos.length) return this._vazio('Escolha os arquivos de áudio das faixas.');
+      this._titulo(nomeMusica(arquivos[0].name) || 'Arquivos locais');
+      await this._preparar(arquivos.map((f) => ({ nome: nomeFaixa(f.name), blob: f }))
+        .sort((x, y) => ordem(x.nome) - ordem(y.nome)));
+    }
+
+    async _preparar(itens) {
+      this.descarregar();
+      this._estado('Preparando...');
+      // iPhone: toca mesmo com a chave do silencioso ligada (Safari 16.4+)
+      try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {}
+      this.ctx = this.ctx || new (global.AudioContext || global.webkitAudioContext)();
+      this.master = this.ctx.createGain();
+      this.master.gain.value = Number(this.ui.volGeral.value);
+      this.master.connect(this.ctx.destination);
+
+      this.faixas = itens.map((it) => {
+        const url = URL.createObjectURL(it.blob);
+        const audio = new Audio();
+        audio.preload = 'auto';
+        audio.src = url;
+        const src = this.ctx.createMediaElementSource(audio);
+        const gain = this.ctx.createGain();
+        src.connect(gain).connect(this.master);
+        return { nome: it.nome, audio, gain, url, vol: 1, mudo: false, solo: false };
+      });
+      // espera os metadados (duração) de todas
+      await Promise.all(this.faixas.map((f) => new Promise((ok, erro) => {
+        if (f.audio.readyState >= 1) return ok();
+        f.audio.addEventListener('loadedmetadata', ok, { once: true });
+        f.audio.addEventListener('error', () => erro(new Error('Não consegui abrir a faixa ' + f.nome)), { once: true });
+      })));
+      this.duracao = Math.max(...this.faixas.map((f) => f.audio.duration || 0));
+      // a faixa mais longa é a "mestre" do relógio
+      this.mestre = this.faixas.reduce((a, b) => (b.audio.duration > a.audio.duration ? b : a));
+      this.mestre.audio.addEventListener('ended', () => this.pausar(true));
+      this._renderFaixas();
+      this._aplicarGanhos();
+      this._habilitar(true);
+      this._estado(this.faixas.length + ' faixas');
+      this._atualizarTempo();
+    }
+
+    descarregar() {
+      this.pausar();
+      this.faixas.forEach((f) => { f.audio.src = ''; URL.revokeObjectURL(f.url); try { f.gain.disconnect(); } catch (e) {} });
+      this.faixas = [];
+      if (this.master) { try { this.master.disconnect(); } catch (e) {} }
+      this._habilitar(false);
+    }
+
+    // ---------- transporte
+    get posicao() { return this.mestre ? this.mestre.audio.currentTime : 0; }
+
+    async tocar() {
+      if (!this.faixas.length) return;
+      if (this.ctx.state === 'suspended') await this.ctx.resume();
+      const t = this.posicao >= this.duracao - 0.05 ? 0 : this.posicao;
+      this.faixas.forEach((f) => { f.audio.currentTime = Math.min(t, f.audio.duration || t); });
+      await Promise.all(this.faixas.map((f) => f.audio.play().catch(() => {})));
+      this.tocando = true;
+      this.ui.play.textContent = '❚❚';
+      requestAnimationFrame(this._loop);
+    }
+
+    pausar(fim) {
+      this.faixas.forEach((f) => f.audio.pause());
+      this.tocando = false;
+      if (this.ui) this.ui.play.textContent = '▶';
+      if (fim === true) this.irPara(0);
+    }
+
+    alternar() { return this.tocando ? this.pausar() : this.tocar(); }
+
+    irPara(seg) {
+      seg = Math.max(0, Math.min(seg, this.duracao || 0));
+      this.faixas.forEach((f) => { f.audio.currentTime = Math.min(seg, f.audio.duration || seg); });
+      this._atualizarTempo();
+    }
+
+    _loop() {
+      if (!this.tocando) return;
+      // corrige o desvio entre as faixas
+      const t = this.mestre.audio.currentTime;
+      this.faixas.forEach((f) => {
+        if (f === this.mestre || f.audio.ended) return;
+        if (Math.abs(f.audio.currentTime - t) > this.op.toleranciaSync && t < f.audio.duration) {
+          f.audio.currentTime = t;
+        }
+      });
+      this._atualizarTempo();
+      requestAnimationFrame(this._loop);
+    }
+
+    // ---------- mixer
+    _aplicarGanhos() {
+      const algumSolo = this.faixas.some((f) => f.solo);
+      this.faixas.forEach((f) => {
+        const audivel = !f.mudo && (!algumSolo || f.solo);
+        f.gain.gain.setTargetAtTime(audivel ? f.vol : 0, this.ctx.currentTime, 0.015);
+        if (f.linha) f.linha.classList.toggle('silencio', !audivel);
+      });
+    }
+
+    /** Estado atual do mixer (útil para salvar a mixagem de cada músico). */
+    mixagem() {
+      return this.faixas.map((f) => ({ faixa: f.nome, vol: f.vol, mudo: f.mudo, solo: f.solo }));
+    }
+
+    aplicarMixagem(mix) {
+      (mix || []).forEach((m) => {
+        const f = this.faixas.find((x) => x.nome === m.faixa);
+        if (!f) return;
+        f.vol = m.vol ?? 1; f.mudo = !!m.mudo; f.solo = !!m.solo;
+      });
+      this._renderFaixas();
+      this._aplicarGanhos();
+    }
+
+    /** Avisa quem usa o player (opção aoMudar) que o membro mexeu na mixagem. */
+    _mudou() { if (typeof this.op.aoMudar === 'function') { try { this.op.aoMudar(this.mixagem()); } catch (e) {} } }
+
+    // ---------- interface
+    _montar() {
+      const ui = this.ui = {};
+      ui.titulo = el('div', { class: 'mtusc-titulo' }, 'Multitrack');
+      ui.status = el('div', { class: 'mtusc-status' }, '');
+      ui.play = el('button', { class: 'mtusc-btn mtusc-play', title: 'Tocar/pausar', onclick: () => this.alternar() }, '▶');
+      ui.voltar = el('button', { class: 'mtusc-btn', title: 'Voltar 10s', onclick: () => this.irPara(this.posicao - 10) }, '−10');
+      ui.avancar = el('button', { class: 'mtusc-btn', title: 'Avançar 10s', onclick: () => this.irPara(this.posicao + 10) }, '+10');
+      ui.seek = el('input', { class: 'mtusc-seek', type: 'range', min: 0, max: 1000, value: 0, 'aria-label': 'Posição' });
+      ui.seek.addEventListener('input', () => { this._arrastando = true; this._mostrarTempo(ui.seek.value / 1000 * this.duracao); });
+      ui.seek.addEventListener('change', () => { this._arrastando = false; this.irPara(ui.seek.value / 1000 * this.duracao); });
+      ui.tempo = el('div', { class: 'mtusc-tempo' }, '0:00 / 0:00');
+      ui.lista = el('div', { class: 'mtusc-faixas' }, el('div', { class: 'mtusc-vazio' }, 'Nenhuma música carregada.'));
+      ui.volGeral = el('input', { type: 'range', min: 0, max: 1, step: 0.01, value: 1, 'aria-label': 'Volume geral' });
+      ui.volGeral.addEventListener('input', () => { if (this.master) this.master.gain.value = Number(ui.volGeral.value); });
+      ui.resetar = el('button', { class: 'mtusc-btn', onclick: () => { this.aplicarMixagem(this.faixas.map((f) => ({ faixa: f.nome }))); this._mudou(); } }, 'Resetar mix');
+
+      this.raiz.innerHTML = '';
+      this.raiz.append(el('div', { class: 'mtusc' },
+        el('div', { class: 'mtusc-topo' }, ui.titulo, ui.status),
+        el('div', { class: 'mtusc-trans' }, ui.voltar, ui.play, ui.avancar, ui.seek, ui.tempo),
+        ui.lista,
+        el('div', { class: 'mtusc-geral' }, 'Volume geral', ui.volGeral, el('span', { style: 'flex:1' }), ui.resetar)
+      ));
+      this._habilitar(false);
+      document.addEventListener('keydown', (e) => {
+        if (e.code === 'Space' && this.faixas.length && this.raiz.contains(document.activeElement)) {
+          e.preventDefault(); this.alternar();
+        }
+      });
+    }
+
+    _renderFaixas() {
+      this.ui.lista.innerHTML = '';
+      this.faixas.forEach((f) => {
+        const m = el('button', { class: 'mtusc-btn mtusc-m' + (f.mudo ? ' on' : ''), title: 'Mudo' }, 'M');
+        const s = el('button', { class: 'mtusc-btn mtusc-s' + (f.solo ? ' on' : ''), title: 'Solo' }, 'S');
+        const v = el('input', { type: 'range', min: 0, max: 1.5, step: 0.01, value: f.vol, 'aria-label': 'Volume ' + f.nome });
+        m.onclick = () => { f.mudo = !f.mudo; m.classList.toggle('on', f.mudo); this._aplicarGanhos(); this._mudou(); };
+        s.onclick = () => { f.solo = !f.solo; s.classList.toggle('on', f.solo); this._aplicarGanhos(); this._mudou(); };
+        v.oninput = () => { f.vol = Number(v.value); this._aplicarGanhos(); };
+        v.onchange = () => this._mudou();
+        const icone = ICONE[String(f.nome).toLowerCase()] || '🎵';
+        f.linha = el('div', { class: 'mtusc-faixa', 'data-faixa': f.nome },
+          el('div', { class: 'mtusc-nome' }, icone + ' ' + f.nome), m, s, v);
+        this.ui.lista.append(f.linha);
+      });
+    }
+
+    _atualizarTempo() {
+      if (this._arrastando) return;
+      this._mostrarTempo(this.posicao);
+      this.ui.seek.value = this.duracao ? (this.posicao / this.duracao) * 1000 : 0;
+    }
+    _mostrarTempo(t) { this.ui.tempo.textContent = fmt(t) + ' / ' + fmt(this.duracao); }
+    _titulo(t) { this.ui.titulo.textContent = t; this.ui.titulo.title = t; }
+    _estado(t) { this.ui.status.textContent = t; }
+    _vazio(t) { this.descarregar(); this._estado(''); this.ui.lista.innerHTML = ''; this.ui.lista.append(el('div', { class: 'mtusc-vazio' }, t)); }
+    _habilitar(on) { ['play', 'voltar', 'avancar', 'seek', 'resetar'].forEach((k) => { this.ui[k].disabled = !on; }); }
+  }
+
+  global.MultitrackUSC = { drive, Player, nomeFaixa, nomeMusica };
+})(typeof window !== 'undefined' ? window : this);
+
+</script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 <script>
@@ -1341,6 +1749,7 @@ function songHtml(m,i){
   if(m.seq) tags+='<span class="chip"><i class="fa-solid fa-drum"></i> '+esc(m.seq)+' BPM</span>';
   if(partes.length) tags+='<button class="tag-medley" onclick="toggleMedleyMenu(this)"><i class="fa-solid fa-layer-group"></i> Medley ('+(partes.length+1)+') <i class="fa-solid fa-chevron-down"></i></button>';
   if(m.yt&&(m.cifra||cifraTxt(m))) tags+='<button class="tag-treino" onclick="acaoMusica('+i+',\'treino\')"><i class="fa-solid fa-dumbbell"></i> Treinar</button>';
+  if(mtAtivo()&&m.mt) tags+='<button class="tag-mt" onclick="acaoMusica('+i+',\'mt\')"><i class="fa-solid fa-sliders"></i> Multitrack</button>';
 
   var bpm=parseInt(m.seq);
   var podeTocar=temYt(m)||partes.some(function(p){return p.yt&&extrairYtId(p.yt);});
@@ -1429,6 +1838,7 @@ function acaoMusica(i,tipo){
   else if(tipo==='metro') abrirMetronomo(m.nome||'Música',m.seq);
   else if(tipo==='treino'&&m.yt&&(m.cifra||cifraTxt(m))) abrirTreino(m.yt,m.cifra||'',m.nome||'Treino',m);
   else if(tipo==='play') abrirPlayerSequencial(_repertorioAtual,i);
+  else if(tipo==='mt'&&mtAtivo()&&m.mt) abrirMultitrack(m);
 }
 function acaoParte(i,pi,tipo){
   var m=_repertorioAtual[i]; if(!m||!m.partes) return;
@@ -1563,7 +1973,7 @@ function copiarLinkAtual(){
     modoAvulso=true;
     col.doc(id).get().then(function(doc){
       if(!doc.exists){renderErroGeral('fa-star','Culto não encontrado','Ministério não encontrado.');return;}
-      _cifras=doc.data().cifras||{}; setBannerCfg(doc.data().banner);
+      _cifras=doc.data().cifras||{}; setBannerCfg(doc.data().banner); setRecursos(doc.data());
       var av=(doc.data().avulsos||{})[avulsoId];
       if(!av){renderErroGeral('fa-star','Culto não encontrado','Culto não encontrado ou removido.');return;}
       renderAvulso(av);
@@ -1576,7 +1986,7 @@ function copiarLinkAtual(){
   col.doc(id).onSnapshot(function(doc){
     if(!doc.exists){renderErroGeral('fa-music','Sem Programação','Seu líder ainda não publicou o repertório.');return;}
     var data=doc.data();
-    _cifras=data.cifras||{}; setBannerCfg(data.banner);
+    _cifras=data.cifras||{}; setBannerCfg(data.banner); setRecursos(data);
     if(data.programacoes&&Object.keys(data.programacoes).length){
       progs=data.programacoes;
     }else if(data.programacao){
@@ -2545,6 +2955,53 @@ document.addEventListener('keydown', function(e){
   if(e.key === 'Escape') fecharYtModal();
 });
 
+
+/* ══ RECURSOS DO PLANO + MULTITRACK ══ */
+var RECURSOS_LEGADO={separador:false,playlistYt:true,playlistSp:true};
+var _recursos={}, _mtCfg=null;
+function setRecursos(d){
+  var r=(d&&d.recursos)?d.recursos:RECURSOS_LEGADO;
+  _recursos={separador:!!r.separador,playlistYt:!!r.playlistYt,playlistSp:!!r.playlistSp};
+  var cfg=d&&d.multitrack;
+  if(!cfg||!_mtCfg||cfg.url!==_mtCfg.url||cfg.token!==_mtCfg.token){ _mtFonte=null; _mtLista=null; }
+  _mtCfg=cfg||null;
+  var f=el('faqMt'); if(f) f.style.display=mtAtivo()?'':'none';
+}
+function mtAtivo(){ return !!(_recursos.separador&&_mtCfg&&_mtCfg.url); }
+function mtNorm(s){ return String(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,' ').trim(); }
+var _mtPlayer=null,_mtFonte=null,_mtLista=null,_mtPasta='';
+function mtChaveMix(){ return 'mlMix:'+_idMin+':'+mtNorm(_mtPasta); }
+function abrirMultitrack(m){
+  _mtPasta=m.mt;
+  el('mtTitulo').textContent=m.nome||m.mt;
+  el('mtOverlay').classList.add('aberto');
+  document.body.style.overflow='hidden';
+  if(!_mtPlayer) _mtPlayer=new MultitrackUSC.Player(el('mtPlayer'),{aoMudar:function(mix){ try{localStorage.setItem(mtChaveMix(),JSON.stringify(mix));}catch(e){} }});
+  if(!_mtFonte) _mtFonte=MultitrackUSC.drive({url:_mtCfg.url,token:_mtCfg.token||''});
+  _mtPlayer.descarregar(); _mtPlayer._vazio('Procurando as faixas…');
+  var pasta=_mtPasta;
+  (_mtLista?Promise.resolve(_mtLista):_mtFonte.listar().then(function(l){_mtLista=l;return l;}))
+  .then(function(lista){
+    if(pasta!==_mtPasta) return;
+    var alvo=mtNorm(pasta);
+    var mus=lista.filter(function(x){return mtNorm(x.musica)===alvo;})[0];
+    if(!mus){ _mtLista=null; _mtPlayer._vazio('As faixas de “'+pasta+'” ainda não estão no Drive. Avise o líder.'); return; }
+    if(mus.processando) _mtLista=null;
+    return _mtPlayer.carregarDoDrive(mus,_mtFonte).then(function(){
+      if(pasta!==_mtPasta) return;
+      try{ var mix=JSON.parse(localStorage.getItem(mtChaveMix())||'null'); if(mix) _mtPlayer.aplicarMixagem(mix); }catch(e){}
+    });
+  })
+  .catch(function(e){ if(_mtPlayer) _mtPlayer._vazio('Não foi possível abrir o multitrack: '+(e&&e.message||e)); });
+}
+function fecharMultitrack(e){
+  if(e&&e.target!==el('mtOverlay')) return;
+  if(_mtPlayer) _mtPlayer.pausar();
+  _mtPasta='';
+  el('mtOverlay').classList.remove('aberto');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&el('mtOverlay').classList.contains('aberto')) fecharMultitrack(); });
 </script>
 
 <!-- Modal Metrônomo -->
